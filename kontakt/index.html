@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kontaktujte Spotless Cleaning — +421 951 093 781, spotlesslv.cleaning@gmail.com, Instagram.">
+  <title>%BUSINESS% — Kontakt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-page="contact">
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="Spotless Cleaning — domov">
+        <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
+        <span class="logo-text">SPOTLESS</span>
+      </a>
+      <nav class="nav-desktop" aria-label="Hlavná navigácia">
+        <a href="/" data-page="home">Domov</a>
+        <a href="/cennik" data-page="pricing">Cenník</a>
+        <a href="/galeria" data-page="gallery">Galéria</a>
+        <a href="/kontakt" data-page="contact">Kontakt</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Otvoriť menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="nav-mobile" aria-label="Mobilná navigácia">
+      <a href="/" data-page="home">Domov</a>
+      <a href="/cennik" data-page="pricing">Cenník</a>
+      <a href="/galeria" data-page="gallery">Galéria</a>
+      <a href="/kontakt" data-page="contact">Kontakt</a>
+    </nav>
+  </header>
+
+  <main>
+    <header class="page-header">
+      <div class="container">
+        <h1>Kontakt</h1>
+        <p>Zavolajte, napíšte email alebo nás kontaktujte cez Instagram a Facebook.</p>
+      </div>
+    </header>
+
+    <section class="section" style="padding-top: 0;">
+      <div class="container contact-grid">
+        <div class="contact-info">
+          <div class="contact-info-item">
+            <div class="contact-info-icon" aria-hidden="true">📞</div>
+            <div>
+              <h4>Telefón</h4>
+              <p id="contact-phone"></p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-info-icon" aria-hidden="true">✉️</div>
+            <div>
+              <h4>Email</h4>
+              <p id="contact-email"></p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-info-icon" aria-hidden="true">📍</div>
+            <div>
+              <h4>Adresa</h4>
+              <p id="contact-address"></p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-info-icon" aria-hidden="true">🕐</div>
+            <div>
+              <h4>Objednávky</h4>
+              <p id="contact-hours"></p>
+            </div>
+          </div>
+          <div class="social-links" data-social-links></div>
+          <p style="margin-top: 1.5rem; font-size: 0.95rem; color: var(--color-text-muted);">
+            Instagram: <a href="https://www.instagram.com/spotless_cleaning__/" target="_blank" rel="noopener">@spotless_cleaning__</a>
+          </p>
+        </div>
+
+        <form class="contact-form" id="contact-form">
+          <div id="form-error" class="form-error" role="alert"></div>
+          <div id="form-success" class="form-success" role="status">
+            Ďakujeme za správu! Ozveme sa vám čo najskôr.
+          </div>
+          <div class="form-group">
+            <label for="name">Meno a priezvisko</label>
+            <input type="text" id="name" name="name" required autocomplete="name" placeholder="Ján Novák">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="jan@email.sk">
+          </div>
+          <div class="form-group">
+            <label for="phone">Telefón</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+421 951 093 781">
+          </div>
+          <div class="form-group">
+            <label for="service">Záujem o službu</label>
+            <select id="service" name="service">
+              <option value="">Vyberte službu</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Správa</label>
+            <textarea id="message" name="message" required placeholder="Popíšte, čo potrebujete vyčistiť, adresu a preferovaný termín..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="contact-submit">Odoslať správu</button>
+          <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--color-text-muted); text-align: center;">
+            Rýchlejšia odpoveď: zavolajte na <a href="tel:+421951093781">+421 951 093 781</a>
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo" aria-label="Spotless Cleaning — domov">
+        <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
+        <span class="logo-text">SPOTLESS</span>
+      </a>
+          <p data-tagline>Tepovanie, čistenie okien a dezinfekcia ozónom — Levice a okolie</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigácia</h4>
+          <a href="/">Domov</a>
+          <a href="/cennik">Cenník</a>
+          <a href="/galeria">Galéria</a>
+          <a href="/kontakt">Kontakt</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontakt</h4>
+          <a href="/kontakt">Napísať správu</a>
+          <span id="contact-email-footer"></span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="footer-year"></span> <span data-business-name>Spotless Cleaning</span></span>
+        <div class="footer-social" data-social-links data-social-style="footer"></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

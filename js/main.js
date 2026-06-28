@@ -1,0 +1,549 @@
+function initSite() {
+  const config = typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {};
+  const page = document.body.dataset.page;
+
+  applyConfig(config);
+  initNavigation(page);
+  initMobileMenu();
+  initGallery();
+  initContactForm();
+  renderPageContent(config, page);
+  initScrollAnimations();
+}
+
+function applyConfig(config) {
+  document.querySelectorAll("[data-business-name]").forEach((el) => {
+    el.textContent = config.businessName || "";
+  });
+
+  document.querySelectorAll("[data-tagline]").forEach((el) => {
+    el.textContent = config.tagline || "";
+  });
+
+  document.title = document.title.replace(
+    "%BUSINESS%",
+    config.businessName || "Web"
+  );
+
+  const footerYear = document.getElementById("footer-year");
+  if (footerYear) footerYear.textContent = new Date().getFullYear();
+
+  renderSocialLinks(config.social);
+  renderContactInfo(config.contact);
+
+  if (config.logo) {
+    document.querySelectorAll(".logo-mark").forEach((img) => {
+      img.src = config.logo;
+    });
+  }
+
+  const logoLabel = config.logoText || config.businessName;
+  if (logoLabel) {
+    document.querySelectorAll(".logo-text").forEach((el) => {
+      el.textContent = logoLabel.toUpperCase();
+    });
+  }
+}
+
+function renderSocialLinks(social = {}) {
+  const containers = document.querySelectorAll("[data-social-links]");
+  const icons = {
+    instagram: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
+    facebook: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+    tiktok: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>`,
+  };
+
+  containers.forEach((container) => {
+    container.innerHTML = "";
+    Object.entries(social).forEach(([network, url]) => {
+      if (!url) return;
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.className = container.dataset.socialStyle === "footer" ? "" : "social-link";
+      link.setAttribute("aria-label", network);
+      link.innerHTML = icons[network] || network;
+      container.appendChild(link);
+    });
+  });
+}
+
+function renderContactInfo(contact = {}) {
+  const addressEl = document.getElementById("contact-address");
+  const hoursEl = document.getElementById("contact-hours");
+
+  const phoneHtml = contact.phone
+    ? `<a href="tel:${contact.phone.replace(/\s/g, "")}">${contact.phone}</a>`
+    : "";
+  const emailHtml = contact.email
+    ? `<a href="mailto:${contact.email}">${contact.email}</a>`
+    : "";
+
+  document.querySelectorAll("#contact-phone").forEach((el) => {
+    el.innerHTML = phoneHtml;
+  });
+  document.querySelectorAll("#contact-email, #contact-email-footer").forEach((el) => {
+    el.innerHTML = emailHtml;
+  });
+  if (addressEl) {
+    if (contact.mapsUrl && contact.address) {
+      addressEl.innerHTML = `<a href="${contact.mapsUrl}" target="_blank" rel="noopener noreferrer">${contact.address}</a>`;
+    } else {
+      addressEl.textContent = contact.address || "";
+    }
+  }
+  if (hoursEl) hoursEl.textContent = contact.hours || "";
+}
+
+function initNavigation(currentPage) {
+  document.querySelectorAll(".nav-desktop a, .nav-mobile a").forEach((link) => {
+    if (link.dataset.page === currentPage) {
+      link.classList.add("active");
+    }
+  });
+}
+
+function initMobileMenu() {
+  const toggle = document.querySelector(".menu-toggle");
+  const mobileNav = document.querySelector(".nav-mobile");
+  if (!toggle || !mobileNav) return;
+
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    mobileNav.classList.toggle("open");
+  });
+
+  mobileNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      toggle.setAttribute("aria-expanded", "false");
+      mobileNav.classList.remove("open");
+    });
+  });
+}
+
+function renderPageContent(config, page) {
+  if (page === "home") {
+    renderHome(config);
+    renderServices(config);
+    const previewCount = config.homeGalleryPreview || 3;
+    const preview = config.gallery?.slice(0, previewCount);
+    renderGallery(preview, "gallery-preview", config.gallery);
+    renderReels(config, "home-reels-track", { linked: false });
+  }
+  if (page === "pricing") renderPricing(config);
+  if (page === "gallery") {
+    renderGallery(config.gallery, "gallery-full", config.gallery);
+    renderReels(config, "reels-track", { linked: true });
+  }
+  if (page === "contact") renderContactServices(config);
+}
+
+function renderHome(config) {
+  const hero = config.hero || {};
+  const headline = document.getElementById("hero-headline");
+  const subheadline = document.getElementById("hero-subheadline");
+  const cta = document.getElementById("hero-cta");
+  const heroImg = document.getElementById("hero-image");
+
+  if (headline) headline.textContent = hero.headline || "";
+  if (subheadline) subheadline.textContent = hero.subheadline || "";
+  if (cta) {
+    cta.textContent = hero.ctaText || "Kontakt";
+    cta.href = hero.ctaLink || "/kontakt";
+  }
+  if (heroImg && hero.image) {
+    heroImg.src = hero.image;
+    heroImg.alt = hero.imageAlt || "";
+  }
+
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc && config.description) metaDesc.content = config.description;
+}
+
+function renderServices(config) {
+  const container = document.getElementById("services-grid");
+  if (!container || !config.services) return;
+
+  container.innerHTML = config.services
+    .map(
+      (s) => `
+    <article class="feature-card">
+      <div class="feature-icon" aria-hidden="true">${s.icon}</div>
+      <h3>${s.title}</h3>
+      <p>${s.text}</p>
+    </article>
+  `
+    )
+    .join("");
+}
+
+function renderPricing(config) {
+  const container = document.getElementById("pricing-grid");
+  if (!container) return;
+
+  if (config.pricingCategories) {
+    container.className = "pricing-tables";
+    container.innerHTML = config.pricingCategories
+      .map(
+        (cat) => `
+      <article class="pricing-category${cat.highlight ? " pricing-category--windows" : ""}">
+        <h3>${cat.title}</h3>
+        ${cat.items
+          .map(
+            (item) => `
+          <div class="pricing-row">
+            <span>${item.name}</span>
+            <span>${item.price}</span>
+          </div>
+        `
+          )
+          .join("")}
+      </article>
+    `
+      )
+      .join("");
+
+    const notesEl = document.getElementById("pricing-notes");
+    if (notesEl && config.pricingNotes) {
+      notesEl.innerHTML = `<ul>${config.pricingNotes.map((n) => `<li>${n}</li>`).join("")}</ul>`;
+    }
+
+    return;
+  }
+
+  if (!config.pricing) return;
+  container.innerHTML = config.pricing
+    .map(
+      (plan) => `
+    <article class="pricing-card ${plan.recommended ? "recommended" : ""}">
+      ${plan.recommended ? '<span class="pricing-badge">Odporúčané</span>' : ""}
+      <h3>${plan.name}</h3>
+      <div class="pricing-price">${plan.price}</div>
+      <div class="pricing-period">${plan.period}</div>
+      <p class="pricing-desc">${plan.description}</p>
+      <ul class="pricing-features">
+        ${plan.features.map((f) => `<li>${f}</li>`).join("")}
+      </ul>
+      <a href="/kontakt" class="btn btn-primary btn-block">${plan.cta || "Objednať"}</a>
+    </article>
+  `
+    )
+    .join("");
+}
+
+function renderContactServices(config) {
+  const select = document.getElementById("service");
+  if (!select || !config.contactServices) return;
+
+  select.innerHTML =
+    `<option value="">Vyberte službu</option>` +
+    config.contactServices
+      .map((s) => `<option value="${s.toLowerCase().replace(/\s+/g, "-")}">${s}</option>`)
+      .join("");
+}
+
+function renderGallery(items, containerId, lightboxSource) {
+  const container = document.getElementById(containerId);
+  if (!container || !items?.length) return;
+
+  const isPreview = containerId === "gallery-preview";
+  const isPage = containerId === "gallery-full";
+  const lightboxItems = lightboxSource || items;
+
+  if (isPage) container.className = "gallery-grid gallery-grid--page";
+
+  container.innerHTML = items
+    .map((item, i) => {
+      const lightboxIndex = isPreview
+        ? lightboxItems.findIndex((g) => g.src === item.src)
+        : i;
+      const wideClass = !isPreview && !isPage && item.wide ? " gallery-item--wide" : "";
+      return `
+    <figure class="gallery-item${wideClass}" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
+      <div class="gallery-item__frame">
+        <img src="${item.src}" alt="${item.alt}" loading="lazy">
+      </div>
+      ${item.caption ? `<figcaption class="gallery-caption">${item.caption}</figcaption>` : ""}
+    </figure>
+  `;
+    })
+    .join("");
+
+  container.querySelectorAll(".gallery-item").forEach((item) => {
+    const open = () =>
+      openLightbox(lightboxItems, parseInt(item.dataset.index, 10));
+    item.addEventListener("click", open);
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
+function renderReels(config, containerId = "reels-track", options = { linked: true }) {
+  const track = document.getElementById(containerId);
+  const reelsConfig = config.instagramReels;
+  if (!track || !reelsConfig?.items?.length) return;
+
+  const duration = reelsConfig.previewDuration || 2;
+  const linked = options.linked !== false;
+
+  track.innerHTML = reelsConfig.items
+    .map((reel) => {
+      const dataAttrs = `data-start="${reel.startTime || 0}" data-duration="${duration}"`;
+      const inner = `
+        <span class="reel-card__ring">
+          <span class="reel-card__inner">
+            <video class="reel-card__video" muted playsinline preload="metadata" aria-hidden="true">
+              <source src="${reel.video}" type="video/mp4">
+            </video>
+          </span>
+        </span>`;
+
+      if (linked) {
+        return `<a href="${reel.url}" class="reel-card" target="_blank" rel="noopener noreferrer" ${dataAttrs} aria-label="Instagram reel">${inner}</a>`;
+      }
+      return `<div class="reel-card reel-card--home" ${dataAttrs} role="group">
+          <span class="reel-card__inner">
+            <video class="reel-card__video" muted playsinline preload="metadata" aria-hidden="true">
+              <source src="${reel.video}" type="video/mp4">
+            </video>
+          </span>
+        </div>`;
+    })
+    .join("");
+
+  initReelsHover(track);
+}
+
+function initReelsHover(track) {
+  const cards = track.querySelectorAll(".reel-card");
+
+  cards.forEach((card) => {
+    const video = card.querySelector("video");
+    if (!video) return;
+
+    const start = parseFloat(card.dataset.start) || 0;
+    const duration = parseFloat(card.dataset.duration) || 2;
+    let timeUpdateHandler = null;
+    let endedHandler = null;
+
+    const getStopAt = () => {
+      const stop = start + duration;
+      if (video.duration && !Number.isNaN(video.duration)) {
+        return Math.min(stop, video.duration);
+      }
+      return stop;
+    };
+
+    const clearPreview = () => {
+      if (timeUpdateHandler) {
+        video.removeEventListener("timeupdate", timeUpdateHandler);
+        timeUpdateHandler = null;
+      }
+      if (endedHandler) {
+        video.removeEventListener("ended", endedHandler);
+        endedHandler = null;
+      }
+      video.pause();
+      video.currentTime = start;
+      card.classList.remove("is-playing");
+    };
+
+    const loopPreview = () => {
+      video.currentTime = start;
+      video.play().catch(() => clearPreview());
+    };
+
+    const playPreview = () => {
+      clearPreview();
+      card.classList.add("is-playing");
+
+      timeUpdateHandler = () => {
+        if (video.currentTime >= getStopAt() - 0.05) {
+          loopPreview();
+        }
+      };
+
+      endedHandler = () => {
+        if (card.classList.contains("is-playing")) {
+          loopPreview();
+        }
+      };
+
+      video.addEventListener("timeupdate", timeUpdateHandler);
+      video.addEventListener("ended", endedHandler);
+      loopPreview();
+    };
+
+    video.addEventListener("loadedmetadata", () => {
+      video.currentTime = start;
+    });
+
+    card.addEventListener("mouseenter", playPreview);
+    card.addEventListener("mouseleave", clearPreview);
+  });
+}
+
+function initScrollAnimations() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const targets = document.querySelectorAll(
+    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .cta-banner, .pricing-category, .contact-form"
+  );
+
+  targets.forEach((el, i) => {
+    el.classList.add("animate-on-scroll");
+    el.style.setProperty("--delay", `${(i % 5) * 0.07}s`);
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -30px 0px" }
+  );
+
+  document.querySelectorAll(".animate-on-scroll").forEach((el) => observer.observe(el));
+}
+
+let lightboxItems = [];
+
+function initGallery() {
+  const lightbox = document.getElementById("lightbox");
+  const closeBtn = document.getElementById("lightbox-close");
+  if (!lightbox) return;
+
+  closeBtn?.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+  });
+}
+
+function openLightbox(items, index) {
+  lightboxItems = items;
+  const lightbox = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+  const caption = document.getElementById("lightbox-caption");
+  if (!lightbox || !img) return;
+
+  const item = items[index];
+  img.src = item.src;
+  img.alt = item.alt;
+  if (caption) caption.textContent = item.caption || "";
+  lightbox.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById("lightbox");
+  if (!lightbox) return;
+  lightbox.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function initContactForm() {
+  const form = document.getElementById("contact-form");
+  const success = document.getElementById("form-success");
+  const error = document.getElementById("form-error");
+  const submitBtn = document.getElementById("contact-submit");
+  if (!form) return;
+
+  const config = typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {};
+  const formConfig = config.form || {};
+
+  const hideMessages = () => {
+    success?.classList.remove("show");
+    error?.classList.remove("show");
+  };
+
+  const showSuccess = () => {
+    if (!success) return;
+    success.textContent =
+      formConfig.successMessage ||
+      "Ďakujeme za správu! Ozveme sa vám čo najskôr.";
+    success.classList.add("show");
+    setTimeout(() => success.classList.remove("show"), 8000);
+  };
+
+  const showError = (message) => {
+    if (!error) return;
+    error.textContent = message || formConfig.errorMessage || "Odoslanie sa nepodarilo.";
+    error.classList.add("show");
+  };
+
+  const getPayload = () => {
+    const formData = new FormData(form);
+    return {
+      name: String(formData.get("name") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      service: String(formData.get("service") || "").trim(),
+      message: String(formData.get("message") || "").trim(),
+      status: formConfig.orderStatus?.default || "Nová",
+      submittedAt: new Date().toISOString(),
+      source: window.location.origin || "spotless-cleaning",
+      page: "kontakt",
+    };
+  };
+
+  const sendToMake = async (webhookUrl, payload) => {
+    const body = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      body.append(key, value);
+    });
+
+    await fetch(webhookUrl, {
+      method: "POST",
+      mode: "no-cors",
+      body,
+    });
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideMessages();
+
+    const payload = getPayload();
+    const webhookUrl = formConfig.makeWebhookUrl?.trim();
+
+    if (!webhookUrl) {
+      showSuccess();
+      form.reset();
+      return;
+    }
+
+    const originalLabel = submitBtn?.textContent || "Odoslať správu";
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Odosielam…";
+    }
+
+    try {
+      await sendToMake(webhookUrl, payload);
+      showSuccess();
+      form.reset();
+    } catch (err) {
+      showError();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", initSite);
