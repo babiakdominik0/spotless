@@ -34,6 +34,17 @@ const SITE_CONFIG = {
     hours: "Objednávky: Po – Ne (po dohode)",
   },
 
+  localBusiness: {
+    legalName: "Spotless Cleaning",
+    streetAddress: "Dolná Seč 201",
+    postalCode: "935 31",
+    addressLocality: "Dolná Seč",
+    addressRegion: "Nitra",
+    addressCountry: "SK",
+    areaServed: "Levice a okolie",
+    priceRange: "€",
+  },
+
   // Make.com: Webhooks → Custom webhook → skopíruj URL sem
   form: {
     makeWebhookUrl: "https://hook.eu1.make.com/nisvq9k8xmvduoecyi46xfh1jmjd3c4q",

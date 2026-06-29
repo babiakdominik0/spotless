@@ -1089,6 +1089,62 @@ ul {
   cursor: not-allowed;
 }
 
+/* ===== Floating call (mobile) ===== */
+.floating-call {
+  position: fixed;
+  right: 1rem;
+  bottom: 1.25rem;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.15rem;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-call:hover {
+  transform: translateY(-2px);
+  color: var(--color-bg);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.floating-call svg {
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .floating-call {
+    display: none;
+  }
+}
+
+/* ===== Contact map ===== */
+.contact-map-section {
+  padding-top: 0;
+}
+
+.contact-map {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  aspect-ratio: 16 / 9;
+  min-height: 260px;
+}
+
+.contact-map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
 /* ===== CTA Banner ===== */
 .cta-banner {
   background: var(--color-surface);

@@ -3,6 +3,8 @@ function initSite() {
   const page = document.body.dataset.page;
 
   applyConfig(config);
+  injectLocalBusinessSchema(config);
+  initFloatingCall(config.contact);
   initNavigation(page);
   initMobileMenu();
   initGallery();
@@ -96,6 +98,93 @@ function renderContactInfo(contact = {}) {
   if (hoursEl) hoursEl.textContent = contact.hours || "";
 }
 
+function injectLocalBusinessSchema(config) {
+  if (document.getElementById("local-business-schema")) return;
+
+  const seo = config.seo || {};
+  const contact = config.contact || {};
+  const lb = config.localBusiness || {};
+  const siteUrl = seo.siteUrl || "";
+  const phone = contact.phone ? contact.phone.replace(/\s/g, "") : "";
+  const sameAs = Object.values(config.social || {}).filter(Boolean);
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: lb.legalName || seo.siteName || config.businessName,
+    url: siteUrl || undefined,
+    image: siteUrl ? `${siteUrl}${config.logo || "/images/logo-spotless.png"}` : undefined,
+    telephone: phone || undefined,
+    email: contact.email || undefined,
+    description: config.description || config.tagline || undefined,
+    priceRange: lb.priceRange || "€",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: lb.streetAddress || contact.address,
+      postalCode: lb.postalCode,
+      addressLocality: lb.addressLocality,
+      addressRegion: lb.addressRegion,
+      addressCountry: lb.addressCountry || "SK",
+    },
+    areaServed: lb.areaServed || config.tagline,
+    sameAs: sameAs.length ? sameAs : undefined,
+  };
+
+  if (config.services?.length) {
+    schema.hasOfferCatalog = {
+      "@type": "OfferCatalog",
+      name: "Služby Spotless Cleaning",
+      itemListElement: config.services.map((service, index) => ({
+        "@type": "Offer",
+        position: index + 1,
+        itemOffered: {
+          "@type": "Service",
+          name: service.title,
+          description: service.text,
+        },
+      })),
+    };
+  }
+
+  const script = document.createElement("script");
+  script.id = "local-business-schema";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+function initFloatingCall(contact = {}) {
+  if (!contact.phone || document.getElementById("floating-call")) return;
+
+  const tel = contact.phone.replace(/\s/g, "");
+  const link = document.createElement("a");
+  link.id = "floating-call";
+  link.className = "floating-call";
+  link.href = `tel:${tel}`;
+  link.setAttribute("aria-label", `Zavolať ${contact.phone}`);
+  link.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>Zavolať</span>`;
+  document.body.appendChild(link);
+}
+
+function renderContactMap(contact = {}) {
+  const container = document.getElementById("contact-map");
+  if (!container || !contact.address) return;
+
+  const query = encodeURIComponent(contact.address);
+  const src =
+    contact.mapsEmbedUrl ||
+    `https://www.google.com/maps?q=${query}&hl=sk&z=13&output=embed`;
+
+  const iframe = document.createElement("iframe");
+  iframe.src = src;
+  iframe.title = `Mapa — ${contact.address}`;
+  iframe.loading = "lazy";
+  iframe.referrerPolicy = "no-referrer-when-downgrade";
+  iframe.allowFullscreen = true;
+
+  container.replaceChildren(iframe);
+}
+
 function initNavigation(currentPage) {
   document.querySelectorAll(".nav-desktop a, .nav-mobile a").forEach((link) => {
     if (link.dataset.page === currentPage) {
@@ -137,7 +226,10 @@ function renderPageContent(config, page) {
     renderGallery(config.gallery, "gallery-full", config.gallery);
     renderReels(config, "reels-track", { linked: true });
   }
-  if (page === "contact") renderContactServices(config);
+  if (page === "contact") {
+    renderContactServices(config);
+    renderContactMap(config.contact);
+  }
 }
 
 function renderHome(config) {
