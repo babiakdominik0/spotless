@@ -17,7 +17,7 @@ const SITE_CONFIG = {
 
   hero: {
     headline:
-      "Sedačka, koberec aj auto ako nové — bez kúpy nového nábytku",
+      "Tepovanie sedačiek, kobercov, áut a okien v Leviciach — Spotless Cleaning",
     subheadline:
       "Tepovanie, čistenie okien a dezinfekcia ozónom v Leviciach a okolí. Doprava v rámci mesta zdarma. Transparentný cenník — viete, čo zaplatíte.",
     ctaText: "Pozrieť cenník",
