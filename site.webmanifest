@@ -1,0 +1,15 @@
+{
+  "name": "Spotless Cleaning",
+  "short_name": "Spotless",
+  "icons": [
+    {
+      "src": "/images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "lang": "sk"
+}

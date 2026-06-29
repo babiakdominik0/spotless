@@ -6,6 +6,15 @@ const SITE_CONFIG = {
   description:
     "Profesionálne tepovanie sedačiek, kobercov a áut, čistenie okien a dezinfekcia ozónom. Doprava zdarma v Leviciach.",
 
+  seo: {
+    siteUrl: "https://www.spotlesscleaning.sk",
+    siteName: "Spotless Cleaning",
+    locale: "sk_SK",
+    ogImage: "/images/og-image.jpg",
+    ogImageWidth: 1200,
+    ogImageHeight: 630,
+  },
+
   hero: {
     headline:
       "Sedačka, koberec aj auto ako nové — bez kúpy nového nábytku",
