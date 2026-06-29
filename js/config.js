@@ -14,7 +14,7 @@ const SITE_CONFIG = {
     ogImageWidth: 1200,
     ogImageHeight: 630,
     // Google Analytics 4 → Admin → Data Streams → Measurement ID (G-XXXXXXXXXX)
-    ga4MeasurementId: "",
+    ga4MeasurementId: "G-7Y9ZV5KEVJ",
   },
 
   hero: {
