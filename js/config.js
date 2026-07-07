@@ -50,7 +50,9 @@ const SITE_CONFIG = {
   // Make.com: Webhooks → Custom webhook → skopíruj URL sem
   form: {
     makeWebhookUrl: "https://hook.eu1.make.com/nisvq9k8xmvduoecyi46xfh1jmjd3c4q",
-    successMessage: "Ďakujeme za správu! Ozveme sa vám čo najskôr.",
+    phonePlaceholder: "+421xxxxxxxxx",
+    responseTime: "Ozveme sa vám do 24 hodín.",
+    successMessage: "Ďakujeme za správu! Ozveme sa vám do 24 hodín.",
     errorMessage:
       "Odoslanie sa nepodarilo. Skúste to znova alebo nás zavolajte na +421 951 093 781.",
     orderStatus: {

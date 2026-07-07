@@ -109,12 +109,44 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="objednavka">
       <div class="container">
-        <div class="cta-banner">
-          <h2>Chcete objednať čistenie?</h2>
-          <p>Zavolajte na +421 951 093 781, napíšte na spotlesslv.cleaning@gmail.com alebo nás kontaktujte cez Instagram.</p>
-          <a href="/kontakt" class="btn btn-primary">Objednať čistenie</a>
+        <h2 class="section-title">Chcete objednať čistenie?</h2>
+        <p class="section-subtitle">Vyplňte formulár — ozveme sa vám do 24 hodín. Alebo nás kontaktujte priamo telefonicky.</p>
+        <div class="home-contact-wrap">
+          <form class="contact-form" id="contact-form">
+            <div class="form-error" role="alert"></div>
+            <div class="form-success" role="status">
+              Ďakujeme za správu! Ozveme sa vám do 24 hodín.
+            </div>
+            <div class="form-group">
+              <label for="name">Meno a priezvisko</label>
+              <input type="text" id="name" name="name" required autocomplete="name" placeholder="Ján Novák">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required autocomplete="email" placeholder="jan@email.sk">
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefón</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+421xxxxxxxxx">
+            </div>
+            <div class="form-group">
+              <label for="service">Záujem o službu</label>
+              <select id="service" name="service">
+                <option value="">Vyberte službu</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Správa</label>
+              <textarea id="message" name="message" required placeholder="Popíšte, čo potrebujete vyčistiť, adresu a preferovaný termín..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Odoslať správu</button>
+            <p class="form-note" data-response-time>Ozveme sa vám do 24 hodín.</p>
+            <p class="form-note">
+              Rýchlejšia odpoveď: zavolajte na <a href="tel:+421951093781">+421 951 093 781</a>
+            </p>
+          </form>
         </div>
       </div>
     </section>

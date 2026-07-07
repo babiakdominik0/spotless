@@ -226,6 +226,7 @@ function renderPageContent(config, page) {
     const preview = config.gallery?.slice(0, previewCount);
     renderGallery(preview, "gallery-preview", config.gallery);
     renderReels(config, "home-reels-track", { linked: false });
+    renderContactServices(config);
   }
   if (page === "pricing") renderPricing(config);
   if (page === "gallery") {
@@ -553,95 +554,109 @@ function closeLightbox() {
 }
 
 function initContactForm() {
-  const form = document.getElementById("contact-form");
-  const success = document.getElementById("form-success");
-  const error = document.getElementById("form-error");
-  const submitBtn = document.getElementById("contact-submit");
-  if (!form) return;
+  const forms = document.querySelectorAll(".contact-form");
+  if (!forms.length) return;
 
   const config = typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {};
   const formConfig = config.form || {};
+  const page = document.body.dataset.page || "unknown";
 
-  const hideMessages = () => {
-    success?.classList.remove("show");
-    error?.classList.remove("show");
-  };
+  forms.forEach((form) => {
+    const success = form.querySelector(".form-success");
+    const error = form.querySelector(".form-error");
+    const submitBtn = form.querySelector("[type=submit]");
+    const phoneInput = form.querySelector('input[name="phone"]');
 
-  const showSuccess = () => {
-    if (!success) return;
-    success.textContent =
-      formConfig.successMessage ||
-      "Ďakujeme za správu! Ozveme sa vám čo najskôr.";
-    success.classList.add("show");
-    trackEvent("generate_lead", { method: "contact_form" });
-    setTimeout(() => success.classList.remove("show"), 8000);
-  };
+    if (phoneInput && formConfig.phonePlaceholder) {
+      phoneInput.placeholder = formConfig.phonePlaceholder;
+    }
 
-  const showError = (message) => {
-    if (!error) return;
-    error.textContent = message || formConfig.errorMessage || "Odoslanie sa nepodarilo.";
-    error.classList.add("show");
-  };
+    const responseTimeEl = form.querySelector("[data-response-time]");
+    if (responseTimeEl && formConfig.responseTime) {
+      responseTimeEl.textContent = formConfig.responseTime;
+    }
 
-  const getPayload = () => {
-    const formData = new FormData(form);
-    return {
-      name: String(formData.get("name") || "").trim(),
-      email: String(formData.get("email") || "").trim(),
-      phone: String(formData.get("phone") || "").trim(),
-      service: String(formData.get("service") || "").trim(),
-      message: String(formData.get("message") || "").trim(),
-      status: formConfig.orderStatus?.default || "Nová",
-      submittedAt: new Date().toISOString(),
-      source: window.location.origin || "spotless-cleaning",
-      page: "kontakt",
+    const hideMessages = () => {
+      success?.classList.remove("show");
+      error?.classList.remove("show");
     };
-  };
 
-  const sendToMake = async (webhookUrl, payload) => {
-    const body = new FormData();
-    Object.entries(payload).forEach(([key, value]) => {
-      body.append(key, value);
-    });
+    const showSuccess = () => {
+      if (!success) return;
+      success.textContent =
+        formConfig.successMessage ||
+        "Ďakujeme za správu! Ozveme sa vám do 24 hodín.";
+      success.classList.add("show");
+      trackEvent("generate_lead", { method: "contact_form", page });
+      setTimeout(() => success.classList.remove("show"), 8000);
+    };
 
-    await fetch(webhookUrl, {
-      method: "POST",
-      mode: "no-cors",
-      body,
-    });
-  };
+    const showError = (message) => {
+      if (!error) return;
+      error.textContent = message || formConfig.errorMessage || "Odoslanie sa nepodarilo.";
+      error.classList.add("show");
+    };
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    hideMessages();
+    const getPayload = () => {
+      const formData = new FormData(form);
+      return {
+        name: String(formData.get("name") || "").trim(),
+        email: String(formData.get("email") || "").trim(),
+        phone: String(formData.get("phone") || "").trim(),
+        service: String(formData.get("service") || "").trim(),
+        message: String(formData.get("message") || "").trim(),
+        status: formConfig.orderStatus?.default || "Nová",
+        submittedAt: new Date().toISOString(),
+        source: window.location.origin || "spotless-cleaning",
+        page: page === "home" ? "domov" : page,
+      };
+    };
 
-    const payload = getPayload();
-    const webhookUrl = formConfig.makeWebhookUrl?.trim();
+    const sendToMake = async (webhookUrl, payload) => {
+      const body = new FormData();
+      Object.entries(payload).forEach(([key, value]) => {
+        body.append(key, value);
+      });
 
-    if (!webhookUrl) {
-      showSuccess();
-      form.reset();
-      return;
-    }
+      await fetch(webhookUrl, {
+        method: "POST",
+        mode: "no-cors",
+        body,
+      });
+    };
 
-    const originalLabel = submitBtn?.textContent || "Odoslať správu";
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Odosielam…";
-    }
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideMessages();
 
-    try {
-      await sendToMake(webhookUrl, payload);
-      showSuccess();
-      form.reset();
-    } catch (err) {
-      showError();
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
+      const payload = getPayload();
+      const webhookUrl = formConfig.makeWebhookUrl?.trim();
+
+      if (!webhookUrl) {
+        showSuccess();
+        form.reset();
+        return;
       }
-    }
+
+      const originalLabel = submitBtn?.textContent || "Odoslať správu";
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Odosielam…";
+      }
+
+      try {
+        await sendToMake(webhookUrl, payload);
+        showSuccess();
+        form.reset();
+      } catch (err) {
+        showError();
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
+      }
+    });
   });
 }
 

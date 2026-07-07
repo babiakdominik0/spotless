@@ -107,9 +107,9 @@
         </div>
 
         <form class="contact-form" id="contact-form">
-          <div id="form-error" class="form-error" role="alert"></div>
-          <div id="form-success" class="form-success" role="status">
-            Ďakujeme za správu! Ozveme sa vám čo najskôr.
+          <div class="form-error" role="alert"></div>
+          <div class="form-success" role="status">
+            Ďakujeme za správu! Ozveme sa vám do 24 hodín.
           </div>
           <div class="form-group">
             <label for="name">Meno a priezvisko</label>
@@ -121,7 +121,7 @@
           </div>
           <div class="form-group">
             <label for="phone">Telefón</label>
-            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+421 951 093 781">
+            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+421xxxxxxxxx">
           </div>
           <div class="form-group">
             <label for="service">Záujem o službu</label>
@@ -133,8 +133,9 @@
             <label for="message">Správa</label>
             <textarea id="message" name="message" required placeholder="Popíšte, čo potrebujete vyčistiť, adresu a preferovaný termín..."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary btn-block" id="contact-submit">Odoslať správu</button>
-          <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--color-text-muted); text-align: center;">
+          <button type="submit" class="btn btn-primary btn-block">Odoslať správu</button>
+          <p class="form-note" data-response-time>Ozveme sa vám do 24 hodín.</p>
+          <p class="form-note">
             Rýchlejšia odpoveď: zavolajte na <a href="tel:+421951093781">+421 951 093 781</a>
           </p>
         </form>
