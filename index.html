@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Spotless Cleaning — tepovanie, čistenie okien a dezinfekcia ozónom v Leviciach a okolí. Doprava v meste zdarma.">
+  <meta name="description" content="Spotless Cleaning — tepovanie sedačiek, kobercov a áut, čistenie okien a ozónovanie v Leviciach. Doprava v meste zdarma.">
   <link rel="canonical" href="https://www.spotlesscleaning.sk/">
   <link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
@@ -21,7 +21,7 @@
   <meta name="twitter:title" content="Spotless Cleaning — Tepovanie a čistenie v Leviciach">
   <meta name="twitter:description" content="Tepovanie sedačiek, kobercov a áut, čistenie okien a dezinfekcia ozónom. Doprava v Leviciach zdarma.">
   <meta name="twitter:image" content="https://www.spotlesscleaning.sk/images/og-image.jpg">
-  <title>%BUSINESS% — Domov</title>
+  <title>%BUSINESS% — Tepovanie a čistenie Levice</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -43,12 +43,15 @@
         <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
         <span class="logo-text">SPOTLESS</span>
       </a>
-      <nav class="nav-desktop" aria-label="Hlavná navigácia">
-        <a href="/" data-page="home">Domov</a>
-        <a href="/cennik" data-page="pricing">Cenník</a>
-        <a href="/galeria" data-page="gallery">Galéria</a>
-        <a href="/kontakt" data-page="contact">Kontakt</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="nav-desktop" aria-label="Hlavná navigácia">
+          <a href="/" data-page="home">Domov</a>
+          <a href="/cennik" data-page="pricing">Cenník</a>
+          <a href="/galeria" data-page="gallery">Galéria</a>
+          <a href="/kontakt" data-page="contact">Kontakt</a>
+        </nav>
+        <a href="#objednavka" class="btn btn-primary btn-sm nav-cta" data-nav-cta>Objednať čistenie</a>
+      </div>
       <button class="menu-toggle" aria-label="Otvoriť menu" aria-expanded="false" aria-controls="mobile-nav">
         <span></span><span></span><span></span>
       </button>
@@ -58,6 +61,7 @@
       <a href="/cennik" data-page="pricing">Cenník</a>
       <a href="/galeria" data-page="gallery">Galéria</a>
       <a href="/kontakt" data-page="contact">Kontakt</a>
+      <a href="#objednavka" class="btn btn-primary btn-block nav-mobile-cta" data-nav-cta>Objednať čistenie</a>
     </nav>
   </header>
 
@@ -66,38 +70,41 @@
       <div class="container">
         <div class="hero-block">
           <div class="hero-visual">
-            <img id="hero-image" src="/images/hero-cleaning.png" alt="Profesionálne tepovanie Spotless Cleaning" width="800" height="1000">
+            <img id="hero-image" src="/images/hero-cleaning.png" alt="Profesionálne tepovanie sedačiek Spotless Cleaning Levice" width="800" height="1000">
           </div>
           <div class="hero-content">
-            <p class="hero-eyebrow">Spotless Cleaning · Levice</p>
-            <h1 id="hero-headline">Tepovanie sedačiek, kobercov, áut a okien v Leviciach — Spotless Cleaning</h1>
-            <p id="hero-subheadline">Tepovanie, čistenie okien a dezinfekcia ozónom v Leviciach a okolí. Doprava v rámci mesta zdarma.</p>
+            <p class="hero-eyebrow">Tepovanie · Čistenie okien · Levice</p>
+            <h1 id="hero-headline">Tepovanie sedačiek, kobercov, áut a okien v Leviciach</h1>
+            <p id="hero-subheadline">Spotless Cleaning — hlboké tepovanie nábytku, profesionálne čistenie okien a dezinfekcia ozónom v Leviciach a okolí.</p>
             <div class="hero-actions">
-              <a href="/cennik" class="btn btn-primary" id="hero-cta">Pozrieť cenník</a>
-              <a href="tel:+421951093781" class="btn btn-outline">Zavolať</a>
+              <a href="#objednavka" class="btn btn-primary btn-lg" id="hero-cta-primary">Nezáväzná objednávka</a>
+              <a href="/cennik" class="btn btn-outline btn-lg" id="hero-cta-secondary">Cenník tepovania</a>
             </div>
+            <ul class="hero-trust" id="hero-trust"></ul>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title">Čo ponúkame</h2>
-        <p class="section-subtitle" data-tagline>Tepovanie, čistenie okien a dezinfekcia ozónom — Levice a okolie</p>
+    <section class="section" data-section="services">
+      <div class="container section-head--center">
+        <p class="section-eyebrow" data-section-eyebrow>Služby v Leviciach</p>
+        <h2 class="section-title" data-section-title>Tepovanie, čistenie okien a ozónovanie</h2>
+        <p class="section-subtitle section-subtitle--center" data-section-subtitle>Kompletné čistiace služby pre domácnosti aj firmy v Leviciach a okolí.</p>
         <div class="features-grid" id="services-grid"></div>
       </div>
     </section>
 
-    <section class="section section--showcase">
+    <section class="section section--showcase" data-section="gallery">
       <div class="container">
         <div class="showcase-panel">
           <div class="showcase-panel__head">
             <div>
-              <h2 class="section-title">Naša práca</h2>
-              <p class="section-subtitle showcase-panel__sub">Fotky a krátke video ukážky z našej práce.</p>
+              <p class="section-eyebrow" data-section-eyebrow>Referencie</p>
+              <h2 class="section-title" data-section-title>Tepovanie pred a po — Levice</h2>
+              <p class="section-subtitle showcase-panel__sub" data-section-subtitle>Reálne výsledky tepovania od Spotless Cleaning.</p>
             </div>
-            <a href="/galeria" class="showcase-panel__cta">
+            <a href="/galeria" class="btn btn-outline btn-sm showcase-panel__cta">
               Celá galéria <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -109,12 +116,13 @@
       </div>
     </section>
 
-    <section class="section" id="objednavka">
-      <div class="container">
-        <h2 class="section-title">Chcete objednať čistenie?</h2>
-        <p class="section-subtitle">Vyplňte formulár — ozveme sa vám do 24 hodín. Alebo nás kontaktujte priamo telefonicky.</p>
+    <section class="section section--order" id="objednavka" data-section="order">
+      <div class="container section-head--center">
+        <p class="section-eyebrow" data-section-eyebrow>Objednávka v Leviciach</p>
+        <h2 class="section-title" data-section-title>Nezáväzná objednávka tepovania</h2>
+        <p class="section-subtitle section-subtitle--center" data-section-subtitle>Vyplňte formulár — ozveme sa vám do 24 hodín.</p>
         <div class="home-contact-wrap">
-          <form class="contact-form" id="contact-form">
+          <form class="contact-form contact-form--prominent" id="contact-form">
             <div class="form-error" role="alert"></div>
             <div class="form-success" role="status">
               Ďakujeme za správu! Ozveme sa vám do 24 hodín.
@@ -139,9 +147,9 @@
             </div>
             <div class="form-group">
               <label for="message">Správa</label>
-              <textarea id="message" name="message" required placeholder="Popíšte, čo potrebujete vyčistiť, adresu a preferovaný termín..."></textarea>
+              <textarea id="message" name="message" required placeholder="Popíšte, čo potrebujete vyčistiť, adresu v Leviciach a preferovaný termín..."></textarea>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Odoslať správu</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Odoslať objednávku</button>
             <p class="form-note" data-response-time>Ozveme sa vám do 24 hodín.</p>
             <p class="form-note">
               Rýchlejšia odpoveď: zavolajte na <a href="tel:+421951093781">+421 951 093 781</a>
@@ -157,9 +165,9 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="/" class="logo" aria-label="Spotless Cleaning — domov">
-        <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
-        <span class="logo-text">SPOTLESS</span>
-      </a>
+            <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
+            <span class="logo-text">SPOTLESS</span>
+          </a>
           <p data-tagline>Tepovanie, čistenie okien a dezinfekcia ozónom — Levice a okolie</p>
         </div>
         <div class="footer-col">

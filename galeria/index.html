@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Galéria Spotless Cleaning — pred a po tepovaní sedačiek, kobercov a áut.">
+  <meta name="description" content="Galéria Spotless Cleaning — fotky pred a po tepovaní sedačiek, kobercov a áut v Leviciach a okolí.">
   <link rel="canonical" href="https://www.spotlesscleaning.sk/galeria">
   <link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
@@ -43,12 +43,15 @@
         <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
         <span class="logo-text">SPOTLESS</span>
       </a>
-      <nav class="nav-desktop" aria-label="Hlavná navigácia">
-        <a href="/" data-page="home">Domov</a>
-        <a href="/cennik" data-page="pricing">Cenník</a>
-        <a href="/galeria" data-page="gallery">Galéria</a>
-        <a href="/kontakt" data-page="contact">Kontakt</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="nav-desktop" aria-label="Hlavná navigácia">
+          <a href="/" data-page="home">Domov</a>
+          <a href="/cennik" data-page="pricing">Cenník</a>
+          <a href="/galeria" data-page="gallery">Galéria</a>
+          <a href="/kontakt" data-page="contact">Kontakt</a>
+        </nav>
+        <a href="/kontakt" class="btn btn-primary btn-sm nav-cta" data-nav-cta>Objednať čistenie</a>
+      </div>
       <button class="menu-toggle" aria-label="Otvoriť menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -58,14 +61,16 @@
       <a href="/cennik" data-page="pricing">Cenník</a>
       <a href="/galeria" data-page="gallery">Galéria</a>
       <a href="/kontakt" data-page="contact">Kontakt</a>
+      <a href="/kontakt" class="btn btn-primary btn-block nav-mobile-cta" data-nav-cta>Objednať čistenie</a>
     </nav>
   </header>
 
   <main>
     <header class="page-header">
       <div class="container">
-        <h1>Galéria tepovania a čistenia — fotky pred a po v Leviciach</h1>
-        <p>Pred a po — reálne výsledky tepovania a čistenia. Kliknite na fotku pre zväčšenie.</p>
+        <p class="section-eyebrow" data-page-eyebrow>Galéria · Spotless Cleaning</p>
+        <h1 data-page-title>Galéria tepovania a čistenia — fotky pred a po v Leviciach</h1>
+        <p data-page-subtitle>Reálne výsledky tepovania sedačiek, kobercov, kresiel a interiérov áut.</p>
       </div>
     </header>
 
@@ -81,12 +86,17 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section--cta">
       <div class="container">
-        <div class="cta-banner">
-          <h2>Chcete rovnaký výsledok u vás doma?</h2>
-          <p>Objednajte tepovanie alebo čistenie okien — ozveme sa s termínom.</p>
-          <a href="/kontakt" class="btn btn-primary">Objednať čistenie</a>
+        <div class="cta-block" data-cta="gallery">
+          <p class="section-eyebrow" data-cta-eyebrow>Tepovanie v Leviciach</p>
+          <h2 data-cta-title>Chcete rovnaký výsledok u vás doma?</h2>
+          <p data-cta-subtitle>Objednajte tepovanie sedačky, koberca, auta alebo čistenie okien — ozveme sa do 24 hodín.</p>
+          <div class="cta-block__actions">
+            <a href="/kontakt" class="btn btn-primary btn-lg" data-cta-primary>Objednať tepovanie</a>
+            <a href="/cennik" class="btn btn-outline btn-lg" data-cta-secondary>Pozrieť cenník</a>
+          </div>
+          <p class="cta-block__note" data-cta-note>Doprava v Leviciach zdarma</p>
         </div>
       </div>
     </section>

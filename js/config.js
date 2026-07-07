@@ -54,6 +54,58 @@ const SITE_CONFIG = {
     },
   },
 
+  pages: {
+    pricing: {
+      eyebrow: "Cenník tepovania · Levice",
+      title: "Cenník tepovania, čistenia okien a ozónovania v Leviciach",
+      subtitle:
+        "Transparentné ceny tepovania sedačiek, kobercov, áut a okien. Doprava v rámci mesta Levice zdarma.",
+      metaDescription:
+        "Cenník tepovania sedačiek, kobercov a áut, čistenie okien a ozónovania v Leviciach. Spotless Cleaning — doprava v meste zdarma.",
+    },
+    gallery: {
+      eyebrow: "Galéria · Spotless Cleaning",
+      title: "Galéria tepovania a čistenia — fotky pred a po v Leviciach",
+      subtitle:
+        "Reálne výsledky tepovania sedačiek, kobercov, kresiel a interiérov áut. Kliknite na fotku pre zväčšenie.",
+      metaDescription:
+        "Galéria Spotless Cleaning — fotky pred a po tepovaní sedačiek, kobercov a áut v Leviciach a okolí.",
+    },
+    contact: {
+      eyebrow: "Kontakt · Levice a okolie",
+      title: "Kontakt a objednávka tepovania — Spotless Cleaning Levice",
+      subtitle:
+        "Zavolajte, napíšte email alebo vyplňte formulár. Ozveme sa do 24 hodín s termínom čistenia.",
+      metaDescription:
+        "Objednávka tepovania v Leviciach — Spotless Cleaning. Telefón +421 951 093 781, email, formulár. Odpoveď do 24 hodín.",
+    },
+  },
+
+  cta: {
+    pricing: {
+      eyebrow: "Individuálna ponuka",
+      title: "Chcete presnú cenu tepovania v Leviciach?",
+      subtitle:
+        "Cena sa môže líšiť podľa miery znečistenia. Zavolajte alebo napíšte — pripravíme ponuku na mieru.",
+      primary: { text: "Nezáväzná objednávka", link: "/kontakt" },
+      secondary: { text: "Zavolať teraz", link: "tel:+421951093781" },
+      note: "Odpoveď do 24 hodín · Doprava v Leviciach zdarma",
+    },
+    gallery: {
+      eyebrow: "Tepovanie v Leviciach",
+      title: "Chcete rovnaký výsledok u vás doma?",
+      subtitle:
+        "Objednajte tepovanie sedačky, koberca, auta alebo čistenie okien — ozveme sa s termínom do 24 hodín.",
+      primary: { text: "Objednať tepovanie", link: "/kontakt" },
+      secondary: { text: "Pozrieť cenník", link: "/cennik" },
+      note: "Doprava v Leviciach zdarma",
+    },
+  },
+
+  navCta: {
+    text: "Objednať čistenie",
+  },
+
   contact: {
     phone: "+421 951 093 781",
     email: "spotlesslv.cleaning@gmail.com",
@@ -201,38 +253,38 @@ const SITE_CONFIG = {
   gallery: [
     {
       src: "/images/pred-po-sedacka.png",
-      alt: "Pred a po tepovaní sedačky",
-      caption: "Tepovanie sedačky — pred a po",
+      alt: "Pred a po tepovaní sedačky v Leviciach — Spotless Cleaning",
+      caption: "Tepovanie sedačky v Leviciach — pred a po",
       wide: true,
     },
     {
       src: "/images/pred-po-sedadlo-1.png",
-      alt: "Pred a po tepovaní sedadla v aute",
-      caption: "Sedadlo v aute — pred a po",
+      alt: "Pred a po tepovaní autosedačky v Leviciach",
+      caption: "Tepovanie sedadla v aute — pred a po",
       wide: true,
     },
     {
       src: "/images/pred-po-sedadlo-2.png",
-      alt: "Pred a po čistení autosedačky",
-      caption: "Autosedačka — pred a po",
+      alt: "Pred a po čistení autosedačky — tepovanie auta Levice",
+      caption: "Autosedačka — pred a po tepovaní",
       wide: true,
     },
     {
       src: "/images/pred-po-kreslo.png",
-      alt: "Pred a po tepovaní kresla",
+      alt: "Pred a po tepovaní kresla v Leviciach",
       caption: "Tepovanie kresla — pred a po",
       wide: true,
     },
     {
       src: "/images/pred-po-auto.png",
-      alt: "Pred a po tepovaní interiéru auta",
-      caption: "Interiér auta — pred a po",
+      alt: "Pred a po tepovaní interiéru auta — Spotless Cleaning Levice",
+      caption: "Interiér auta — pred a po tepovaní",
       wide: true,
     },
     {
       src: "/images/pred-po-kufor.png",
-      alt: "Pred a po čistení kufra auta",
-      caption: "Kufor auta — pred a po",
+      alt: "Pred a po čistení kufra auta v Leviciach",
+      caption: "Kufor auta — pred a po čistení",
       wide: true,
     },
   ],

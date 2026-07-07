@@ -5,7 +5,7 @@ function initSite() {
   applyConfig(config);
   injectLocalBusinessSchema(config);
   initFloatingCall(config.contact);
-  initNavCta();
+  initNavCta(config);
   initNavigation(page);
   initMobileMenu();
   initGallery();
@@ -105,10 +105,15 @@ function trackEvent(eventName, params = {}) {
   }
 }
 
-function initNavCta() {
-  const cta = document.querySelector("[data-nav-cta]");
-  if (!cta) return;
-  cta.href = document.body.dataset.page === "home" ? "#objednavka" : "/kontakt";
+function initNavCta(config = {}) {
+  const navCta = config.navCta || {};
+  const isHome = document.body.dataset.page === "home";
+  const href = isHome ? "#objednavka" : "/kontakt";
+
+  document.querySelectorAll("[data-nav-cta]").forEach((cta) => {
+    cta.href = href;
+    if (navCta.text) cta.textContent = navCta.text;
+  });
 }
 
 function applySectionCopy(config) {
@@ -123,6 +128,49 @@ function applySectionCopy(config) {
     if (eyebrow && copy.eyebrow) eyebrow.textContent = copy.eyebrow;
     if (title && copy.title) title.textContent = copy.title;
     if (subtitle && copy.subtitle) subtitle.textContent = copy.subtitle;
+  });
+}
+
+function renderPageHeader(config, page) {
+  const copy = config.pages?.[page];
+  if (!copy) return;
+
+  const eyebrow = document.querySelector("[data-page-eyebrow]");
+  const title = document.querySelector("[data-page-title]");
+  const subtitle = document.querySelector("[data-page-subtitle]");
+
+  if (eyebrow && copy.eyebrow) eyebrow.textContent = copy.eyebrow;
+  if (title && copy.title) title.textContent = copy.title;
+  if (subtitle && copy.subtitle) subtitle.textContent = copy.subtitle;
+
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc && copy.metaDescription) metaDesc.content = copy.metaDescription;
+}
+
+function renderCtaBlocks(config) {
+  document.querySelectorAll("[data-cta]").forEach((block) => {
+    const copy = config.cta?.[block.dataset.cta];
+    if (!copy) return;
+
+    const eyebrow = block.querySelector("[data-cta-eyebrow]");
+    const title = block.querySelector("[data-cta-title]");
+    const subtitle = block.querySelector("[data-cta-subtitle]");
+    const note = block.querySelector("[data-cta-note]");
+    const primary = block.querySelector("[data-cta-primary]");
+    const secondary = block.querySelector("[data-cta-secondary]");
+
+    if (eyebrow && copy.eyebrow) eyebrow.textContent = copy.eyebrow;
+    if (title && copy.title) title.textContent = copy.title;
+    if (subtitle && copy.subtitle) subtitle.textContent = copy.subtitle;
+    if (note && copy.note) note.textContent = copy.note;
+    if (primary && copy.primary) {
+      primary.textContent = copy.primary.text;
+      primary.href = copy.primary.link;
+    }
+    if (secondary && copy.secondary) {
+      secondary.textContent = copy.secondary.text;
+      secondary.href = copy.secondary.link;
+    }
   });
 }
 
@@ -241,6 +289,10 @@ function initMobileMenu() {
 }
 
 function renderPageContent(config, page) {
+  applySectionCopy(config);
+  renderPageHeader(config, page);
+  renderCtaBlocks(config);
+
   if (page === "home") {
     renderHome(config);
     renderServices(config);
@@ -287,8 +339,6 @@ function renderHome(config) {
   if (trustEl && hero.trustPoints?.length) {
     trustEl.innerHTML = hero.trustPoints.map((point) => `<li>${point}</li>`).join("");
   }
-
-  applySectionCopy(config);
 
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && config.description) metaDesc.content = config.description;
@@ -525,7 +575,7 @@ function initScrollAnimations() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const targets = document.querySelectorAll(
-    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .cta-banner, .pricing-category, .contact-form"
+    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .cta-block, .pricing-category, .contact-form"
   );
 
   targets.forEach((el, i) => {
