@@ -4,6 +4,7 @@ function initSite() {
 
   applyConfig(config);
   injectLocalBusinessSchema(config);
+  injectFaqSchema(config);
   initFloatingCall(config.contact);
   initNavCta(config);
   initNavigation(page);
@@ -230,6 +231,29 @@ function injectLocalBusinessSchema(config) {
   document.head.appendChild(script);
 }
 
+function injectFaqSchema(config) {
+  if (document.getElementById("faq-schema") || !config.faq?.length) return;
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: config.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
+  const script = document.createElement("script");
+  script.id = "faq-schema";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
 function initFloatingCall(contact = {}) {
   if (!contact.phone || document.getElementById("floating-call")) return;
 
@@ -302,6 +326,7 @@ function renderPageContent(config, page) {
     renderGallery(preview, "gallery-preview", config.gallery);
     renderReels(config, "home-reels-track", { linked: false });
     renderContactServices(config);
+    renderFaq(config);
   }
   if (page === "pricing") renderPricing(config);
   if (page === "gallery") {
@@ -343,6 +368,38 @@ function renderHome(config) {
 
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && config.description) metaDesc.content = config.description;
+
+  const seo = config.seo || {};
+  if (seo.homeTitle) document.title = seo.homeTitle;
+  if (seo.homeDescription) {
+    if (metaDesc) metaDesc.content = seo.homeDescription;
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    const twDesc = document.querySelector('meta[name="twitter:description"]');
+    if (ogDesc) ogDesc.content = seo.homeDescription;
+    if (twDesc) twDesc.content = seo.homeDescription;
+  }
+  if (seo.homeTitle) {
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const twTitle = document.querySelector('meta[name="twitter:title"]');
+    if (ogTitle) ogTitle.content = seo.homeTitle;
+    if (twTitle) twTitle.content = seo.homeTitle;
+  }
+}
+
+function renderFaq(config) {
+  const container = document.getElementById("faq-list");
+  if (!container || !config.faq?.length) return;
+
+  container.innerHTML = config.faq
+    .map(
+      (item) => `
+    <details class="faq-item">
+      <summary>${item.question}</summary>
+      <p>${item.answer}</p>
+    </details>
+  `
+    )
+    .join("");
 }
 
 function renderServices(config) {
@@ -576,7 +633,7 @@ function initScrollAnimations() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const targets = document.querySelectorAll(
-    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .cta-block, .pricing-category, .contact-form"
+    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .cta-block, .pricing-category, .contact-form, .seo-content, .faq-item"
   );
 
   targets.forEach((el, i) => {
