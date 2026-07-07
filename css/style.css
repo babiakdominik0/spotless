@@ -348,7 +348,14 @@ ul {
 }
 
 .nav-mobile-cta {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   margin-top: 1rem;
+  padding: 0.9rem 1.75rem !important;
+  text-align: center;
+  border-bottom: none !important;
 }
 
 @media (min-width: 768px) {
