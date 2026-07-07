@@ -5,6 +5,7 @@ function initSite() {
   applyConfig(config);
   injectLocalBusinessSchema(config);
   initFloatingCall(config.contact);
+  initNavCta();
   initNavigation(page);
   initMobileMenu();
   initGallery();
@@ -102,6 +103,27 @@ function trackEvent(eventName, params = {}) {
   if (typeof window.gtag === "function") {
     window.gtag("event", eventName, params);
   }
+}
+
+function initNavCta() {
+  const cta = document.querySelector("[data-nav-cta]");
+  if (!cta) return;
+  cta.href = document.body.dataset.page === "home" ? "#objednavka" : "/kontakt";
+}
+
+function applySectionCopy(config) {
+  document.querySelectorAll("[data-section]").forEach((section) => {
+    const copy = config.sections?.[section.dataset.section];
+    if (!copy) return;
+
+    const eyebrow = section.querySelector("[data-section-eyebrow]");
+    const title = section.querySelector("[data-section-title]");
+    const subtitle = section.querySelector("[data-section-subtitle]");
+
+    if (eyebrow && copy.eyebrow) eyebrow.textContent = copy.eyebrow;
+    if (title && copy.title) title.textContent = copy.title;
+    if (subtitle && copy.subtitle) subtitle.textContent = copy.subtitle;
+  });
 }
 
 function injectLocalBusinessSchema(config) {
@@ -243,19 +265,30 @@ function renderHome(config) {
   const hero = config.hero || {};
   const headline = document.getElementById("hero-headline");
   const subheadline = document.getElementById("hero-subheadline");
-  const cta = document.getElementById("hero-cta");
+  const ctaPrimary = document.getElementById("hero-cta-primary");
+  const ctaSecondary = document.getElementById("hero-cta-secondary");
   const heroImg = document.getElementById("hero-image");
+  const trustEl = document.getElementById("hero-trust");
 
   if (headline) headline.textContent = hero.headline || "";
   if (subheadline) subheadline.textContent = hero.subheadline || "";
-  if (cta) {
-    cta.textContent = hero.ctaText || "Kontakt";
-    cta.href = hero.ctaLink || "/kontakt";
+  if (ctaPrimary && hero.ctaPrimary) {
+    ctaPrimary.textContent = hero.ctaPrimary.text;
+    ctaPrimary.href = hero.ctaPrimary.link || "#objednavka";
+  }
+  if (ctaSecondary && hero.ctaSecondary) {
+    ctaSecondary.textContent = hero.ctaSecondary.text;
+    ctaSecondary.href = hero.ctaSecondary.link || "/cennik";
   }
   if (heroImg && hero.image) {
     heroImg.src = hero.image;
     heroImg.alt = hero.imageAlt || "";
   }
+  if (trustEl && hero.trustPoints?.length) {
+    trustEl.innerHTML = hero.trustPoints.map((point) => `<li>${point}</li>`).join("");
+  }
+
+  applySectionCopy(config);
 
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && config.description) metaDesc.content = config.description;

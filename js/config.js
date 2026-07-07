@@ -2,9 +2,9 @@ const SITE_CONFIG = {
   businessName: "Spotless",
   logoText: "SPOTLESS",
   logo: "/images/logo-spotless.png",
-  tagline: "Tepovanie, čistenie okien a dezinfekcia ozónom — Levice a okolie",
+  tagline: "Profesionálne tepovanie a čistenie v Leviciach a okolí",
   description:
-    "Profesionálne tepovanie sedačiek, kobercov a áut, čistenie okien a dezinfekcia ozónom. Doprava zdarma v Leviciach.",
+    "Spotless Cleaning — tepovanie sedačiek, kobercov a áut, čistenie okien a dezinfekcia ozónom v Leviciach. Doprava v meste zdarma. Transparentný cenník.",
 
   seo: {
     siteUrl: "https://www.spotlesscleaning.sk",
@@ -19,13 +19,39 @@ const SITE_CONFIG = {
 
   hero: {
     headline:
-      "Tepovanie sedačiek, kobercov, áut a okien v Leviciach — Spotless Cleaning",
+      "Tepovanie sedačiek, kobercov, áut a okien v Leviciach",
     subheadline:
-      "Tepovanie, čistenie okien a dezinfekcia ozónom v Leviciach a okolí. Doprava v rámci mesta zdarma. Transparentný cenník — viete, čo zaplatíte.",
-    ctaText: "Pozrieť cenník",
-    ctaLink: "/cennik",
+      "Spotless Cleaning — hlboké tepovanie nábytku, profesionálne čistenie okien a dezinfekcia ozónom v Leviciach a okolí. Doprava v meste zdarma, transparentný cenník.",
+    ctaPrimary: { text: "Nezáväzná objednávka", link: "#objednavka" },
+    ctaSecondary: { text: "Cenník tepovania", link: "/cennik" },
     image: "/images/hero-cleaning.png",
-    imageAlt: "Profesionálne tepovanie matracov Spotless Cleaning",
+    imageAlt: "Profesionálne tepovanie sedačiek a kobercov Spotless Cleaning Levice",
+    trustPoints: [
+      "Doprava v Leviciach zdarma",
+      "Odpoveď do 24 hodín",
+      "Fotky pred a po",
+    ],
+  },
+
+  sections: {
+    services: {
+      eyebrow: "Služby v Leviciach",
+      title: "Tepovanie, čistenie okien a ozónovanie",
+      subtitle:
+        "Kompletné čistiace služby pre domácnosti aj firmy v Leviciach a okolí — sedačky, koberce, autá aj okná.",
+    },
+    gallery: {
+      eyebrow: "Referencie",
+      title: "Tepovanie pred a po — Levice",
+      subtitle:
+        "Reálne výsledky tepovania sedačiek, kobercov a interiérov áut od Spotless Cleaning.",
+    },
+    order: {
+      eyebrow: "Objednávka v Leviciach",
+      title: "Nezáväzná objednávka tepovania",
+      subtitle:
+        "Vyplňte formulár — ozveme sa vám do 24 hodín s termínom a cenovou ponukou. Alebo nás kontaktujte telefonicky.",
+    },
   },
 
   contact: {
@@ -70,23 +96,23 @@ const SITE_CONFIG = {
   services: [
     {
       icon: "🛋️",
-      title: "Tepovanie nábytku",
-      text: "Sedačky, kreslá, postele, koberce — hlboké čistenie s viditeľným výsledkom.",
+      title: "Tepovanie sedačiek a kobercov",
+      text: "Hlboké tepovanie sedačiek, kresiel, postelí a kobercov v Leviciach — viditeľný výsledok pred a po.",
     },
     {
       icon: "🚗",
-      title: "Tepovanie áut",
-      text: "Sedadlá aj kompletné čistenie interiéru hatchbacku, sedanu alebo SUV.",
+      title: "Tepovanie interiéru auta",
+      text: "Čistenie sedadiel a kompletný interiér hatchbacku, sedanu alebo SUV. Tepovanie auta v Leviciach a okolí.",
     },
     {
       icon: "🪟",
-      title: "Čistenie okien",
-      text: "Okná, balkónové dvere, francúzske okná aj žalúzie — bez šmúh.",
+      title: "Čistenie okien Levice",
+      text: "Okná, balkónové dvere, francúzske okná a žalúzie — bez šmúh, pre domácnosti aj firmy.",
     },
     {
       icon: "🌿",
-      title: "Ozónovanie",
-      text: "Dezinfekcia priestorov ozónom. Možnosť prenájmu stroja od 15 €.",
+      title: "Ozónovanie a dezinfekcia",
+      text: "Dezinfekcia priestorov ozónom v Leviciach. Prenájom ozónového stroja od 15 €.",
     },
   ],
 
