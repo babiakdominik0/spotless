@@ -61,6 +61,11 @@ const SITE_CONFIG = {
       answer:
         "Áno, umývanie okien a čistenie okien realizujeme aj počas chladnejších mesiacov, pokiaľ teploty neklesnú výrazne pod bod mrazu, kedy by čistiace prípravky na skle zamŕzali.",
     },
+    {
+      question: "Prečo si vybrať Spotless Cleaning?",
+      answer:
+        "Sme lokálny špecialista s osobným prístupom. Používame profesionálnu techniku a ekologické prostriedky bezpečné pre deti aj domácich miláčikov. Pôsobíme v Leviciach, Nitre a okolí — doprava v rámci mesta Levice je zdarma.",
+    },
   ],
 
   sections: {
