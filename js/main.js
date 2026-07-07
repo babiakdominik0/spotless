@@ -351,7 +351,11 @@ function renderHome(config) {
   if (headline) headline.textContent = hero.headline || "";
   if (subheadline) subheadline.textContent = hero.subheadline || "";
   if (ctaPrimary && hero.ctaPrimary) {
-    ctaPrimary.textContent = hero.ctaPrimary.text;
+    const desktopText = hero.ctaPrimary.text || "";
+    const mobileText = hero.ctaPrimary.textMobile || desktopText;
+    ctaPrimary.innerHTML =
+      `<span class="btn-label btn-label--desktop">${desktopText}</span>` +
+      `<span class="btn-label btn-label--mobile">${mobileText}</span>`;
     ctaPrimary.href = hero.ctaPrimary.link || "#objednavka";
   }
   if (ctaSecondary && hero.ctaSecondary) {

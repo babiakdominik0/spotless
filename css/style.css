@@ -366,6 +366,24 @@ ul {
   border-width: 2px;
 }
 
+.btn-label--desktop {
+  display: none;
+}
+
+.btn-label--mobile {
+  display: inline;
+}
+
+@media (min-width: 768px) {
+  .btn-label--desktop {
+    display: inline;
+  }
+
+  .btn-label--mobile {
+    display: none;
+  }
+}
+
 /* ===== Header CTA ===== */
 .header-actions {
   display: none;

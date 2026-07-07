@@ -25,7 +25,11 @@ const SITE_CONFIG = {
     headline: "Profesionálne tepovanie a umývanie okien",
     subheadline:
       "Hĺbkové čistenie sedačiek, kobercov a áut pre domácnosti aj firmy. Pôsobíme v Leviciach, Nitre a okolí — doprava v Leviciach zdarma.",
-    ctaPrimary: { text: "Chcem nezáväznú kalkuláciu", link: "#objednavka" },
+    ctaPrimary: {
+      text: "Chcem nezáväznú kalkuláciu",
+      textMobile: "Nezáväzná kalkulácia",
+      link: "#objednavka",
+    },
     ctaSecondary: { text: "Cenník služieb", link: "/cennik" },
     image: "/images/hero-cleaning.png",
     imageAlt: "Profesionálne tepovanie sedačiek a umývanie okien — Spotless Cleaning",
