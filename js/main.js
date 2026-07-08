@@ -485,49 +485,52 @@ function initServiceCards() {
   const cards = grid.querySelectorAll(".feature-card--expandable");
   const prefersHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  cards.forEach((card) => {
+  const clearExpanded = () => {
+    grid.classList.remove("features-grid--expanded");
+    cards.forEach((c) => {
+      c.classList.remove("is-expanded");
+      c.setAttribute("aria-expanded", "false");
+      const d = c.querySelector(".feature-card__detail");
+      if (d) d.setAttribute("aria-hidden", "true");
+    });
+  };
+
+  const setExpanded = (card) => {
+    clearExpanded();
+    if (!card) return;
+    grid.classList.add("features-grid--expanded");
+    card.classList.add("is-expanded");
+    card.setAttribute("aria-expanded", "true");
     const detail = card.querySelector(".feature-card__detail");
+    if (detail) detail.setAttribute("aria-hidden", "false");
+  };
+
+  cards.forEach((card) => {
     card.setAttribute("tabindex", "0");
     card.setAttribute("role", "button");
     card.setAttribute("aria-expanded", "false");
+    const detail = card.querySelector(".feature-card__detail");
     if (detail) detail.setAttribute("aria-hidden", "true");
 
-    const setExpanded = (expanded) => {
-      card.setAttribute("aria-expanded", String(expanded));
-      if (detail) detail.setAttribute("aria-hidden", String(!expanded));
-    };
-
     if (prefersHover) {
-      card.addEventListener("mouseenter", () => setExpanded(true));
-      card.addEventListener("mouseleave", () => setExpanded(false));
+      card.addEventListener("mouseenter", () => setExpanded(card));
       return;
     }
 
     card.addEventListener("click", (e) => {
       if (e.target.closest("a")) return;
-
       const isExpanded = card.classList.contains("is-expanded");
-      cards.forEach((c) => {
-        c.classList.remove("is-expanded");
-        const d = c.querySelector(".feature-card__detail");
-        c.setAttribute("aria-expanded", "false");
-        if (d) d.setAttribute("aria-hidden", "true");
-      });
-
-      if (!isExpanded) {
-        card.classList.add("is-expanded");
-        setExpanded(true);
-      }
+      clearExpanded();
+      if (!isExpanded) setExpanded(card);
     });
   });
 
-  if (!prefersHover) {
+  if (prefersHover) {
+    grid.addEventListener("mouseleave", clearExpanded);
+  } else {
     document.addEventListener("click", (e) => {
       if (grid.contains(e.target)) return;
-      cards.forEach((c) => {
-        c.classList.remove("is-expanded");
-        c.setAttribute("aria-expanded", "false");
-      });
+      clearExpanded();
     });
   }
 }
