@@ -606,7 +606,7 @@ function ensureReelVideoSource(video) {
   video.load();
 }
 
-function initReelMobilePoster(card, video, start, delayMs = 0) {
+function initReelPoster(card, video, start, delayMs = 0) {
   const preparePoster = () => {
     if (card.dataset.posterReady === "true") return;
     card.dataset.posterReady = "true";
@@ -731,6 +731,13 @@ function initReelTouchScrollPlay(card, playPreview, clearPreview) {
 function initReelsHover(track) {
   const cards = track.querySelectorAll(".reel-card");
   const touchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  const reelControllers = [];
+
+  const stopOtherReels = (activeCard) => {
+    reelControllers.forEach(({ card, clearPreview }) => {
+      if (card !== activeCard) clearPreview();
+    });
+  };
 
   cards.forEach((card, index) => {
     const video = card.querySelector("video");
@@ -769,6 +776,7 @@ function initReelsHover(track) {
     };
 
     const playPreview = () => {
+      stopOtherReels(card);
       ensureReelVideoSource(video);
       clearPreview();
       card.classList.add("is-playing");
@@ -801,8 +809,11 @@ function initReelsHover(track) {
       }
     });
 
+    reelControllers.push({ card, clearPreview, playPreview });
+
+    initReelPoster(card, video, start, index * 180);
+
     if (touchDevice) {
-      initReelMobilePoster(card, video, start, index * 180);
       initReelTouchScrollPlay(card, playPreview, clearPreview);
       return;
     }
