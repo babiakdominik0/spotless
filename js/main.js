@@ -468,9 +468,10 @@ function renderServices(config) {
         <div class="feature-icon" aria-hidden="true">${s.icon}</div>
         <h3>${s.title}</h3>
         <p class="feature-card__teaser">${s.text}</p>
+        <span class="feature-card__more">Čítať ďalej</span>
       </div>
-      <div class="feature-card__detail">
-        <div class="feature-card__detail-inner">${s.detail || ""}</div>
+      <div class="feature-card__detail" aria-hidden="true">
+        <div class="feature-card__detail-inner">${s.detail || ""}<button type="button" class="feature-card__less">Čítať menej</button></div>
       </div>
     </article>
   `
@@ -483,7 +484,16 @@ function initServiceCards() {
   if (!grid?.classList.contains("features-grid--expandable")) return;
 
   const cards = grid.querySelectorAll(".feature-card--expandable");
-  const prefersHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const desktopQuery = window.matchMedia("(min-width: 640px)");
+
+  const syncGridLayout = () => {
+    const expanded = grid.querySelector(".feature-card--expandable.is-expanded");
+    if (expanded && desktopQuery.matches) {
+      grid.classList.add("features-grid--expanded");
+    } else {
+      grid.classList.remove("features-grid--expanded");
+    }
+  };
 
   const clearExpanded = () => {
     grid.classList.remove("features-grid--expanded");
@@ -498,11 +508,16 @@ function initServiceCards() {
   const setExpanded = (card) => {
     clearExpanded();
     if (!card) return;
-    grid.classList.add("features-grid--expanded");
     card.classList.add("is-expanded");
     card.setAttribute("aria-expanded", "true");
     const detail = card.querySelector(".feature-card__detail");
     if (detail) detail.setAttribute("aria-hidden", "false");
+    syncGridLayout();
+    if (!desktopQuery.matches) {
+      requestAnimationFrame(() => {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }
   };
 
   cards.forEach((card) => {
@@ -512,27 +527,36 @@ function initServiceCards() {
     const detail = card.querySelector(".feature-card__detail");
     if (detail) detail.setAttribute("aria-hidden", "true");
 
-    if (prefersHover) {
-      card.addEventListener("mouseenter", () => setExpanded(card));
-      return;
-    }
-
     card.addEventListener("click", (e) => {
       if (e.target.closest("a")) return;
+      if (e.target.closest(".feature-card__less")) return;
+
+      const isExpanded = card.classList.contains("is-expanded");
+      clearExpanded();
+      if (!isExpanded) setExpanded(card);
+    });
+
+    card.querySelector(".feature-card__less")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      clearExpanded();
+    });
+
+    card.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      if (e.target.closest("a") || e.target.closest(".feature-card__less")) return;
+      e.preventDefault();
       const isExpanded = card.classList.contains("is-expanded");
       clearExpanded();
       if (!isExpanded) setExpanded(card);
     });
   });
 
-  if (prefersHover) {
-    grid.addEventListener("mouseleave", clearExpanded);
-  } else {
-    document.addEventListener("click", (e) => {
-      if (grid.contains(e.target)) return;
-      clearExpanded();
-    });
-  }
+  document.addEventListener("click", (e) => {
+    if (grid.contains(e.target)) return;
+    clearExpanded();
+  });
+
+  desktopQuery.addEventListener("change", syncGridLayout);
 }
 
 function renderPricing(config) {
