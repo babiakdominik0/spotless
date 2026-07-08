@@ -486,38 +486,59 @@ function initServiceCards() {
   const cards = grid.querySelectorAll(".feature-card--expandable");
   const desktopQuery = window.matchMedia("(min-width: 640px)");
 
-  const syncGridLayout = () => {
-    const expanded = grid.querySelector(".feature-card--expandable.is-expanded");
-    if (expanded && desktopQuery.matches) {
-      grid.classList.add("features-grid--expanded");
-    } else {
-      grid.classList.remove("features-grid--expanded");
+  const collapseCard = (card, instant = false) => {
+    if (instant) card.classList.add("is-instant");
+    card.classList.remove("is-expanded");
+    card.setAttribute("aria-expanded", "false");
+    const detail = card.querySelector(".feature-card__detail");
+    if (detail) detail.setAttribute("aria-hidden", "true");
+    if (instant) {
+      requestAnimationFrame(() => card.classList.remove("is-instant"));
     }
   };
 
   const clearExpanded = () => {
-    grid.classList.remove("features-grid--expanded");
-    cards.forEach((c) => {
-      c.classList.remove("is-expanded");
-      c.setAttribute("aria-expanded", "false");
-      const d = c.querySelector(".feature-card__detail");
-      if (d) d.setAttribute("aria-hidden", "true");
-    });
+    grid.classList.remove("features-grid--expanded", "is-switching");
+    cards.forEach((c) => collapseCard(c, true));
   };
 
-  const setExpanded = (card) => {
-    clearExpanded();
-    if (!card) return;
+  const expandCard = (card, { instant = false } = {}) => {
     card.classList.add("is-expanded");
     card.setAttribute("aria-expanded", "true");
     const detail = card.querySelector(".feature-card__detail");
     if (detail) detail.setAttribute("aria-hidden", "false");
-    syncGridLayout();
+    if (desktopQuery.matches) {
+      grid.classList.add("features-grid--expanded");
+    }
+    if (instant) {
+      card.classList.add("is-instant");
+      requestAnimationFrame(() => card.classList.remove("is-instant"));
+    }
     if (!desktopQuery.matches) {
       requestAnimationFrame(() => {
         card.scrollIntoView({ behavior: "smooth", block: "nearest" });
       });
     }
+  };
+
+  const activateCard = (card) => {
+    const current = grid.querySelector(".feature-card--expandable.is-expanded");
+
+    if (current === card) {
+      clearExpanded();
+      return;
+    }
+
+    if (desktopQuery.matches && current) {
+      grid.classList.add("is-switching", "features-grid--expanded");
+      collapseCard(current, true);
+      expandCard(card, { instant: true });
+      requestAnimationFrame(() => grid.classList.remove("is-switching"));
+      return;
+    }
+
+    clearExpanded();
+    expandCard(card);
   };
 
   cards.forEach((card) => {
@@ -530,10 +551,7 @@ function initServiceCards() {
     card.addEventListener("click", (e) => {
       if (e.target.closest("a")) return;
       if (e.target.closest(".feature-card__less")) return;
-
-      const isExpanded = card.classList.contains("is-expanded");
-      clearExpanded();
-      if (!isExpanded) setExpanded(card);
+      activateCard(card);
     });
 
     card.querySelector(".feature-card__less")?.addEventListener("click", (e) => {
@@ -545,9 +563,7 @@ function initServiceCards() {
       if (e.key !== "Enter" && e.key !== " ") return;
       if (e.target.closest("a") || e.target.closest(".feature-card__less")) return;
       e.preventDefault();
-      const isExpanded = card.classList.contains("is-expanded");
-      clearExpanded();
-      if (!isExpanded) setExpanded(card);
+      activateCard(card);
     });
   });
 
@@ -556,7 +572,15 @@ function initServiceCards() {
     clearExpanded();
   });
 
-  desktopQuery.addEventListener("change", syncGridLayout);
+  desktopQuery.addEventListener("change", () => {
+    const expanded = grid.querySelector(".feature-card--expandable.is-expanded");
+    if (!expanded) return;
+    if (desktopQuery.matches) {
+      grid.classList.add("features-grid--expanded");
+    } else {
+      grid.classList.remove("features-grid--expanded", "is-switching");
+    }
+  });
 }
 
 function renderPricing(config) {
