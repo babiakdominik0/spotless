@@ -748,13 +748,14 @@ ul {
 
 /* Expandable service cards — click only, no hover layout */
 .features-grid--expandable {
-  align-items: start;
+  align-items: stretch;
 }
 
 .feature-card--expandable {
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  height: 100%;
   transition: box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
@@ -783,6 +784,12 @@ ul {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  flex: 1;
+  height: 100%;
+}
+
+.feature-card--expandable:not(.is-expanded) .feature-card__head {
+  min-height: 100%;
 }
 
 .feature-card--expandable .feature-icon {
@@ -799,12 +806,21 @@ ul {
   -webkit-line-clamp: 3;
   overflow: hidden;
   width: 100%;
+  min-height: calc(3 * 1.55em);
+}
+
+@media (min-width: 1024px) {
+  .features-grid--expandable:not(.features-grid--expanded) .feature-card--expandable h3 {
+    min-height: 2.65em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .feature-card__more,
 .feature-card__less {
   display: inline-block;
-  margin-top: 0.75rem;
   font-size: 0.9rem;
   color: var(--color-text);
   text-decoration: underline;
@@ -814,6 +830,11 @@ ul {
   padding: 0;
   cursor: pointer;
   font-family: inherit;
+}
+
+.feature-card__more {
+  margin-top: auto;
+  padding-top: 0.75rem;
 }
 
 .feature-card__less {
@@ -924,8 +945,17 @@ ul {
     display: grid;
     grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
     gap: 2rem 3rem;
-    align-items: start;
+    align-items: center;
     padding: 2rem 2.25rem;
+    height: auto;
+  }
+
+  .features-grid--expandable.features-grid--expanded .feature-card--expandable:not(.is-expanded) {
+    height: auto;
+  }
+
+  .features-grid--expandable.features-grid--expanded .feature-card--expandable:not(.is-expanded) h3 {
+    min-height: 2.65em;
   }
 
   .features-grid--expandable.features-grid--expanded .feature-card--expandable:not(.is-expanded) .feature-card__teaser,
@@ -939,7 +969,15 @@ ul {
 
   .features-grid--expandable.features-grid--expanded .feature-card--expandable.is-expanded .feature-card__head {
     position: relative;
-    padding-top: 0.25rem;
+    align-self: center;
+    height: auto;
+    min-height: 0;
+    flex: none;
+  }
+
+  .features-grid--expandable.features-grid--expanded .feature-card--expandable.is-expanded .feature-card__head h3 {
+    min-height: 0;
+    display: block;
   }
 
   .features-grid--expandable.features-grid--expanded .feature-card--expandable.is-expanded .feature-card__head::after {
