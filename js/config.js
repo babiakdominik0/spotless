@@ -73,7 +73,7 @@ const SITE_CONFIG = {
       eyebrow: "Naše služby",
       title: "Tepovanie, umývanie okien a čistenie kože",
       subtitle:
-        "Kompletné čistiace služby pre domácnosti aj firmy — sedačky, koberce, autá aj okná.",
+        "Hľadáte spoľahlivé tepovanie a čistenie okien v Leviciach, Nitre alebo okolí? Spotless Cleaning prináša čistiace služby pre váš domov aj vozidlo — naším cieľom je vrátiť vašim veciam sviežosť a predĺžiť ich životnosť.",
     },
     gallery: {
       eyebrow: "Referencie",
@@ -185,21 +185,35 @@ const SITE_CONFIG = {
       icon: "🛋️",
       title: "Tepovanie sedačiek a kobercov",
       text: "Hlboké tepovanie sedačiek, kresiel, postelí a kobercov — viditeľný výsledok pred a po.",
+      detail: `<p>Ponúkame komplexné služby zamerané na <a href="/galeria">tepovanie sedačiek</a> a tepovanie gaučov, ktoré zbavia nábytok prachu, škvŕn a nepríjemných pachov. Pracujeme s certifikovanými prípravkami a prídeme priamo k vám — prehľad cien nájdete v <a href="/cennik">cenníku</a>.</p>
+        <h4>Hĺbkové tepovanie sedačiek a gaučov</h4>
+        <p>Čistenie sedačiek odstraňuje nečistoty a alergény z hĺbky vlákien. Prídeme s profesionálnym vybavením priamo k vám domov.</p>
+        <h4>Tepovanie kobercov</h4>
+        <p>Hĺbkové čistenie kobercov oživí ich vzhľad. Pre zákazníkov v Leviciach je doprava pri tepovaní kobercov zdarma.</p>
+        <h4>Čistenie kože v domácnosti</h4>
+        <p>Kožený nábytok vyžaduje špeciálnu starostlivosť. Vykonávame šetrné čistenie s následnou impregnáciou. <a href="/cennik">Viac v cenníku služieb.</a></p>`,
     },
     {
       icon: "🚗",
       title: "Tepovanie interiéru auta",
       text: "Čistenie sedadiel a kompletný interiér hatchbacku, sedanu alebo SUV. Kufor aj koberce.",
+      detail: `<p>Trávite v aute veľa času? Doprajte interiéru hĺbkové tepovanie vrátane kufra a koberčekov. Tepovanie autosedačiek odstráni škvrny od jedla, nápojov aj potu.</p>
+        <h4>Čistenie kože v aute</h4>
+        <p>Šetrné čistenie kožených sedačiek s impregnáciou, ktorá chráni materiál pred popraskaním. Ceny nájdete transparentne v <a href="/cennik">cenníku</a> — bez skrytých poplatkov.</p>`,
     },
     {
       icon: "🪟",
       title: "Umývanie okien",
       text: "Okná, balkónové dvere, francúzske okná a žalúzie — bez šmúh, pre domácnosti aj firmy.",
+      detail: `<p>Špinavé okná bránia prirodzenému svetlu. Zabezpečujeme <a href="/kontakt">umývanie okien v domácnosti</a> aj vo firmách — sklá, rámy, kľučky a parapety, bez šmúh.</p>
+        <p>Realizujeme aj počas chladnejších mesiacov, pokiaľ teploty neklesnú pod bod mrazu.</p>`,
     },
     {
       icon: "🌿",
       title: "Ozónovanie a dezinfekcia",
       text: "Dezinfekcia priestorov ozónom. Možnosť prenájmu ozónového stroja od 15 €.",
+      detail: `<p>Dezinfekcia priestorov ozónom je účinná proti pachom, baktériám a alergénom — vhodná pre autá, byty aj kancelárie. Odstraňuje zápach po fajčení, zvieratách či vlhkosti.</p>
+        <p>Okrem profesionálneho ozónovania ponúkame aj prenájom ozónového prístroja — ceny od 15 € nájdete v <a href="/cennik">cenníku</a>.</p>`,
     },
   ],
 
