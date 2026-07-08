@@ -602,14 +602,137 @@ function ensureReelVideoSource(video) {
   source.src = src;
   source.type = "video/mp4";
   video.appendChild(source);
+  video.preload = "metadata";
   video.load();
+}
+
+function initReelMobilePoster(card, video, start, delayMs = 0) {
+  const preparePoster = () => {
+    if (card.dataset.posterReady === "true") return;
+    card.dataset.posterReady = "true";
+    ensureReelVideoSource(video);
+
+    const showPosterFrame = () => {
+      try {
+        video.currentTime = start;
+      } catch {
+        /* ignore seek before frame is ready */
+      }
+      video.pause();
+      card.classList.add("is-ready");
+    };
+
+    if (video.readyState >= 2) {
+      showPosterFrame();
+      return;
+    }
+
+    video.addEventListener("loadeddata", showPosterFrame, { once: true });
+  };
+
+  const schedulePoster = () => {
+    if (delayMs > 0) {
+      window.setTimeout(preparePoster, delayMs);
+    } else {
+      preparePoster();
+    }
+  };
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            schedulePoster();
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin: "80px", threshold: 0.15 }
+    );
+    observer.observe(card);
+    return;
+  }
+
+  schedulePoster();
+}
+
+function initReelTouchScrollPlay(card, playPreview, clearPreview) {
+  const SCROLL_THRESHOLD = 12;
+  let startX = 0;
+  let startY = 0;
+  let tracking = false;
+  let scrollTriggered = false;
+  let blockLinkUntil = 0;
+
+  card.addEventListener(
+    "touchstart",
+    (event) => {
+      if (event.touches.length !== 1) return;
+      tracking = true;
+      scrollTriggered = false;
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  card.addEventListener(
+    "touchmove",
+    (event) => {
+      if (!tracking || scrollTriggered || card.classList.contains("is-playing")) return;
+
+      const dx = event.touches[0].clientX - startX;
+      const dy = event.touches[0].clientY - startY;
+      if (Math.hypot(dx, dy) < SCROLL_THRESHOLD) return;
+
+      scrollTriggered = true;
+      tracking = false;
+      blockLinkUntil = Date.now() + 450;
+      playPreview();
+    },
+    { passive: true }
+  );
+
+  const resetTouch = () => {
+    tracking = false;
+  };
+
+  card.addEventListener("touchend", resetTouch, { passive: true });
+  card.addEventListener("touchcancel", resetTouch, { passive: true });
+
+  if (card.tagName === "A") {
+    card.addEventListener(
+      "click",
+      (event) => {
+        if (Date.now() < blockLinkUntil || card.classList.contains("is-playing")) {
+          event.preventDefault();
+        }
+      },
+      true
+    );
+  }
+
+  if ("IntersectionObserver" in window) {
+    const pauseObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting && card.classList.contains("is-playing")) {
+            clearPreview();
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    pauseObserver.observe(card);
+  }
 }
 
 function initReelsHover(track) {
   const cards = track.querySelectorAll(".reel-card");
   const touchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
-  cards.forEach((card) => {
+  cards.forEach((card, index) => {
     const video = card.querySelector("video");
     if (!video) return;
 
@@ -665,30 +788,22 @@ function initReelsHover(track) {
       video.addEventListener("timeupdate", timeUpdateHandler);
       video.addEventListener("ended", endedHandler);
 
-      if (video.readyState >= 1) {
+      if (video.readyState >= 2) {
         loopPreview();
       } else {
-        video.addEventListener("loadedmetadata", loopPreview, { once: true });
+        video.addEventListener("loadeddata", loopPreview, { once: true });
       }
     };
 
     video.addEventListener("loadedmetadata", () => {
-      if (video.dataset.loaded === "true") {
+      if (video.dataset.loaded === "true" && !card.classList.contains("is-playing")) {
         video.currentTime = start;
       }
     });
 
     if (touchDevice) {
-      card.addEventListener(
-        "click",
-        (event) => {
-          if (card.classList.contains("is-playing")) return;
-          if (!card.classList.contains("reel-card--home")) return;
-          event.preventDefault();
-          playPreview();
-        },
-        { passive: false }
-      );
+      initReelMobilePoster(card, video, start, index * 180);
+      initReelTouchScrollPlay(card, playPreview, clearPreview);
       return;
     }
 
