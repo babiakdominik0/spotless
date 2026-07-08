@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.spotlesscleaning.sk/sitemap.xml
+
+# LLM-friendly site summary
+# https://www.spotlesscleaning.sk/llms.txt

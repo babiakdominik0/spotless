@@ -22,6 +22,24 @@ function buildPictureMarkup(src, { alt = "", loading, fetchPriority, className, 
   return `<picture>${webp ? `<source srcset="${webp}" type="image/webp">` : ""}<img ${imgAttrs}></picture>`;
 }
 
+function hasStaticContent(container) {
+  return container?.dataset.staticContent === "true" || container.children.length > 0;
+}
+
+function bindGalleryItems(container, lightboxItems) {
+  container.querySelectorAll(".gallery-item").forEach((item) => {
+    const open = () =>
+      openLightbox(lightboxItems, parseInt(item.dataset.index, 10));
+    item.addEventListener("click", open);
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
 function initSite() {
   const config = typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {};
   const page = document.body.dataset.page;
@@ -396,7 +414,7 @@ function renderHome(config) {
     heroImg.src = hero.image;
     heroImg.alt = hero.imageAlt || "";
   }
-  if (trustEl && hero.trustPoints?.length) {
+  if (trustEl && hero.trustPoints?.length && !hasStaticContent(trustEl)) {
     trustEl.innerHTML = hero.trustPoints.map((point) => `<li>${point}</li>`).join("");
   }
 
@@ -422,7 +440,7 @@ function renderHome(config) {
 
 function renderFaq(config) {
   const container = document.getElementById("faq-list");
-  if (!container || !config.faq?.length) return;
+  if (!container || !config.faq?.length || hasStaticContent(container)) return;
 
   container.innerHTML = config.faq
     .map(
@@ -438,7 +456,7 @@ function renderFaq(config) {
 
 function renderServices(config) {
   const container = document.getElementById("services-grid");
-  if (!container || !config.services) return;
+  if (!container || !config.services || hasStaticContent(container)) return;
 
   container.innerHTML = config.services
     .map(
@@ -455,7 +473,7 @@ function renderServices(config) {
 
 function renderPricing(config) {
   const container = document.getElementById("pricing-grid");
-  if (!container) return;
+  if (!container || hasStaticContent(container)) return;
 
   if (config.pricingCategories) {
     container.className = "pricing-tables";
@@ -509,7 +527,7 @@ function renderPricing(config) {
 
 function renderContactServices(config) {
   const select = document.getElementById("service");
-  if (!select || !config.contactServices) return;
+  if (!select || !config.contactServices || select.options.length > 1) return;
 
   select.innerHTML =
     `<option value="">Vyberte službu</option>` +
@@ -525,6 +543,12 @@ function renderGallery(items, containerId, lightboxSource) {
   const isPreview = containerId === "gallery-preview";
   const isPage = containerId === "gallery-full";
   const lightboxItems = lightboxSource || items;
+
+  if (hasStaticContent(container)) {
+    if (isPage) container.className = "gallery-grid gallery-grid--page";
+    bindGalleryItems(container, lightboxItems);
+    return;
+  }
 
   if (isPage) container.className = "gallery-grid gallery-grid--page";
 
@@ -545,17 +569,7 @@ function renderGallery(items, containerId, lightboxSource) {
     })
     .join("");
 
-  container.querySelectorAll(".gallery-item").forEach((item) => {
-    const open = () =>
-      openLightbox(lightboxItems, parseInt(item.dataset.index, 10));
-    item.addEventListener("click", open);
-    item.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        open();
-      }
-    });
-  });
+  bindGalleryItems(container, lightboxItems);
 }
 
 function renderReels(config, containerId = "reels-track", options = { linked: true }) {
@@ -613,6 +627,8 @@ function initReelPoster(card, video, start, delayMs = 0) {
     ensureReelVideoSource(video);
 
     const showPosterFrame = () => {
+      if (card.classList.contains("is-playing")) return;
+
       try {
         video.currentTime = start;
       } catch {
@@ -756,7 +772,7 @@ function initReelsHover(track) {
       return stop;
     };
 
-    const clearPreview = () => {
+    const resetPreviewHandlers = () => {
       if (timeUpdateHandler) {
         video.removeEventListener("timeupdate", timeUpdateHandler);
         timeUpdateHandler = null;
@@ -765,20 +781,78 @@ function initReelsHover(track) {
         video.removeEventListener("ended", endedHandler);
         endedHandler = null;
       }
+    };
+
+    const clearPreview = () => {
+      resetPreviewHandlers();
       video.pause();
-      video.currentTime = start;
+      try {
+        video.currentTime = start;
+      } catch {
+        /* ignore seek before frame is ready */
+      }
       card.classList.remove("is-playing");
     };
 
+    const beginPlayback = () => {
+      if (!card.classList.contains("is-playing")) return;
+
+      video.muted = true;
+      video.playsInline = true;
+
+      const playFromStart = () => {
+        if (!card.classList.contains("is-playing")) return;
+        video.play().catch(() => clearPreview());
+      };
+
+      const seekToStart = () => {
+        if (Math.abs(video.currentTime - start) < 0.05) {
+          playFromStart();
+          return;
+        }
+
+        const onSeeked = () => {
+          video.removeEventListener("seeked", onSeeked);
+          playFromStart();
+        };
+
+        video.addEventListener("seeked", onSeeked);
+        try {
+          video.currentTime = start;
+        } catch {
+          video.removeEventListener("seeked", onSeeked);
+          playFromStart();
+          return;
+        }
+
+        if (!video.seeking) {
+          video.removeEventListener("seeked", onSeeked);
+          playFromStart();
+        }
+      };
+
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        seekToStart();
+      } else {
+        video.addEventListener(
+          "loadeddata",
+          () => {
+            if (card.classList.contains("is-playing")) seekToStart();
+          },
+          { once: true }
+        );
+      }
+    };
+
     const loopPreview = () => {
-      video.currentTime = start;
-      video.play().catch(() => clearPreview());
+      beginPlayback();
     };
 
     const playPreview = () => {
       stopOtherReels(card);
       ensureReelVideoSource(video);
-      clearPreview();
+      video.preload = "auto";
+      resetPreviewHandlers();
       card.classList.add("is-playing");
 
       timeUpdateHandler = () => {
@@ -796,10 +870,16 @@ function initReelsHover(track) {
       video.addEventListener("timeupdate", timeUpdateHandler);
       video.addEventListener("ended", endedHandler);
 
-      if (video.readyState >= 2) {
-        loopPreview();
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        beginPlayback();
       } else {
-        video.addEventListener("loadeddata", loopPreview, { once: true });
+        video.addEventListener(
+          "canplay",
+          () => {
+            if (card.classList.contains("is-playing")) beginPlayback();
+          },
+          { once: true }
+        );
       }
     };
 
