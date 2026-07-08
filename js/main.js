@@ -1,3 +1,27 @@
+function toWebpSrc(src) {
+  if (!src || !/\.(png|jpe?g)$/i.test(src)) return null;
+  return src.replace(/\.(png|jpe?g)$/i, ".webp");
+}
+
+function buildPictureMarkup(src, { alt = "", loading, fetchPriority, className, width, height } = {}) {
+  const webp = toWebpSrc(src);
+  const imgAttrs = [
+    `src="${src}"`,
+    alt !== undefined ? `alt="${alt}"` : "",
+    loading ? `loading="${loading}"` : "",
+    fetchPriority ? `fetchpriority="${fetchPriority}"` : "",
+    className ? `class="${className}"` : "",
+    width ? `width="${width}"` : "",
+    height ? `height="${height}"` : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  if (!webp) return `<img ${imgAttrs}>`;
+
+  return `<picture>${webp ? `<source srcset="${webp}" type="image/webp">` : ""}<img ${imgAttrs}></picture>`;
+}
+
 function initSite() {
   const config = typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {};
   const page = document.body.dataset.page;
@@ -363,6 +387,12 @@ function renderHome(config) {
     ctaSecondary.href = hero.ctaSecondary.link || "/cennik";
   }
   if (heroImg && hero.image) {
+    const picture = heroImg.closest("picture");
+    const webp = toWebpSrc(hero.image);
+    if (picture && webp) {
+      const source = picture.querySelector("source");
+      if (source) source.srcset = webp;
+    }
     heroImg.src = hero.image;
     heroImg.alt = hero.imageAlt || "";
   }
@@ -507,7 +537,7 @@ function renderGallery(items, containerId, lightboxSource) {
       return `
     <figure class="gallery-item${wideClass}" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-item__frame">
-        <img src="${item.src}" alt="${item.alt}" loading="lazy">
+        ${buildPictureMarkup(item.src, { alt: item.alt, loading: "lazy" })}
       </div>
       ${item.caption ? `<figcaption class="gallery-caption">${item.caption}</figcaption>` : ""}
     </figure>
@@ -535,6 +565,8 @@ function renderReels(config, containerId = "reels-track", options = { linked: tr
 
   const duration = reelsConfig.previewDuration || 2;
   const linked = options.linked !== false;
+  const videoMarkup = (videoSrc) =>
+    `<video class="reel-card__video" muted playsinline preload="none" data-src="${videoSrc}" aria-hidden="true"></video>`;
 
   track.innerHTML = reelsConfig.items
     .map((reel) => {
@@ -542,9 +574,7 @@ function renderReels(config, containerId = "reels-track", options = { linked: tr
       const inner = `
         <span class="reel-card__ring">
           <span class="reel-card__inner">
-            <video class="reel-card__video" muted playsinline preload="metadata" aria-hidden="true">
-              <source src="${reel.video}" type="video/mp4">
-            </video>
+            ${videoMarkup(reel.video)}
           </span>
         </span>`;
 
@@ -553,9 +583,7 @@ function renderReels(config, containerId = "reels-track", options = { linked: tr
       }
       return `<div class="reel-card reel-card--home" ${dataAttrs} role="group">
           <span class="reel-card__inner">
-            <video class="reel-card__video" muted playsinline preload="metadata" aria-hidden="true">
-              <source src="${reel.video}" type="video/mp4">
-            </video>
+            ${videoMarkup(reel.video)}
           </span>
         </div>`;
     })
@@ -564,8 +592,22 @@ function renderReels(config, containerId = "reels-track", options = { linked: tr
   initReelsHover(track);
 }
 
+function ensureReelVideoSource(video) {
+  if (!video || video.dataset.loaded === "true") return;
+  const src = video.dataset.src;
+  if (!src) return;
+
+  video.dataset.loaded = "true";
+  const source = document.createElement("source");
+  source.src = src;
+  source.type = "video/mp4";
+  video.appendChild(source);
+  video.load();
+}
+
 function initReelsHover(track) {
   const cards = track.querySelectorAll(".reel-card");
+  const touchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
   cards.forEach((card) => {
     const video = card.querySelector("video");
@@ -604,6 +646,7 @@ function initReelsHover(track) {
     };
 
     const playPreview = () => {
+      ensureReelVideoSource(video);
       clearPreview();
       card.classList.add("is-playing");
 
@@ -621,12 +664,33 @@ function initReelsHover(track) {
 
       video.addEventListener("timeupdate", timeUpdateHandler);
       video.addEventListener("ended", endedHandler);
-      loopPreview();
+
+      if (video.readyState >= 1) {
+        loopPreview();
+      } else {
+        video.addEventListener("loadedmetadata", loopPreview, { once: true });
+      }
     };
 
     video.addEventListener("loadedmetadata", () => {
-      video.currentTime = start;
+      if (video.dataset.loaded === "true") {
+        video.currentTime = start;
+      }
     });
+
+    if (touchDevice) {
+      card.addEventListener(
+        "click",
+        (event) => {
+          if (card.classList.contains("is-playing")) return;
+          if (!card.classList.contains("reel-card--home")) return;
+          event.preventDefault();
+          playPreview();
+        },
+        { passive: false }
+      );
+      return;
+    }
 
     card.addEventListener("mouseenter", playPreview);
     card.addEventListener("mouseleave", clearPreview);

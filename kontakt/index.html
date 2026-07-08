@@ -26,16 +26,9 @@
   <title>%BUSINESS% — Kontakt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/config.js"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y9ZVSKEVJ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag("js", new Date());
-    gtag("config", "G-7Y9ZVSKEVJ");
-  </script>
 </head>
 <body data-page="contact">
 
@@ -188,6 +181,20 @@
     </div>
   </footer>
 
-  <script src="/js/main.js"></script>
+  <script defer src="/js/config.js"></script>
+  <script defer src="/js/main.js"></script>
+  <script>
+    window.addEventListener("load", function () {
+      var s = document.createElement("script");
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-7Y9ZVSKEVJ";
+      s.async = true;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-7Y9ZVSKEVJ");
+    });
+  </script>
 </body>
 </html>

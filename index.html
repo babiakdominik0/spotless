@@ -24,18 +24,12 @@
   <meta name="twitter:description" content="Hĺbkové tepovanie sedačiek, kobercov, áut a umývanie okien v Leviciach a Nitre. Vráťte čistotu svojmu domovu či vozidlu.">
   <meta name="twitter:image" content="https://www.spotlesscleaning.sk/images/og-image.jpg">
   <title>Tepovanie a umývanie okien Levice &amp; Nitra | Spotless</title>
+  <link rel="preload" href="/images/hero-cleaning.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/config.js"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y9ZVSKEVJ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag("js", new Date());
-    gtag("config", "G-7Y9ZVSKEVJ");
-  </script>
 </head>
 <body data-page="home">
 
@@ -72,7 +66,10 @@
       <div class="container">
         <div class="hero-block">
           <div class="hero-visual">
-            <img id="hero-image" src="/images/hero-cleaning.png" alt="Profesionálne tepovanie sedačiek — Spotless Cleaning" width="800" height="1000">
+            <picture>
+              <source srcset="/images/hero-cleaning.webp" type="image/webp">
+              <img id="hero-image" src="/images/hero-cleaning.png" alt="Profesionálne tepovanie sedačiek — Spotless Cleaning" width="800" height="1000" fetchpriority="high">
+            </picture>
           </div>
           <div class="hero-content">
             <p class="hero-eyebrow">Spotless Cleaning</p>
@@ -124,15 +121,24 @@
 
         <div class="seo-images">
           <figure class="seo-images__item">
-            <img src="/images/tepovanie-sedaciek-levice-pred-a-po.png" alt="Tepovanie sedačky — porovnanie pred a po čistení" loading="lazy" width="400" height="400">
+            <picture>
+              <source srcset="/images/tepovanie-sedaciek-levice-pred-a-po.webp" type="image/webp">
+              <img src="/images/tepovanie-sedaciek-levice-pred-a-po.png" alt="Tepovanie sedačky — porovnanie pred a po čistení" loading="lazy" width="400" height="400">
+            </picture>
             <figcaption>Tepovanie sedačky — pred a po</figcaption>
           </figure>
           <figure class="seo-images__item">
-            <img src="/images/tepovanie-autosedaciek-nitra.png" alt="Tepovanie autosedačiek — pred a po čistení" loading="lazy" width="400" height="400">
+            <picture>
+              <source srcset="/images/tepovanie-autosedaciek-nitra.webp" type="image/webp">
+              <img src="/images/tepovanie-autosedaciek-nitra.png" alt="Tepovanie autosedačiek — pred a po čistení" loading="lazy" width="400" height="400">
+            </picture>
             <figcaption>Tepovanie autosedačiek — pred a po</figcaption>
           </figure>
           <figure class="seo-images__item">
-            <img src="/images/umyvanie-okien-v-domacnosti.png" alt="Umývanie okien v domácnosti — čistenie skiel a rámov" loading="lazy" width="400" height="400">
+            <picture>
+              <source srcset="/images/umyvanie-okien-v-domacnosti.webp" type="image/webp">
+              <img src="/images/umyvanie-okien-v-domacnosti.png" alt="Umývanie okien v domácnosti — čistenie skiel a rámov" loading="lazy" width="400" height="400">
+            </picture>
             <figcaption>Umývanie okien v domácnosti</figcaption>
           </figure>
         </div>
@@ -250,6 +256,20 @@
     <p id="lightbox-caption" class="lightbox-caption"></p>
   </div>
 
-  <script src="/js/main.js"></script>
+  <script defer src="/js/config.js"></script>
+  <script defer src="/js/main.js"></script>
+  <script>
+    window.addEventListener("load", function () {
+      var s = document.createElement("script");
+      s.src = "https://www.googletagmanager.com/gtag/js?id=G-7Y9ZVSKEVJ";
+      s.async = true;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag("js", new Date());
+      gtag("config", "G-7Y9ZVSKEVJ");
+    });
+  </script>
 </body>
 </html>
