@@ -16,6 +16,14 @@
   background-color: rgba(0, 0, 0, 0.65) !important;
 }
 
+html.spotless-cookiebot-waiting #CybotCookiebotDialog,
+html.spotless-cookiebot-waiting #CybotCookiebotDialogBodyUnderlay {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .CybotCookiebotScrollContainer,
 #CybotCookiebotDialogTabContent {
   background-color: #141414 !important;
@@ -89,14 +97,9 @@
   transition: 0.25s !important;
 }
 
-.CybotCookiebotDialogBodyButton:hover,
-#CybotCookiebotDialogBodyButtonDecline:hover,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll:hover,
-#CybotCookiebotDialogBodyLevelButtonCustomize:hover,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection:hover {
-  background: #0a0a0a !important;
-  border-color: #ffffff !important;
-  color: #ffffff !important;
+#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection,
+#CybotCookiebotDialogBodyLevelButtonCustomize {
+  border-color: #f5f5f5 !important;
 }
 
 #CybotCookiebotDialogBodyButtonAccept,
@@ -109,11 +112,28 @@
   transition: 0.25s !important;
 }
 
+#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection:hover,
+#CybotCookiebotDialogBodyLevelButtonCustomize:hover {
+  background: #f5f5f5 !important;
+  background-color: #f5f5f5 !important;
+  border-color: #f5f5f5 !important;
+  color: #0a0a0a !important;
+}
+
+#CybotCookiebotDialogBodyButtonDecline:hover,
+#CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll:hover {
+  background: #9a9a9a !important;
+  background-color: #9a9a9a !important;
+  border-color: #9a9a9a !important;
+  color: #0a0a0a !important;
+}
+
 #CybotCookiebotDialogBodyButtonAccept:hover,
 #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll:hover {
-  background: #0a0a0a !important;
-  border-color: #2dd68a !important;
-  color: #2dd68a !important;
+  background: #22b573 !important;
+  background-color: #22b573 !important;
+  border-color: #22b573 !important;
+  color: #ffffff !important;
   filter: none !important;
 }
 
