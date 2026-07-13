@@ -1,64 +1,179 @@
+/* ===== Spotless dark theme — Cookiebot ===== */
+
 /* Kontajner */
-#CybotCookiebotDialog {
+#CybotCookiebotDialog,
+#CybotCookiebotDialog.CybotCookiebotDialogActive {
   border-radius: 18px !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18) !important;
-  border: none !important;
-  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55) !important;
+  border: 1px solid #2a2a2a !important;
+  overflow: hidden !important;
   font-family: inherit !important;
+  background-color: #141414 !important;
+  color: #f5f5f5 !important;
 }
 
-/* Hlavička */
+#CybotCookiebotDialogBodyUnderlay {
+  background-color: rgba(0, 0, 0, 0.65) !important;
+}
+
+.CybotCookiebotScrollContainer,
+#CybotCookiebotDialogTabContent {
+  background-color: #141414 !important;
+  color: #f5f5f5 !important;
+}
+
+/* Hlavička & záložky */
 #CybotCookiebotDialogHeader {
-  padding: 28px 32px 10px;
+  padding: 28px 32px 10px !important;
+  border-color: #2a2a2a !important;
+}
+
+#CybotCookiebotDialogNav {
+  border-color: #2a2a2a !important;
+}
+
+#CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink {
+  color: #9a9a9a !important;
+}
+
+#CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink.CybotCookiebotDialogActive {
+  color: #f5f5f5 !important;
+  border-bottom-color: #ffffff !important;
 }
 
 /* Text */
-#CybotCookiebotDialogBodyContent,
-#CybotCookiebotDialogBodyContentText {
-  font-size: 15px;
-  line-height: 1.7;
+#CybotCookiebotDialogBodyContentTitle,
+.CybotCookiebotDialogBodyContentHeading,
+.CybotCookiebotDialogBodyLevelButtonDescription {
+  color: #f5f5f5 !important;
 }
 
-/* Tlačidlá */
+#CybotCookiebotDialogBodyContent,
+#CybotCookiebotDialogBodyContentText,
+.CybotCookiebotDialogBodyContentText {
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  color: #b0b0b0 !important;
+}
+
+#CybotCookiebotDialogBodyContentText a,
+.CybotCookiebotDialogBodyContentText a {
+  color: #f5f5f5 !important;
+}
+
+/* Prepínače */
+#CybotCookiebotDialog .CybotCookiebotDialogBodyLevelButtonSlider {
+  background-color: #2a2a2a !important;
+}
+
+#CybotCookiebotDialog input:checked + .CybotCookiebotDialogBodyLevelButtonSlider {
+  background-color: #22b573 !important;
+}
+
+#CybotCookiebotDialog .CybotCookiebotDialogBodyLevelButtonSlider:before,
+#CybotCookiebotDialog input:checked + .CybotCookiebotDialogBodyLevelButtonSlider:before {
+  background-color: #0a0a0a !important;
+}
+
+/* Tlačidlá — outline, čierne vnútro */
+.CybotCookiebotDialogBodyButton,
+#CybotCookiebotDialogBodyButtonDecline,
+#CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll,
+#CybotCookiebotDialogBodyLevelButtonCustomize,
+#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection {
+  background: #0a0a0a !important;
+  background-color: #0a0a0a !important;
+  color: #f5f5f5 !important;
+  border: 2px solid #9a9a9a !important;
+  border-radius: 12px !important;
+  transition: 0.25s !important;
+}
+
+.CybotCookiebotDialogBodyButton:hover,
+#CybotCookiebotDialogBodyButtonDecline:hover,
+#CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll:hover,
+#CybotCookiebotDialogBodyLevelButtonCustomize:hover,
+#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection:hover {
+  background: #0a0a0a !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
 #CybotCookiebotDialogBodyButtonAccept,
 #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll {
-  background: #22b573 !important;
+  background: #0a0a0a !important;
+  background-color: #0a0a0a !important;
+  color: #22b573 !important;
+  border: 2px solid #22b573 !important;
   border-radius: 12px !important;
-  border: none !important;
-  transition: 0.25s;
+  transition: 0.25s !important;
 }
 
-#CybotCookiebotDialogBodyButtonAccept:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
+#CybotCookiebotDialogBodyButtonAccept:hover,
+#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll:hover {
+  background: #0a0a0a !important;
+  border-color: #2dd68a !important;
+  color: #2dd68a !important;
+  filter: none !important;
 }
 
-#CybotCookiebotDialogBodyButtonDecline,
-#CybotCookiebotDialogBodyLevelButtonCustomize {
-  border-radius: 12px !important;
+@media (min-width: 769px) {
+  #CybotCookiebotDialogBodyButtonAccept:hover,
+  #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll:hover {
+    transform: translateY(-1px) !important;
+  }
 }
 
+/* Detaily */
+.CybotCookiebotDialogDetailBodyContentCookieTypeIntro,
+.CybotCookiebotDialogDetailBodyContentCookieContainerHeader {
+  color: #b0b0b0 !important;
+}
+
+.CybotCookiebotDialogDetailBodyContentCookieTypeTitle,
+.CybotCookiebotDialogDetailBodyContentCookieContainerHeaderTitle {
+  color: #f5f5f5 !important;
+}
+
+.CybotCookiebotDialogDetailBodyContentCookieContainerHeader,
+.CybotCookiebotDialogDetailBodyContentCookieContainer {
+  border-color: #2a2a2a !important;
+  background-color: #141414 !important;
+}
+
+/* ===== Mobile ===== */
 @media (max-width: 768px) {
-  #CybotCookiebotDialog {
-    width: calc(100% - 24px) !important;
-    max-width: none !important;
-    left: 12px !important;
-    right: 12px !important;
+  #CybotCookiebotDialog,
+  #CybotCookiebotDialog.CybotCookiebotDialogActive {
+    position: fixed !important;
+    top: auto !important;
     bottom: 12px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 0 !important;
     border-radius: 18px !important;
   }
 
-  #CybotCookiebotDialogBodyButtons {
+  #CybotCookiebotDialogBodyButtons,
+  #CybotCookiebotDialogBodyButtonsWrapper {
     display: flex !important;
     flex-direction: column !important;
     gap: 10px !important;
   }
 
-  #CybotCookiebotDialogBodyButtons button {
+  #CybotCookiebotDialogBodyButtons button,
+  #CybotCookiebotDialogBodyButtonsWrapper button {
     width: 100% !important;
   }
 
   #CybotCookiebotDialogBodyContent {
     padding: 20px !important;
+  }
+
+  #CybotCookiebotDialogHeader {
+    padding: 20px 20px 8px !important;
   }
 }
