@@ -164,17 +164,23 @@ html.spotless-cookiebot-waiting #CybotCookiebotDialogBodyUnderlay {
 /* ===== Mobile ===== */
 @media (max-width: 768px) {
   #CybotCookiebotDialog,
-  #CybotCookiebotDialog.CybotCookiebotDialogActive {
-    position: fixed !important;
+  #CybotCookiebotDialogPoweredByContainer,
+  #CybotCookiebotDialogContentWrapper,
+  .CybotCookiebotDialogContentWrapper {
     width: 92% !important;
     max-width: 420px !important;
+    margin: auto !important;
+  }
+
+  #CybotCookiebotDialog,
+  #CybotCookiebotDialog.CybotCookiebotDialogActive {
+    position: fixed !important;
     left: 50% !important;
     right: auto !important;
     top: 50% !important;
     bottom: auto !important;
     transform: translate(-50%, -50%) !important;
     max-height: 80vh !important;
-    margin: 0 !important;
     border-radius: 20px !important;
     overflow: hidden !important;
   }
