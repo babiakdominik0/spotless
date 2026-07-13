@@ -119,3 +119,63 @@
   background-color: #141414 !important;
   border-color: #2a2a2a !important;
 }
+
+/* ===== Veľkosť — desktop ===== */
+@media (min-width: 769px) {
+  #CybotCookiebotDialog,
+  #CybotCookiebotDialog.CybotCookiebotDialogActive {
+    max-width: 460px !important;
+    scale: 0.9;
+  }
+}
+
+/* ===== Mobile — bottom sheet, nie celá obrazovka ===== */
+@media (max-width: 768px) {
+  #CybotCookiebotDialogBodyUnderlay {
+    background-color: rgba(0, 0, 0, 0.45) !important;
+  }
+
+  #CybotCookiebotDialog,
+  #CybotCookiebotDialog.CybotCookiebotDialogActive {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 72vh !important;
+    height: auto !important;
+    border-radius: 18px 18px 0 0 !important;
+    transform-origin: bottom center !important;
+    overflow: hidden !important;
+    scale: 1 !important;
+  }
+
+  #CybotCookiebotDialog.spotless-cookiebot-dismiss {
+    opacity: 0.98;
+  }
+
+  .spotless-cookiebot-handle {
+    display: block;
+    width: 42px;
+    height: 4px;
+    margin: 10px auto 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.35);
+    flex-shrink: 0;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  #CybotCookiebotDialogBody,
+  .CybotCookiebotScrollContainer {
+    max-height: calc(72vh - 140px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #CybotCookiebotDialogBodyButtonsWrapper {
+    padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  }
+}
