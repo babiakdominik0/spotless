@@ -368,6 +368,7 @@ function renderPageContent(config, page) {
     const preview = config.gallery?.slice(0, previewCount);
     renderGallery(preview, "gallery-preview", config.gallery);
     renderReels(config, "home-reels-track", { linked: false });
+    renderReviews(config);
     renderContactServices(config);
     renderFaq(config);
   }
@@ -581,6 +582,62 @@ function initServiceCards() {
       grid.classList.remove("features-grid--expanded", "is-switching");
     }
   });
+}
+
+function renderStarString(rating = 5) {
+  const value = Math.max(0, Math.min(5, Math.round(Number(rating) || 0)));
+  return "★".repeat(value) + "☆".repeat(5 - value);
+}
+
+function renderReviews(config) {
+  const grid = document.getElementById("reviews-grid");
+  if (!grid || !config.reviews?.length) return;
+
+  const gb = config.googleBusiness || {};
+  const summary = document.querySelector(".reviews-summary");
+  if (summary) {
+    const score = summary.querySelector(".reviews-summary__score");
+    const meta = summary.querySelector(".reviews-summary__meta");
+    const stars = summary.querySelector(".review-stars--lg");
+    const link = summary.querySelector(".reviews-summary__link");
+    const rating = gb.rating ?? 5;
+    const count = gb.reviewCount ?? config.reviews.length;
+
+    if (score) score.textContent = rating.toFixed(1).replace(".", ",");
+    if (meta) {
+      const label = count === 1 ? "recenzia" : count >= 2 && count <= 4 ? "recenzie" : "recenzií";
+      meta.textContent = `${count} ${label} na Google`;
+    }
+    if (stars) {
+      stars.textContent = renderStarString(rating);
+      stars.setAttribute("aria-label", `Hodnotenie ${rating} z 5`);
+    }
+    if (link && gb.url) link.href = gb.url;
+  }
+
+  if (hasStaticContent(grid)) return;
+
+  grid.innerHTML = config.reviews
+    .map((review) => {
+      const rating = review.rating ?? 5;
+      const stars = renderStarString(rating);
+      const textBlock = review.text
+        ? `<blockquote class="review-card__text">„${review.text}“</blockquote>`
+        : "";
+      const ratingOnlyClass = review.text ? "" : " review-card--rating-only";
+
+      return `
+    <article class="review-card${ratingOnlyClass}">
+      <div class="review-stars" aria-label="${rating} z 5 hviezdičiek">${stars}</div>
+      ${textBlock}
+      <footer class="review-card__footer">
+        <cite class="review-card__author">${review.author}</cite>
+        <span class="review-card__source">Google</span>
+      </footer>
+    </article>
+  `;
+    })
+    .join("");
 }
 
 function renderPricing(config) {
@@ -1019,7 +1076,7 @@ function initScrollAnimations() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const targets = document.querySelectorAll(
-    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .cta-block, .pricing-category, .contact-form, .seo-content, .faq-item"
+    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .review-card, .cta-block, .pricing-category, .contact-form, .seo-content, .faq-item"
   );
 
   targets.forEach((el, i) => {

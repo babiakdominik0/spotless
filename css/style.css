@@ -1770,6 +1770,133 @@ ul {
   padding-top: 2rem;
 }
 
+/* ===== Google reviews ===== */
+.reviews-section {
+  padding-top: 1rem;
+}
+
+.reviews-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 2rem;
+}
+
+.reviews-summary__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.reviews-summary__score {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.reviews-summary__meta {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.reviews-summary__link {
+  margin-top: 0.35rem;
+  font-size: 0.92rem;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.reviews-summary__link:hover {
+  color: var(--color-accent);
+}
+
+.reviews-grid {
+  display: grid;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+@media (min-width: 640px) {
+  .reviews-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .reviews-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, #171717 0%, #141414 100%);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.review-stars {
+  color: #f4b942;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin-bottom: 0.85rem;
+}
+
+.review-stars--lg {
+  font-size: 1.15rem;
+  margin-bottom: 0;
+}
+
+.review-card__text {
+  flex: 1;
+  margin: 0 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  font-style: normal;
+}
+
+.review-card--rating-only {
+  justify-content: center;
+}
+
+.review-card--rating-only .review-stars {
+  margin-bottom: 1rem;
+}
+
+.review-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.review-card__author {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+
+.review-card__source {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
 .faq-list {
   max-width: 720px;
   margin: 0 auto;
