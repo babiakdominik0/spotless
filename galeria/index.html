@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/js/cookiebot-config.js"></script>
+  <script src="/js/cookiebot-init.js"></script>
   <meta name="description" content="Galéria Spotless Cleaning — fotky pred a po tepovaní sedačiek, kobercov a áut v Leviciach a okolí.">
   <link rel="canonical" href="https://www.spotlesscleaning.sk/galeria">
   <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM site summary">
@@ -30,6 +32,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cookiebot-custom.css">
+  <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-7Y9ZVSKEVJ"></script>
+  <script type="text/plain" data-cookieconsent="statistics" src="/js/gtag-init.js"></script>
 </head>
 <body data-page="gallery">
 
@@ -174,18 +179,5 @@
 
   <script defer src="/js/config.js"></script>
   <script defer src="/js/main.js"></script>
-  <script>
-    window.addEventListener("load", function () {
-      var s = document.createElement("script");
-      s.src = "https://www.googletagmanager.com/gtag/js?id=G-7Y9ZVSKEVJ";
-      s.async = true;
-      document.head.appendChild(s);
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      window.gtag = gtag;
-      gtag("js", new Date());
-      gtag("config", "G-7Y9ZVSKEVJ");
-    });
-  </script>
 </body>
 </html>
