@@ -1,242 +1,64 @@
-/**
- * Spotless Cleaning — Cookiebot dark theme
- *
- * Drží natívny Cookiebot layout (Swift / multilevel).
- * Mení len farby tak, aby ladili s tmavým webom Spotless.
- *
- * V Cookiebot Admin odporúčame:
- * - Theme: Dark
- * - Button style: Solid
- */
-
-/* Overlay */
-#CybotCookiebotDialogBodyUnderlay {
-  background-color: rgba(0, 0, 0, 0.65) !important;
+/* Kontajner */
+#CybotCookiebotDialog {
+  border-radius: 18px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18) !important;
+  border: none !important;
+  overflow: hidden;
+  font-family: inherit !important;
 }
 
-/* Hlavný dialog */
-#CybotCookiebotDialog,
-#CybotCookiebotDialog.CybotCookiebotDialogActive,
-.CybotCookiebotScrollContainer,
-#CybotCookiebotDialogTabContent {
-  font-family: "DM Sans", system-ui, -apple-system, sans-serif !important;
-  background-color: #141414 !important;
-  color: #f5f5f5 !important;
+/* Hlavička */
+#CybotCookiebotDialogHeader {
+  padding: 28px 32px 10px;
 }
 
-#CybotCookiebotDialogHeader,
-#CybotCookiebotDialogNav {
-  border-color: #2a2a2a !important;
+/* Text */
+#CybotCookiebotDialogBodyContent,
+#CybotCookiebotDialogBodyContentText {
+  font-size: 15px;
+  line-height: 1.7;
 }
 
-/* Záložky — biely accent namiesto modrej */
-#CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink {
-  color: #9a9a9a !important;
-}
-
-#CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink.CybotCookiebotDialogActive {
-  color: #f5f5f5 !important;
-  border-bottom-color: #ffffff !important;
-}
-
-/* Texty */
-#CybotCookiebotDialogBodyContentTitle,
-.CybotCookiebotDialogBodyContentHeading,
-.CybotCookiebotDialogDetailBodyContentCookieTypeTitle,
-.CybotCookiebotDialogDetailBodyContentCookieContainerHeaderTitle,
-.CybotCookiebotDialogBodyLevelButtonDescription {
-  color: #f5f5f5 !important;
-}
-
-#CybotCookiebotDialogBodyContentText,
-.CybotCookiebotDialogBodyContentText,
-.CybotCookiebotDialogDetailBodyContentCookieTypeIntro,
-.CybotCookiebotDialogDetailBodyContentCookieContainerHeader,
-.CybotCookiebotDialogDetailBodyContentIABv2Intro {
-  color: #b0b0b0 !important;
-}
-
-#CybotCookiebotDialogBodyContentText a,
-.CybotCookiebotDialogBodyContentText a {
-  color: #f5f5f5 !important;
-}
-
-/* Prepínače kategórií */
-#CybotCookiebotDialog .CybotCookiebotDialogBodyLevelButtonSlider {
-  background-color: #2a2a2a !important;
-}
-
-#CybotCookiebotDialog input:checked + .CybotCookiebotDialogBodyLevelButtonSlider {
-  background-color: #ffffff !important;
-}
-
-#CybotCookiebotDialog .CybotCookiebotDialogBodyLevelButtonSlider:before,
-#CybotCookiebotDialog input:checked + .CybotCookiebotDialogBodyLevelButtonSlider:before {
-  background-color: #0a0a0a !important;
-}
-
-/* Tlačidlá — sekundárne (Cookiebot solid, biela namiesto modrej) */
-.CybotCookiebotDialogBodyButton,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection,
-#CybotCookiebotDialogBodyButtonDecline,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll,
-#CybotCookiebotDialogBodyLevelButtonAccept,
-#CybotCookiebotDialogBodyLevelButtonCustomize {
-  background-color: #ffffff !important;
-  color: #0a0a0a !important;
-  border-color: #ffffff !important;
-}
-
-.CybotCookiebotDialogBodyButton:hover,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection:hover,
-#CybotCookiebotDialogBodyButtonDecline:hover,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll:hover,
-#CybotCookiebotDialogBodyLevelButtonAccept:hover,
-#CybotCookiebotDialogBodyLevelButtonCustomize:hover {
-  background-color: #e8e8e8 !important;
-  border-color: #e8e8e8 !important;
-  color: #0a0a0a !important;
-}
-
-/* Primárne tlačidlá — zelené */
+/* Tlačidlá */
 #CybotCookiebotDialogBodyButtonAccept,
 #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll {
   background: #22b573 !important;
-  background-color: #22b573 !important;
-  color: #ffffff !important;
+  border-radius: 12px !important;
   border: none !important;
-  border-color: transparent !important;
+  transition: 0.25s;
 }
 
-#CybotCookiebotDialogBodyButtonAccept:hover,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll:hover {
-  background: #22b573 !important;
-  background-color: #22b573 !important;
-  color: #ffffff !important;
-  border-color: transparent !important;
+#CybotCookiebotDialogBodyButtonAccept:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
-/* Detaily cookies */
-.CybotCookiebotDialogDetailBodyContentCookieContainerHeader,
-.CybotCookiebotDialogDetailBodyContentCookieContainer {
-  border-color: #2a2a2a !important;
-  background-color: #141414 !important;
+#CybotCookiebotDialogBodyButtonDecline,
+#CybotCookiebotDialogBodyLevelButtonCustomize {
+  border-radius: 12px !important;
 }
 
-#CybotCookiebotDialog .CybotCookiebotDialogDetailBodyContentCookieContainerButton,
-#CybotCookiebotDialog .CybotCookiebotDialogDetailBodyContentCookieLink {
-  color: #f5f5f5 !important;
-}
-
-/* Plávajúce cookie tlačidlo */
-#CookiebotWidget:not(.CookiebotWidget-inactive) {
-  background-color: #141414 !important;
-  border-color: #2a2a2a !important;
-}
-
-/* ===== Desktop ===== */
-@media (min-width: 769px) {
-  #CybotCookiebotDialog,
-  #CybotCookiebotDialog.CybotCookiebotDialogActive {
-    border-radius: 18px !important;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18) !important;
-    border: none !important;
-    overflow: hidden !important;
-    font-family: inherit !important;
-    max-width: 460px !important;
-  }
-
-  #CybotCookiebotDialogHeader {
-    padding: 28px 32px 10px !important;
-  }
-
-  #CybotCookiebotDialogBodyContent,
-  #CybotCookiebotDialogBodyContentText {
-    font-size: 15px !important;
-    line-height: 1.7 !important;
-  }
-
-  #CybotCookiebotDialogBodyButtonAccept,
-  #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll {
-    border-radius: 12px !important;
-    transition: 0.25s !important;
-  }
-
-  #CybotCookiebotDialogBodyButtonAccept:hover,
-  #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll:hover {
-    transform: translateY(-1px) !important;
-    filter: brightness(1.05) !important;
-    background-color: #22b573 !important;
-  }
-
-  #CybotCookiebotDialogBodyButtonDecline,
-  #CybotCookiebotDialogBodyLevelButtonCustomize,
-  #CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll,
-  #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection {
-    border-radius: 12px !important;
-  }
-}
-
-/* ===== Mobile ===== */
 @media (max-width: 768px) {
-  #CybotCookiebotDialogBodyUnderlay {
-    background-color: rgba(0, 0, 0, 0.45) !important;
-  }
-
-  #CybotCookiebotDialog,
-  #CybotCookiebotDialog.CybotCookiebotDialogActive {
+  #CybotCookiebotDialog {
     width: calc(100% - 24px) !important;
     max-width: none !important;
     left: 12px !important;
     right: 12px !important;
     bottom: 12px !important;
-    top: auto !important;
-    margin: 0 !important;
     border-radius: 18px !important;
-    max-height: 72vh !important;
-    height: auto !important;
-    overflow: hidden !important;
-    transform-origin: bottom center !important;
-    scale: 1 !important;
   }
 
-  #CybotCookiebotDialog.spotless-cookiebot-dismiss {
-    opacity: 0.98;
+  #CybotCookiebotDialogBodyButtons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
   }
 
-  .spotless-cookiebot-handle {
-    display: block;
-    width: 42px;
-    height: 4px;
-    margin: 10px auto 6px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.35);
-    flex-shrink: 0;
-    touch-action: none;
-    cursor: grab;
-  }
-
-  #CybotCookiebotDialogBody,
-  .CybotCookiebotScrollContainer {
-    max-height: calc(72vh - 140px) !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
+  #CybotCookiebotDialogBodyButtons button {
+    width: 100% !important;
   }
 
   #CybotCookiebotDialogBodyContent {
     padding: 20px !important;
-  }
-
-  #CybotCookiebotDialogBodyButtons,
-  #CybotCookiebotDialogBodyButtonsWrapper {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
-  }
-
-  #CybotCookiebotDialogBodyButtons button,
-  #CybotCookiebotDialogBodyButtonsWrapper button {
-    width: 100% !important;
   }
 }
