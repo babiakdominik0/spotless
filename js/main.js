@@ -26,8 +26,12 @@ function hasStaticContent(container) {
   return container?.dataset.staticContent === "true" || container.children.length > 0;
 }
 
+function getGalleryLightboxItems(items) {
+  return (items || []).filter((item) => item.src && !item.compare);
+}
+
 function bindGalleryItems(container, lightboxItems) {
-  container.querySelectorAll(".gallery-item").forEach((item) => {
+  container.querySelectorAll(".gallery-item:not(.gallery-item--compare)").forEach((item) => {
     const open = () =>
       openLightbox(lightboxItems, parseInt(item.dataset.index, 10));
     item.addEventListener("click", open);
@@ -40,13 +44,489 @@ function bindGalleryItems(container, lightboxItems) {
   });
 }
 
+function compareAlignStyle(align) {
+  const x = align?.x ?? 50;
+  const y = align?.y ?? 50;
+  const scale = align?.scale ?? 1;
+  return `--ba-img-x: ${x}%; --ba-img-y: ${y}%; --ba-img-scale: ${scale};`;
+}
+
+function buildCompareMarkup(item, { preview = false } = {}) {
+  const c = item.compare;
+  if (!c?.before || !c?.after) return "";
+
+  const beforeStyle = compareAlignStyle(c.beforeAlign);
+  const afterStyle = compareAlignStyle(c.afterAlign);
+  const previewClass = preview ? " ba-compare--preview" : "";
+
+  return `
+    <div class="ba-compare${previewClass}" data-ba-compare style="--ba-pos: 50%">
+      <div class="ba-compare__layer ba-compare__layer--after">
+        <img class="ba-compare__after" src="${c.after}" alt="${c.afterAlt || ""}" loading="lazy" decoding="async" style="${afterStyle}">
+      </div>
+      <div class="ba-compare__layer ba-compare__layer--before">
+        <img class="ba-compare__before" src="${c.before}" alt="${c.beforeAlt || ""}" loading="lazy" decoding="async" style="${beforeStyle}">
+      </div>
+      <button type="button" class="ba-compare__handle" aria-label="Posunúť porovnanie pred a po" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></button>
+      <span class="ba-compare__label ba-compare__label--before">Pred</span>
+      <span class="ba-compare__label ba-compare__label--after">Po</span>
+    </div>
+  `;
+}
+
+function initCompareSliders(root = document) {
+  root.querySelectorAll("[data-ba-compare]:not([data-ba-ready])").forEach((rootEl) => {
+    rootEl.dataset.baReady = "true";
+    const handle = rootEl.querySelector(".ba-compare__handle");
+    if (!handle) return;
+
+    const syncFrameWidth = () => {
+      if (!rootEl.offsetWidth) return;
+      rootEl.style.setProperty("--ba-frame-width", `${rootEl.offsetWidth}px`);
+    };
+    syncFrameWidth();
+    if (typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(syncFrameWidth).observe(rootEl);
+    } else {
+      window.addEventListener("resize", syncFrameWidth);
+    }
+
+    let dragging = false;
+    const labelBefore = rootEl.querySelector(".ba-compare__label--before");
+    const labelAfter = rootEl.querySelector(".ba-compare__label--after");
+    const labelHideThreshold = 10;
+
+    const updateCompareLabels = (pos) => {
+      // Úplne vľavo = celé Po → skryť „Pred“; úplne vpravo = celé Pred → skryť „Po“
+      if (labelBefore) {
+        labelBefore.classList.toggle("ba-compare__label--hidden", pos <= labelHideThreshold);
+      }
+      if (labelAfter) {
+        labelAfter.classList.toggle("ba-compare__label--hidden", pos >= 100 - labelHideThreshold);
+      }
+    };
+
+    const setPosition = (percent) => {
+      const pos = Math.max(0, Math.min(100, percent));
+      rootEl.style.setProperty("--ba-pos", `${pos}%`);
+      handle.setAttribute("aria-valuenow", String(Math.round(pos)));
+      updateCompareLabels(pos);
+    };
+
+    setPosition(50);
+
+    const positionFromClientX = (clientX) => {
+      const rect = rootEl.getBoundingClientRect();
+      if (!rect.width) return;
+      setPosition(((clientX - rect.left) / rect.width) * 100);
+    };
+
+    const onPointerDown = (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
+      dragging = true;
+      rootEl.classList.add("is-dragging");
+      rootEl.setPointerCapture(e.pointerId);
+      positionFromClientX(e.clientX);
+      e.preventDefault();
+    };
+
+    const onPointerMove = (e) => {
+      if (!dragging) return;
+      positionFromClientX(e.clientX);
+    };
+
+    const endDrag = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      rootEl.classList.remove("is-dragging");
+      if (e.pointerId !== undefined) {
+        try {
+          rootEl.releasePointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
+      }
+    };
+
+    rootEl.addEventListener("pointerdown", onPointerDown);
+    rootEl.addEventListener("pointermove", onPointerMove);
+    rootEl.addEventListener("pointerup", endDrag);
+    rootEl.addEventListener("pointercancel", endDrag);
+
+    handle.addEventListener("keydown", (e) => {
+      const current = parseFloat(rootEl.style.getPropertyValue("--ba-pos")) || 50;
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setPosition(current - 5);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setPosition(current + 5);
+      }
+      if (e.key === "Home") {
+        e.preventDefault();
+        setPosition(0);
+      }
+      if (e.key === "End") {
+        e.preventDefault();
+        setPosition(100);
+      }
+    });
+  });
+}
+
+function renderServiceCompareCarousel(items) {
+  const carousel = document.getElementById("service-compare-carousel");
+  const track = document.getElementById("service-compare-track");
+  if (!carousel || !track) return;
+
+  if (!items?.length) {
+    carousel.hidden = true;
+    return;
+  }
+
+  carousel.hidden = false;
+  carousel._carouselIndex = 0;
+
+  initServiceCompareCarousel(carousel, items);
+}
+
+function buildServiceCarouselSlide(item, slideClass) {
+  const mediaClass = item.compare
+    ? item.compareAspect === "landscape"
+      ? " service-compare-carousel__media--landscape"
+      : ""
+    : " service-compare-carousel__media--static";
+  return `
+    <figure class="service-compare-carousel__slide ${slideClass}" role="group" aria-roledescription="slide">
+      <div class="service-compare-carousel__media${mediaClass}">
+        ${
+          item.compare
+            ? buildCompareMarkup(item)
+            : buildPictureMarkup(item.src, { alt: item.alt || "", loading: "lazy" })
+        }
+      </div>
+    </figure>
+  `;
+}
+
+function initServiceCompareCarousel(carousel, items) {
+  const track = carousel.querySelector(".service-compare-carousel__track");
+  const prevBtn = carousel.querySelector("[data-carousel-prev]");
+  const nextBtn = carousel.querySelector("[data-carousel-next]");
+  const statusEl = document.getElementById("service-compare-status");
+  const captionEl = document.getElementById("service-compare-caption");
+  const hintEl = document.getElementById("service-compare-hint");
+
+  if (!track || !items?.length) return;
+
+  let index = carousel._carouselIndex ?? 0;
+
+  const updateMeta = () => {
+    if (statusEl) statusEl.textContent = `${index + 1} / ${items.length}`;
+    if (captionEl) {
+      captionEl.textContent = items[index]?.caption || items[index]?.alt || "";
+    }
+    if (hintEl) {
+      hintEl.classList.toggle("is-hidden", !items[index]?.compare);
+    }
+  };
+
+  const renderWindow = () => {
+    const n = items.length;
+    carousel.classList.toggle("is-single", n <= 1);
+
+    if (n <= 1) {
+      track.innerHTML = buildServiceCarouselSlide(items[0], "is-active");
+      track.querySelector(".service-compare-carousel__slide")?.setAttribute("aria-hidden", "false");
+      initCompareSliders(carousel);
+      updateMeta();
+      return;
+    }
+
+    const prevI = (index - 1 + n) % n;
+    const nextI = (index + 1) % n;
+
+    track.innerHTML =
+      buildServiceCarouselSlide(items[prevI], "is-side is-prev") +
+      buildServiceCarouselSlide(items[index], "is-active") +
+      buildServiceCarouselSlide(items[nextI], "is-side is-next");
+
+    track.querySelector(".is-active")?.setAttribute("aria-hidden", "false");
+    track.querySelectorAll(".is-side").forEach((el) => el.setAttribute("aria-hidden", "true"));
+
+    initCompareSliders(carousel);
+    updateMeta();
+  };
+
+  const goTo = (nextIndex) => {
+    index = (nextIndex + items.length) % items.length;
+    carousel._carouselIndex = index;
+    renderWindow();
+  };
+
+  if (carousel.dataset.carouselReady !== "true") {
+    carousel.dataset.carouselReady = "true";
+
+    prevBtn?.addEventListener("click", () => goTo(index - 1));
+    nextBtn?.addEventListener("click", () => goTo(index + 1));
+
+    carousel.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goTo(index - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goTo(index + 1);
+      }
+    });
+  }
+
+  carousel._carouselIndex = index;
+  renderWindow();
+}
+
+function getGalleryCompareItems(items) {
+  const compares = (items || []).filter((item) => item.compare);
+  const landscape = compares.filter((item) => item.compareAspect === "landscape");
+  const rest = compares.filter((item) => item.compareAspect !== "landscape");
+  return [...landscape, ...rest];
+}
+
+function buildGalleryCompareCarouselSlide(item) {
+  const mediaClass =
+    item.compareAspect === "landscape" ? " gallery-compare-carousel__media--landscape" : "";
+  return `
+    <figure class="gallery-compare-carousel__slide" role="group" aria-roledescription="slide">
+      <div class="gallery-compare-carousel__media${mediaClass}" data-gallery-compare-media>
+        ${buildCompareMarkup(item, { preview: true })}
+      </div>
+    </figure>
+  `;
+}
+
+function renderGalleryCompareSpotlight(items) {
+  const section = document.getElementById("gallery-compare-section");
+  const carousel = document.getElementById("gallery-compare-carousel");
+  if (!carousel) return;
+
+  if (!items?.length) {
+    section?.setAttribute("hidden", "");
+    carousel.hidden = true;
+    return;
+  }
+
+  section?.removeAttribute("hidden");
+  carousel.hidden = false;
+  carousel._compareItems = items;
+  carousel._compareIndex = 0;
+  initGalleryCompareCarousel(carousel, items);
+}
+
+function initGalleryCompareCarousel(carousel, items) {
+  const track = document.getElementById("gallery-compare-track");
+  const prevBtn = carousel.querySelector("[data-gallery-compare-prev]");
+  const nextBtn = carousel.querySelector("[data-gallery-compare-next]");
+  const openBtn = document.getElementById("gallery-compare-open");
+  const statusEl = document.getElementById("gallery-compare-status");
+  const captionEl = document.getElementById("gallery-compare-caption");
+
+  if (!track || !items?.length) return;
+
+  let index = carousel._compareIndex ?? 0;
+
+  const updateMeta = () => {
+    const single = items.length <= 1;
+    prevBtn?.toggleAttribute("hidden", single);
+    nextBtn?.toggleAttribute("hidden", single);
+    if (statusEl) statusEl.textContent = single ? "Pred a po" : `${index + 1} / ${items.length}`;
+    if (captionEl) {
+      captionEl.textContent = items[index]?.caption || items[index]?.compare?.afterAlt || "";
+    }
+  };
+
+  const renderSlide = () => {
+    track.innerHTML = buildGalleryCompareCarouselSlide(items[index]);
+    initCompareSliders(track);
+    updateMeta();
+    carousel._compareIndex = index;
+  };
+
+  const goTo = (nextIndex) => {
+    index = (nextIndex + items.length) % items.length;
+    renderSlide();
+  };
+
+  if (carousel.dataset.galleryCompareReady !== "true") {
+    carousel.dataset.galleryCompareReady = "true";
+
+    prevBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      goTo(index - 1);
+    });
+    nextBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      goTo(index + 1);
+    });
+
+    openBtn?.addEventListener("click", () => {
+      const media = track.querySelector("[data-gallery-compare-media]");
+      openGalleryCompareFullscreen(items, index, media);
+    });
+
+    carousel.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goTo(index - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goTo(index + 1);
+      }
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const media = track.querySelector("[data-gallery-compare-media]");
+        openGalleryCompareFullscreen(items, index, media);
+      }
+    });
+  }
+
+  renderSlide();
+}
+
+let galleryCompareFullscreenItems = [];
+let galleryCompareFullscreenIndex = 0;
+
+function openGalleryCompareFullscreen(items, index, originEl) {
+  const overlay = document.getElementById("gallery-compare-fullscreen");
+  const stage = document.getElementById("gallery-compare-fullscreen-stage");
+  const captionEl = document.getElementById("gallery-compare-fullscreen-caption");
+  if (!overlay || !stage || !items?.length) return;
+
+  galleryCompareFullscreenItems = items;
+  galleryCompareFullscreenIndex = index;
+
+  renderGalleryCompareFullscreenWindow(stage, captionEl, items, index);
+
+  if (originEl) {
+    const rect = originEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    overlay.style.setProperty("--zoom-origin-x", `${cx}px`);
+    overlay.style.setProperty("--zoom-origin-y", `${cy}px`);
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const scaleFrom = Math.min(rect.width / vw, rect.height / vh, 1) * 0.95;
+    overlay.style.setProperty("--zoom-from", String(Math.max(scaleFrom, 0.35)));
+  } else {
+    overlay.style.setProperty("--zoom-from", "0.88");
+    overlay.style.setProperty("--zoom-origin-x", "50vw");
+    overlay.style.setProperty("--zoom-origin-y", "50vh");
+  }
+
+  overlay.hidden = false;
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => {
+    overlay.classList.add("is-open");
+    document.getElementById("gallery-compare-fullscreen-close")?.focus();
+  });
+
+  updateGalleryCompareFullscreenNav();
+}
+
+function buildGalleryCompareFullscreenSlideMarkup(item, slideClass, { interactive = false } = {}) {
+  if (!item?.compare) return "";
+  const mediaClass =
+    item.compareAspect === "landscape"
+      ? " gallery-compare-fullscreen__media--landscape"
+      : "";
+  return `
+    <figure class="gallery-compare-fullscreen__slide ${slideClass}" role="group" aria-roledescription="slide">
+      <div class="gallery-compare-fullscreen__media${mediaClass}">
+        ${buildCompareMarkup(item, { preview: !interactive })}
+      </div>
+    </figure>
+  `;
+}
+
+function renderGalleryCompareFullscreenWindow(stage, captionEl, items, index) {
+  if (!stage || !items?.length) return;
+
+  const n = items.length;
+  const item = items[index];
+  if (!item?.compare) return;
+
+  if (n <= 1) {
+    stage.innerHTML = `
+      <div class="gallery-compare-fullscreen__track is-single">
+        ${buildGalleryCompareFullscreenSlideMarkup(item, "is-active", { interactive: true })}
+      </div>
+    `;
+  } else {
+    const prevI = (index - 1 + n) % n;
+    const nextI = (index + 1) % n;
+    stage.innerHTML = `
+      <div class="gallery-compare-fullscreen__track">
+        ${buildGalleryCompareFullscreenSlideMarkup(items[prevI], "is-side is-prev")}
+        ${buildGalleryCompareFullscreenSlideMarkup(item, "is-active", { interactive: true })}
+        ${buildGalleryCompareFullscreenSlideMarkup(items[nextI], "is-side is-next")}
+      </div>
+    `;
+    stage.querySelector(".is-active")?.setAttribute("aria-hidden", "false");
+    stage.querySelectorAll(".is-side").forEach((el) => el.setAttribute("aria-hidden", "true"));
+  }
+
+  initCompareSliders(stage);
+  if (captionEl) captionEl.textContent = item.caption || "";
+}
+
+function updateGalleryCompareFullscreenNav() {
+  const overlay = document.getElementById("gallery-compare-fullscreen");
+  const prev = document.getElementById("gallery-compare-fullscreen-prev");
+  const next = document.getElementById("gallery-compare-fullscreen-next");
+  const n = galleryCompareFullscreenItems.length;
+  const showNav = n > 1;
+  prev?.toggleAttribute("hidden", !showNav);
+  next?.toggleAttribute("hidden", !showNav);
+  overlay?.setAttribute("aria-label", `Porovnanie pred a po — ${galleryCompareFullscreenIndex + 1} z ${n}`);
+}
+
+function goGalleryCompareFullscreen(delta) {
+  const n = galleryCompareFullscreenItems.length;
+  if (n <= 1) return;
+  galleryCompareFullscreenIndex = (galleryCompareFullscreenIndex + delta + n) % n;
+  const stage = document.getElementById("gallery-compare-fullscreen-stage");
+  const captionEl = document.getElementById("gallery-compare-fullscreen-caption");
+  renderGalleryCompareFullscreenWindow(
+    stage,
+    captionEl,
+    galleryCompareFullscreenItems,
+    galleryCompareFullscreenIndex
+  );
+  updateGalleryCompareFullscreenNav();
+}
+
+function closeGalleryCompareFullscreen() {
+  const overlay = document.getElementById("gallery-compare-fullscreen");
+  if (!overlay || overlay.hidden) return;
+
+  overlay.classList.remove("is-open");
+  window.setTimeout(() => {
+    if (overlay.classList.contains("is-open")) return;
+    overlay.hidden = true;
+    document.body.style.overflow = "";
+    const stage = document.getElementById("gallery-compare-fullscreen-stage");
+    if (stage) stage.innerHTML = "";
+  }, 420);
+}
+
 function initSite() {
   const config = typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {};
   const page = document.body.dataset.page;
 
   applyConfig(config);
   injectLocalBusinessSchema(config);
-  injectFaqSchema(config);
   initFloatingCall(config.contact);
   initNavCta(config);
   initNavigation(page);
@@ -54,6 +534,7 @@ function initSite() {
   initGallery();
   initContactForm();
   renderPageContent(config, page);
+  initCompareSliders();
   initServiceCards();
   initScrollAnimations();
 }
@@ -175,8 +656,16 @@ function applySectionCopy(config) {
   });
 }
 
+function getPageCopy(config, page) {
+  if (page === "service") {
+    const slug = document.body.dataset.service;
+    return slug ? config.servicePages?.[slug] : null;
+  }
+  return config.pages?.[page];
+}
+
 function renderPageHeader(config, page) {
-  const copy = config.pages?.[page];
+  const copy = getPageCopy(config, page);
   if (!copy) return;
 
   const eyebrow = document.querySelector("[data-page-eyebrow]");
@@ -187,8 +676,18 @@ function renderPageHeader(config, page) {
   if (title && copy.title) title.textContent = copy.title;
   if (subtitle && copy.subtitle) subtitle.textContent = copy.subtitle;
 
+  const galleryTag = document.querySelector("[data-gallery-tag]");
+  if (galleryTag && copy.collectionTag) galleryTag.textContent = copy.collectionTag;
+
+  const galleryMuted = document.querySelector("[data-gallery-title-muted]");
+  if (galleryMuted && copy.titleMuted) {
+    galleryMuted.textContent = ` ${copy.titleMuted}`;
+  }
+
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && copy.metaDescription) metaDesc.content = copy.metaDescription;
+
+  if (copy.pageTitle) document.title = copy.pageTitle;
 }
 
 function renderCtaBlocks(config) {
@@ -274,13 +773,14 @@ function injectLocalBusinessSchema(config) {
   document.head.appendChild(script);
 }
 
-function injectFaqSchema(config) {
-  if (document.getElementById("faq-schema") || !config.faq?.length) return;
+function injectFaqSchema(config, items) {
+  const faqItems = items ?? config.faq;
+  if (document.getElementById("faq-schema") || !faqItems?.length) return;
 
   const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: config.faq.map((item) => ({
+    mainEntity: faqItems.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: {
@@ -292,6 +792,33 @@ function injectFaqSchema(config) {
 
   const script = document.createElement("script");
   script.id = "faq-schema";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+function injectServiceSchema(config, service) {
+  if (document.getElementById("service-schema") || !service) return;
+
+  const seo = config.seo || {};
+  const siteUrl = seo.siteUrl || "";
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.title,
+    description: service.metaDescription || service.subtitle,
+    provider: {
+      "@type": "LocalBusiness",
+      name: config.localBusiness?.legalName || seo.siteName || config.businessName,
+      url: siteUrl || undefined,
+    },
+    areaServed: config.localBusiness?.areaServed || config.tagline,
+    url: siteUrl && service.path ? `${siteUrl}${service.path}` : undefined,
+    image: service.image && siteUrl ? `${siteUrl}${service.image}` : undefined,
+  };
+
+  const script = document.createElement("script");
+  script.id = "service-schema";
   script.type = "application/ld+json";
   script.textContent = JSON.stringify(schema);
   document.head.appendChild(script);
@@ -365,22 +892,97 @@ function renderPageContent(config, page) {
     renderHome(config);
     renderServices(config);
     const previewCount = config.homeGalleryPreview || 3;
-    const preview = config.gallery?.slice(0, previewCount);
+    const preview = config.gallery?.filter((item) => item.src).slice(0, previewCount);
     renderGallery(preview, "gallery-preview", config.gallery);
     renderReels(config, "home-reels-track", { linked: false });
     renderReviews(config);
     renderContactServices(config);
     renderFaq(config);
+    injectFaqSchema(config);
   }
   if (page === "pricing") renderPricing(config);
   if (page === "gallery") {
-    renderGallery(config.gallery, "gallery-full", config.gallery);
+    const allGallery = config.gallery || [];
+    const compareItems = getGalleryCompareItems(allGallery);
+    const staticGallery = allGallery.filter((item) => !item.compare);
+    renderGalleryCompareSpotlight(compareItems);
+    renderGallery(staticGallery, "gallery-full", config.gallery);
+    document.querySelector(".gallery-showcase")?.toggleAttribute("hidden", !staticGallery.length);
     renderReels(config, "reels-track", { linked: true });
   }
   if (page === "contact") {
     renderContactServices(config);
     renderContactMap(config.contact);
   }
+  if (page === "service") {
+    const slug = document.body.dataset.service;
+    if (slug) renderServicePage(config, slug);
+  }
+}
+
+function renderServicePage(config, slug) {
+  const service = config.servicePages?.[slug];
+  if (!service) return;
+
+  const introEl = document.getElementById("service-intro");
+  if (introEl && service.intro) introEl.innerHTML = service.intro;
+
+  const processTitle = document.getElementById("service-process-title");
+  if (processTitle && service.processTitle) processTitle.textContent = service.processTitle;
+
+  const processEl = document.getElementById("service-process");
+  if (processEl && service.process?.length) {
+    processEl.innerHTML = service.process
+      .map(
+        (step, index) => `
+      <article class="service-process__step">
+        <span class="service-process__index" aria-hidden="true">${index + 1}</span>
+        <h3>${step.title}</h3>
+        <p>${step.text}</p>
+      </article>
+    `
+      )
+      .join("");
+  }
+
+  if (service.pricingCategories?.length && config.pricingCategories) {
+    const filtered = config.pricingCategories.filter((cat) =>
+      service.pricingCategories.includes(cat.title)
+    );
+    renderPricingCategories(filtered, "service-pricing");
+  }
+
+  if (service.galleryIndices?.length && config.gallery) {
+    const items = service.galleryIndices
+      .map((i) => config.gallery[i])
+      .filter(Boolean);
+    renderServiceCompareCarousel(items);
+  }
+
+  if (service.faqQuestions?.length || service.faqExtra?.length) {
+    let faqItems =
+      service.faqQuestions?.length && config.faq
+        ? config.faq.filter((item) => service.faqQuestions.includes(item.question))
+        : [];
+    if (service.faqExtra?.length) faqItems = [...faqItems, ...service.faqExtra];
+    if (faqItems.length) {
+      renderFaq(config, "service-faq-list", faqItems);
+      injectFaqSchema(config, faqItems);
+    }
+  }
+
+  const relatedEl = document.getElementById("service-related");
+  if (relatedEl && service.relatedServices?.length) {
+    relatedEl.innerHTML = service.relatedServices
+      .map(
+        (link) => `
+      <a class="service-related__link" href="${link.href}">${link.title}</a>
+    `
+      )
+      .join("");
+  }
+
+  injectServiceSchema(config, service);
 }
 
 function renderHome(config) {
@@ -440,11 +1042,12 @@ function renderHome(config) {
   }
 }
 
-function renderFaq(config) {
-  const container = document.getElementById("faq-list");
-  if (!container || !config.faq?.length || hasStaticContent(container)) return;
+function renderFaq(config, containerId = "faq-list", items) {
+  const faqItems = items ?? config.faq;
+  const container = document.getElementById(containerId);
+  if (!container || !faqItems?.length || hasStaticContent(container)) return;
 
-  container.innerHTML = config.faq
+  container.innerHTML = faqItems
     .map(
       (item) => `
     <details class="faq-item">
@@ -469,6 +1072,7 @@ function renderServices(config) {
         <div class="feature-icon" aria-hidden="true">${s.icon}</div>
         <h3>${s.title}</h3>
         <p class="feature-card__teaser">${s.text}</p>
+        ${s.href ? `<a href="${s.href}" class="feature-card__link">Viac o službe</a>` : ""}
         <span class="feature-card__more">Čítať ďalej</span>
       </div>
       <div class="feature-card__detail" aria-hidden="true">
@@ -640,15 +1244,14 @@ function renderReviews(config) {
     .join("");
 }
 
-function renderPricing(config) {
-  const container = document.getElementById("pricing-grid");
-  if (!container || hasStaticContent(container)) return;
+function renderPricingCategories(categories, containerId, notesId) {
+  const container = document.getElementById(containerId);
+  if (!container || !categories?.length || hasStaticContent(container)) return;
 
-  if (config.pricingCategories) {
-    container.className = "pricing-tables";
-    container.innerHTML = config.pricingCategories
-      .map(
-        (cat) => `
+  container.className = "pricing-tables pricing-tables--service";
+  container.innerHTML = categories
+    .map(
+      (cat) => `
       <article class="pricing-category${cat.highlight ? " pricing-category--windows" : ""}">
         <h3>${cat.title}</h3>
         ${cat.items
@@ -663,14 +1266,24 @@ function renderPricing(config) {
           .join("")}
       </article>
     `
-      )
-      .join("");
+    )
+    .join("");
 
-    const notesEl = document.getElementById("pricing-notes");
+  if (notesId) {
+    const notesEl = document.getElementById(notesId);
+    const config = typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {};
     if (notesEl && config.pricingNotes) {
       notesEl.innerHTML = `<ul>${config.pricingNotes.map((n) => `<li>${n}</li>`).join("")}</ul>`;
     }
+  }
+}
 
+function renderPricing(config) {
+  const container = document.getElementById("pricing-grid");
+  if (!container || hasStaticContent(container)) return;
+
+  if (config.pricingCategories) {
+    renderPricingCategories(config.pricingCategories, "pricing-grid", "pricing-notes");
     return;
   }
 
@@ -705,29 +1318,113 @@ function renderContactServices(config) {
       .join("");
 }
 
+function mosaicVariantClass(index, isCompare) {
+  if (isCompare) return "gallery-tile--span-full";
+  return `gallery-tile--v${index % 6}`;
+}
+
+function groupGalleryMosaicItems(items) {
+  const groups = [];
+  let i = 0;
+  while (i < items.length) {
+    const item = items[i];
+    const next = items[i + 1];
+    if (item.pair && next?.pair === item.pair) {
+      groups.push({ type: "pair", items: [item, next] });
+      i += 2;
+    } else {
+      groups.push({ type: "single", items: [item] });
+      i += 1;
+    }
+  }
+  return groups;
+}
+
+function buildGalleryMosaicStaticTile(item, lightboxItems) {
+  const lightboxIndex = lightboxItems.findIndex((g) => g.src === item.src);
+  return `
+    <figure class="gallery-tile gallery-item" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
+      <div class="gallery-tile__media">
+        ${buildPictureMarkup(item.src, { alt: item.alt, loading: "lazy" })}
+        <div class="gallery-tile__overlay">
+          ${item.caption ? `<p class="gallery-tile__caption">${item.caption}</p>` : ""}
+          <span class="gallery-tile__hint">Zväčšiť</span>
+        </div>
+      </div>
+    </figure>
+  `;
+}
+
+function renderGalleryMosaicHtml(items, lightboxItems) {
+  return groupGalleryMosaicItems(items)
+    .map((group) => {
+      if (group.type === "pair") {
+        return `
+    <div class="gallery-pair">
+      ${group.items.map((item) => buildGalleryMosaicStaticTile(item, lightboxItems)).join("")}
+    </div>`;
+      }
+      return buildGalleryMosaicStaticTile(group.items[0], lightboxItems);
+    })
+    .join("");
+}
+
 function renderGallery(items, containerId, lightboxSource) {
   const container = document.getElementById(containerId);
   if (!container || !items?.length) return;
 
   const isPreview = containerId === "gallery-preview";
-  const isPage = containerId === "gallery-full";
-  const lightboxItems = lightboxSource || items;
+  const isMosaic = containerId === "gallery-full";
+  const isPage = isMosaic || containerId === "service-gallery";
+  const lightboxItems = getGalleryLightboxItems(lightboxSource || items);
 
   if (hasStaticContent(container)) {
-    if (isPage) container.className = "gallery-grid gallery-grid--page";
+    if (isMosaic) container.className = "gallery-mosaic";
+    else if (isPage) container.className = "gallery-grid gallery-grid--page";
     bindGalleryItems(container, lightboxItems);
+    initCompareSliders(container);
     return;
   }
 
-  if (isPage) container.className = "gallery-grid gallery-grid--page";
+  if (isMosaic) container.className = "gallery-mosaic";
+  else if (isPage) container.className = "gallery-grid gallery-grid--page";
 
-  container.innerHTML = items
-    .map((item, i) => {
-      const lightboxIndex = isPreview
-        ? lightboxItems.findIndex((g) => g.src === item.src)
-        : i;
-      const wideClass = !isPreview && !isPage && item.wide ? " gallery-item--wide" : "";
-      return `
+  if (isMosaic && !items.some((item) => item.compare)) {
+    container.innerHTML = renderGalleryMosaicHtml(items, lightboxItems);
+  } else {
+    container.innerHTML = items
+      .map((item, index) => {
+        const wideClass =
+        isPreview || (!isPage && item.wide) ? " gallery-item--wide" : "";
+        if (item.compare) {
+          if (isMosaic) {
+            return `
+    <figure class="gallery-tile gallery-tile--compare ${mosaicVariantClass(index, true)}">
+      <div class="gallery-tile__media gallery-tile__media--compare${item.compareAspect === "landscape" ? " gallery-tile__media--compare-landscape" : ""}">
+        ${buildCompareMarkup(item)}
+      </div>
+      ${item.caption ? `<figcaption class="gallery-tile__figcaption">${item.caption}</figcaption>` : ""}
+    </figure>
+  `;
+          }
+          const compareWide = item.wide && !isPage ? " gallery-item--wide" : "";
+          return `
+    <figure class="gallery-item gallery-item--compare${compareWide}">
+      <div class="gallery-item__frame">
+        ${buildCompareMarkup(item)}
+      </div>
+      ${item.caption ? `<figcaption class="gallery-caption">${item.caption}</figcaption>` : ""}
+    </figure>
+  `;
+        }
+
+        const lightboxIndex = lightboxItems.findIndex((g) => g.src === item.src);
+
+        if (isMosaic) {
+          return buildGalleryMosaicStaticTile(item, lightboxItems);
+        }
+
+        return `
     <figure class="gallery-item${wideClass}" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-item__frame">
         ${buildPictureMarkup(item.src, { alt: item.alt, loading: "lazy" })}
@@ -735,10 +1432,12 @@ function renderGallery(items, containerId, lightboxSource) {
       ${item.caption ? `<figcaption class="gallery-caption">${item.caption}</figcaption>` : ""}
     </figure>
   `;
-    })
-    .join("");
+      })
+      .join("");
+  }
 
   bindGalleryItems(container, lightboxItems);
+  initCompareSliders(container);
 }
 
 function renderReels(config, containerId = "reels-track", options = { linked: true }) {
@@ -1076,7 +1775,7 @@ function initScrollAnimations() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const targets = document.querySelectorAll(
-    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .reels-section, .reel-card, .feature-card, .review-card, .cta-block, .pricing-category, .contact-form, .seo-content, .faq-item"
+    ".section, .showcase-panel, .gallery-grid--page .gallery-item, .gallery-tile, .gallery-intro, .gallery-compare-carousel, .reels-section, .reel-card, .feature-card, .review-card, .cta-block, .pricing-category, .contact-form, .faq-item, .service-process__step, .service-compare-carousel"
   );
 
   targets.forEach((el, i) => {
@@ -1110,9 +1809,40 @@ function initGallery() {
   lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
   });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeLightbox();
+
+  const compareFs = document.getElementById("gallery-compare-fullscreen");
+  document.getElementById("gallery-compare-fullscreen-close")?.addEventListener("click", closeGalleryCompareFullscreen);
+  compareFs?.addEventListener("click", (e) => {
+    if (e.target === compareFs) closeGalleryCompareFullscreen();
   });
+  document.getElementById("gallery-compare-fullscreen-prev")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    goGalleryCompareFullscreen(-1);
+  });
+  document.getElementById("gallery-compare-fullscreen-next")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    goGalleryCompareFullscreen(1);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    closeGalleryCompareFullscreen();
+    closeLightbox();
+  });
+
+  if (compareFs) {
+    document.addEventListener("keydown", (e) => {
+      if (compareFs.hidden || !compareFs.classList.contains("is-open")) return;
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goGalleryCompareFullscreen(-1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goGalleryCompareFullscreen(1);
+      }
+    });
+  }
 }
 
 function openLightbox(items, index) {

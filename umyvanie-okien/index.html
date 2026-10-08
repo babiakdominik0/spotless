@@ -6,8 +6,8 @@
   <script src="/js/cookiebot-config.js"></script>
   <script src="/js/cookiebot-init.js"></script>
   <script src="/js/cookiebot-delay.js"></script>
-  <meta name="description" content="Transparentný cenník tepovania sedačiek, kobercov a áut, čistenia okien a kože v Leviciach a Nitre. Doprava v Leviciach zdarma.">
-  <link rel="canonical" href="https://www.spotlesscleaning.sk/cennik">
+  <meta name="description" content="Umývanie okien v domácnosti a vo firmách — Levice, Nitra a okolie. 1-krídlo od 6 €, balkónové dvere, francúzske okná a žalúzie.">
+  <link rel="canonical" href="https://www.spotlesscleaning.sk/umyvanie-okien">
   <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM site summary">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/images/favicon-48.png" type="image/png" sizes="48x48">
@@ -17,24 +17,22 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Spotless Cleaning">
   <meta property="og:locale" content="sk_SK">
-  <meta property="og:url" content="https://www.spotlesscleaning.sk/cennik">
-  <meta property="og:title" content="Spotless Cleaning — Cenník tepovania a čistenia">
-  <meta property="og:description" content="Transparentný cenník tepovania, čistenia okien, kože a ozónovania v Leviciach a Nitre. Doprava zdarma v Leviciach.">
+  <meta property="og:url" content="https://www.spotlesscleaning.sk/umyvanie-okien">
+  <meta property="og:title" content="Umývanie okien Levice a Nitra | Spotless Cleaning">
+  <meta property="og:description" content="Umývanie okien bez šmúh — sklá, rámy, balkónové dvere a žalúzie. Levice, Nitra a okolie.">
   <meta property="og:image" content="https://www.spotlesscleaning.sk/images/og-image.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Spotless Cleaning — Cenník tepovania a čistenia">
-  <meta name="twitter:description" content="Transparentný cenník tepovania, čistenia okien, kože a ozónovania v Leviciach a Nitre. Doprava zdarma v Leviciach.">
+  <meta name="twitter:title" content="Umývanie okien Levice a Nitra | Spotless Cleaning">
+  <meta name="twitter:description" content="Umývanie okien bez šmúh — sklá, rámy, balkónové dvere a žalúzie. Levice, Nitra a okolie.">
   <meta name="twitter:image" content="https://www.spotlesscleaning.sk/images/og-image.jpg">
-  <title>Cenník tepovania Levice a Nitra | Spotless Cleaning</title>
+  <title>Umývanie okien Levice a Nitra | Spotless Cleaning</title>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Domov", "item": "https://www.spotlesscleaning.sk/" },
-      { "@type": "ListItem", "position": 2, "name": "Cenník", "item": "https://www.spotlesscleaning.sk/cennik" }
+      { "@type": "ListItem", "position": 2, "name": "Umývanie okien", "item": "https://www.spotlesscleaning.sk/umyvanie-okien" }
     ]
   }
   </script>
@@ -47,7 +45,7 @@
   <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-7Y9ZVSKEVJ"></script>
   <script type="text/plain" data-cookieconsent="statistics" src="/js/gtag-init.js"></script>
 </head>
-<body data-page="pricing">
+<body data-page="service" data-service="umyvanie-okien">
 
   <header class="site-header">
     <div class="container header-inner">
@@ -80,31 +78,72 @@
   <main>
     <header class="page-header">
       <div class="container">
-        <p class="section-eyebrow" data-page-eyebrow>Cenník</p>
-        <h1 data-page-title>Cenník tepovania, čistenia okien a ozónovania</h1>
-        <p data-page-subtitle>Transparentné ceny bez skrytých poplatkov. Doprava v rámci mesta Levice je zdarma.</p>
+        <p class="section-eyebrow" data-page-eyebrow>Služba</p>
+        <h1 data-page-title>Umývanie okien</h1>
+        <p data-page-subtitle>Čistenie skiel, rámov, kľučiek a parapetov bez šmúh — domácnosti aj firmy v Leviciach, Nitre a okolí.</p>
       </div>
     </header>
 
-    <section class="section" style="padding-top: 0;">
+    <section class="section section--service-lead" style="padding-top: 0;">
+      <div class="container container--service-lead">
+        <div class="service-compare-carousel" id="service-compare-carousel" aria-roledescription="carousel" aria-label="Pred a po" tabindex="0">
+          <div class="service-compare-carousel__row">
+            <button type="button" class="service-compare-carousel__btn" data-carousel-prev aria-label="Predchádzajúca fotka"><span aria-hidden="true">&#8249;</span></button>
+            <div class="service-compare-carousel__viewport">
+              <div class="service-compare-carousel__track" id="service-compare-track"></div>
+            </div>
+            <button type="button" class="service-compare-carousel__btn" data-carousel-next aria-label="Nasledujúca fotka"><span aria-hidden="true">&#8250;</span></button>
+          </div>
+          <p class="service-compare-carousel__status" id="service-compare-status" aria-live="polite"></p>
+          <p class="service-compare-carousel__caption" id="service-compare-caption"></p>
+          <p class="service-compare-carousel__hint" id="service-compare-hint">Posuňte posuvník v strede fotky pre porovnanie pred a po.</p>
+          <p class="service-compare-carousel__gallery-link"><a href="/galeria" class="btn btn-outline btn-sm">Celá galéria</a></p>
+        </div>
+        <div id="service-intro" class="service-content">
+          <p>Profesionálne <strong>umývanie okien v Leviciach, Nitre a okolí</strong> — sklá, rámy, kľučky aj parapety bez šmúh.</p>
+          <p>Realizujeme balkónové dvere, francúzske okná a žalúzie. Viac v <a href="/cennik">cenníku</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <div class="container">
-        <div class="pricing-tables" id="pricing-grid"></div>
-        <noscript>
-          <p class="section-subtitle section-subtitle--center">Cenník sa zobrazí po zapnutí JavaScriptu. Alebo nás <a href="/kontakt">kontaktujte</a> pre aktuálne ceny.</p>
-        </noscript>
-        <div class="pricing-notes" id="pricing-notes"></div>
+        <h2 class="section-title text-center" id="service-process-title">Ako prebieha umývanie okien</h2>
+        <div class="service-process" id="service-process"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title text-center">Orientačné ceny</h2>
+        <p class="section-subtitle section-subtitle--center">Cena podľa typu okna. Kompletný prehľad je v <a href="/cennik">cenníku</a>.</p>
+        <div class="pricing-tables pricing-tables--service" id="service-pricing"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container" style="max-width: 720px;">
+        <h2 class="section-title text-center">Časté otázky</h2>
+        <div id="service-faq-list"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title text-center">Ďalšie služby</h2>
+        <div class="service-related" id="service-related"></div>
       </div>
     </section>
 
     <section class="section section--cta">
       <div class="container">
-        <div class="cta-block" data-cta="pricing">
-          <p class="section-eyebrow" data-cta-eyebrow>Individuálna ponuka</p>
-          <h2 data-cta-title>Chcete presnú cenu na mieru?</h2>
-          <p data-cta-subtitle>Cena sa môže líšiť podľa miery znečistenia. Zavolajte alebo napíšte — pripravíme ponuku na mieru.</p>
+        <div class="cta-block" data-cta="serviceWindows">
+          <p class="section-eyebrow" data-cta-eyebrow>Objednávka</p>
+          <h2 data-cta-title>Chcete čisté okná bez šmúh?</h2>
+          <p data-cta-subtitle>Pošlite počet okien alebo fotku — pripravíme termín umývania u vás doma alebo vo firme.</p>
           <div class="cta-block__actions">
-            <a href="/kontakt" class="btn btn-primary btn-lg" data-cta-primary>Nezáväzná objednávka</a>
-            <a href="tel:+421951093781" class="btn btn-outline btn-lg" data-cta-secondary>Zavolať teraz</a>
+            <a href="/kontakt" class="btn btn-primary btn-lg" data-cta-primary>Objednať umývanie okien</a>
+            <a href="/cennik" class="btn btn-outline btn-lg" data-cta-secondary>Cenník okien</a>
           </div>
           <p class="cta-block__note" data-cta-note>Odpoveď do 24 hodín · Doprava v Leviciach zdarma</p>
         </div>
@@ -117,9 +156,9 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="/" class="logo" aria-label="Spotless Cleaning — domov">
-        <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
-        <span class="logo-text">SPOTLESS</span>
-      </a>
+            <img src="/images/logo-spotless.png" alt="" class="logo-mark" width="40" height="40" aria-hidden="true">
+            <span class="logo-text">SPOTLESS</span>
+          </a>
           <p data-tagline>Profesionálne tepovanie a umývanie okien — Levice a okolie</p>
         </div>
         <div class="footer-col">
@@ -136,8 +175,7 @@
         <div class="footer-col">
           <h4>Kontakt</h4>
           <a href="/kontakt">Napísať správu</a>
-          <a href="tel:+421951093781" id="contact-phone">+421 951 093 781</a>
-          <a href="mailto:spotlesslv.cleaning@gmail.com" id="contact-email">spotlesslv.cleaning@gmail.com</a>
+          <span id="contact-email-footer"></span>
         </div>
       </div>
       <div class="footer-bottom">
@@ -146,6 +184,12 @@
       </div>
     </div>
   </footer>
+
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Náhľad obrázka">
+    <button id="lightbox-close" class="lightbox-close" aria-label="Zavrieť">×</button>
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption" class="lightbox-caption"></p>
+  </div>
 
   <script defer src="/js/config.js"></script>
   <script defer src="/js/main.js"></script>

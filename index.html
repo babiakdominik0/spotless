@@ -57,7 +57,15 @@
       "addressRegion": "Nitra",
       "addressCountry": "SK"
     },
-    "areaServed": "Levice, Nitra a okolie",
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 48.1765968,
+      "longitude": 18.5653346
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Levice" },
+      { "@type": "City", "name": "Nitra" }
+    ],
     "sameAs": [
       "https://www.instagram.com/spotless_cleaning__/",
       "https://www.facebook.com/p/Spotless-Cleaning-61558413235487/",
@@ -178,7 +186,7 @@
           <div class="hero-visual">
             <picture>
               <source srcset="/images/hero-cleaning.webp" type="image/webp">
-              <img id="hero-image" src="/images/hero-cleaning.png" alt="Profesionálne tepovanie sedačiek — Spotless Cleaning" width="800" height="1000" fetchpriority="high">
+              <img id="hero-image" src="/images/hero-cleaning.png" alt="Profesionálne tepovanie sedačiek a umývanie okien — Spotless Cleaning" width="800" height="1000" fetchpriority="high">
             </picture>
           </div>
           <div class="hero-content">
@@ -210,11 +218,12 @@
               <div class="feature-icon" aria-hidden="true">🛋️</div>
               <h3>Tepovanie sedačiek a kobercov</h3>
               <p class="feature-card__teaser">Hlboké tepovanie sedačiek, kresiel, postelí a kobercov — viditeľný výsledok pred a po.</p>
+              <a href="/tepovanie-sedaciek" class="feature-card__link">Viac o službe</a>
               <span class="feature-card__more">Čítať ďalej</span>
             </div>
             <div class="feature-card__detail" aria-hidden="true">
               <div class="feature-card__detail-inner">
-                <p>Ponúkame komplexné služby zamerané na <a href="/galeria">tepovanie sedačiek</a> a tepovanie gaučov, ktoré zbavia nábytok prachu, škvŕn a nepríjemných pachov. Pracujeme s certifikovanými prípravkami a prídeme priamo k vám — prehľad cien nájdete v <a href="/cennik">cenníku</a>.</p>
+                <p>Ponúkame komplexné služby zamerané na <a href="/tepovanie-sedaciek">tepovanie sedačiek</a> a tepovanie gaučov, ktoré zbavia nábytok prachu, škvŕn a nepríjemných pachov. Pracujeme s certifikovanými prípravkami a prídeme priamo k vám — prehľad cien nájdete v <a href="/cennik">cenníku</a>.</p>
                 <h4>Hĺbkové tepovanie sedačiek a gaučov</h4>
                 <p>Čistenie sedačiek odstraňuje nečistoty a alergény z hĺbky vlákien. Prídeme s profesionálnym vybavením priamo k vám domov.</p>
                 <h4>Tepovanie kobercov</h4>
@@ -230,11 +239,12 @@
               <div class="feature-icon" aria-hidden="true">🚗</div>
               <h3>Tepovanie interiéru auta</h3>
               <p class="feature-card__teaser">Čistenie sedadiel a kompletný interiér hatchbacku, sedanu alebo SUV. Kufor aj koberce.</p>
+              <a href="/tepovanie-auta" class="feature-card__link">Viac o službe</a>
               <span class="feature-card__more">Čítať ďalej</span>
             </div>
             <div class="feature-card__detail" aria-hidden="true">
               <div class="feature-card__detail-inner">
-                <p>Trávite v aute veľa času? Doprajte interiéru hĺbkové tepovanie vrátane kufra a koberčekov. Tepovanie autosedačiek odstráni škvrny od jedla, nápojov aj potu.</p>
+                <p>Trávite v aute veľa času? Doprajte interiéru <a href="/tepovanie-auta">hĺbkové tepovanie</a> vrátane kufra a koberčekov. Tepovanie autosedačiek odstráni škvrny od jedla, nápojov aj potu.</p>
                 <h4>Čistenie kože v aute</h4>
                 <p>Šetrné čistenie kožených sedačiek s impregnáciou, ktorá chráni materiál pred popraskaním. Ceny nájdete transparentne v <a href="/cennik">cenníku</a> — bez skrytých poplatkov.</p>
                 <button type="button" class="feature-card__less">Čítať menej</button>
@@ -246,11 +256,12 @@
               <div class="feature-icon" aria-hidden="true">🪟</div>
               <h3>Umývanie okien</h3>
               <p class="feature-card__teaser">Okná, balkónové dvere, francúzske okná a žalúzie — bez šmúh, pre domácnosti aj firmy.</p>
+              <a href="/umyvanie-okien" class="feature-card__link">Viac o službe</a>
               <span class="feature-card__more">Čítať ďalej</span>
             </div>
             <div class="feature-card__detail" aria-hidden="true">
               <div class="feature-card__detail-inner">
-                <p>Špinavé okná bránia prirodzenému svetlu. Zabezpečujeme <a href="/kontakt">umývanie okien v domácnosti</a> aj vo firmách — sklá, rámy, kľučky a parapety, bez šmúh.</p>
+                <p>Špinavé okná bránia prirodzenému svetlu. Zabezpečujeme <a href="/umyvanie-okien">umývanie okien v domácnosti</a> aj vo firmách — sklá, rámy, kľučky a parapety, bez šmúh.</p>
                 <p>Realizujeme aj počas chladnejších mesiacov, pokiaľ teploty neklesnú pod bod mrazu.</p>
                 <button type="button" class="feature-card__less">Čítať menej</button>
               </div>
@@ -261,48 +272,17 @@
               <div class="feature-icon" aria-hidden="true">🌿</div>
               <h3>Ozónovanie a dezinfekcia</h3>
               <p class="feature-card__teaser">Dezinfekcia priestorov ozónom. Možnosť prenájmu ozónového stroja od 15 €.</p>
+              <a href="/ozonovanie" class="feature-card__link">Viac o službe</a>
               <span class="feature-card__more">Čítať ďalej</span>
             </div>
             <div class="feature-card__detail" aria-hidden="true">
               <div class="feature-card__detail-inner">
-                <p>Dezinfekcia priestorov ozónom je účinná proti pachom, baktériám a alergénom — vhodná pre autá, byty aj kancelárie. Odstraňuje zápach po fajčení, zvieratách či vlhkosti.</p>
+                <p><a href="/ozonovanie">Dezinfekcia priestorov ozónom</a> je účinná proti pachom, baktériám a alergénom — vhodná pre autá, byty aj kancelárie. Odstraňuje zápach po fajčení, zvieratách či vlhkosti.</p>
                 <p>Okrem profesionálneho ozónovania ponúkame aj prenájom ozónového prístroja — ceny od 15 € nájdete v <a href="/cennik">cenníku</a>.</p>
                 <button type="button" class="feature-card__less">Čítať menej</button>
               </div>
             </div>
           </article>
-        </div>
-        <p class="services-outro seo-intro">Hľadáte spoľahlivé tepovanie a čistenie okien v Leviciach, Nitre alebo okolí? Spotless Cleaning prináša čistiace služby pre váš domov aj vozidlo — od hĺbkového tepovania kobercov cez umývanie okien až po čistenie kože. Naším cieľom je vrátiť vašim veciam sviežosť a predĺžiť ich životnosť.</p>
-      </div>
-    </section>
-
-    <section class="section seo-content">
-      <div class="container seo-content__inner">
-        <h2 class="section-title section-title--center">Naša práca v praxi</h2>
-        <p class="seo-intro seo-intro--center">Reálne výsledky tepovania sedačiek, kobercov, áut a umývania okien v Leviciach, Nitre a okolí.</p>
-
-        <div class="seo-images">
-          <figure class="seo-images__item">
-            <picture>
-              <source srcset="/images/tepovanie-sedaciek-levice-pred-a-po.webp" type="image/webp">
-              <img src="/images/tepovanie-sedaciek-levice-pred-a-po.png" alt="Tepovanie sedačky — porovnanie pred a po čistení" loading="lazy" width="400" height="400">
-            </picture>
-            <figcaption>Tepovanie sedačky — pred a po</figcaption>
-          </figure>
-          <figure class="seo-images__item">
-            <picture>
-              <source srcset="/images/tepovanie-autosedaciek-nitra.webp" type="image/webp">
-              <img src="/images/tepovanie-autosedaciek-nitra.png" alt="Tepovanie autosedačiek — pred a po čistení" loading="lazy" width="819" height="1024">
-            </picture>
-            <figcaption>Tepovanie autosedačiek — pred a po</figcaption>
-          </figure>
-          <figure class="seo-images__item">
-            <picture>
-              <source srcset="/images/umyvanie-okien-v-domacnosti.webp" type="image/webp">
-              <img src="/images/umyvanie-okien-v-domacnosti.png" alt="Umývanie okien v domácnosti — čistenie skiel a rámov" loading="lazy" width="400" height="400">
-            </picture>
-            <figcaption>Umývanie okien v domácnosti</figcaption>
-          </figure>
         </div>
       </div>
     </section>
@@ -314,39 +294,14 @@
             <div>
               <p class="section-eyebrow" data-section-eyebrow>Referencie</p>
               <h2 class="section-title" data-section-title>Pred a po — naša práca</h2>
-              <p class="section-subtitle showcase-panel__sub" data-section-subtitle>Reálne výsledky tepovania sedačiek, kobercov a interiérov áut.</p>
+              <p class="section-subtitle showcase-panel__sub" data-section-subtitle>Reálne výsledky tepovania sedačiek, kobercov, áut a umývania okien v Leviciach, Nitre a okolí.</p>
             </div>
             <a href="/galeria" class="btn btn-outline btn-sm showcase-panel__cta">
               Celá galéria <span aria-hidden="true">→</span>
             </a>
           </div>
           <div class="showcase-panel__media">
-            <div class="showcase-panel__photos" id="gallery-preview" data-static-content="true">
-              <figure class="gallery-item gallery-item--wide" data-index="0" tabindex="0" role="button" aria-label="Otvoriť: Tepovanie sedačky — porovnanie pred a po čistení">
-                <div class="gallery-item__frame">
-                  <picture>
-                    <source srcset="/images/tepovanie-sedaciek-levice-pred-a-po.webp" type="image/webp">
-                    <img src="/images/tepovanie-sedaciek-levice-pred-a-po.png" alt="Tepovanie sedačky — porovnanie pred a po čistení" loading="lazy">
-                  </picture>
-                </div>
-              </figure>
-              <figure class="gallery-item gallery-item--wide" data-index="1" tabindex="0" role="button" aria-label="Otvoriť: Tepovanie autosedačiek — pred a po čistení">
-                <div class="gallery-item__frame">
-                  <picture>
-                    <source srcset="/images/tepovanie-autosedaciek-nitra.webp" type="image/webp">
-                    <img src="/images/tepovanie-autosedaciek-nitra.png" alt="Tepovanie autosedačiek — pred a po čistení" loading="lazy">
-                  </picture>
-                </div>
-              </figure>
-              <figure class="gallery-item gallery-item--wide" data-index="2" tabindex="0" role="button" aria-label="Otvoriť: Umývanie okien v domácnosti — čistenie skiel a rámov">
-                <div class="gallery-item__frame">
-                  <picture>
-                    <source srcset="/images/umyvanie-okien-v-domacnosti.webp" type="image/webp">
-                    <img src="/images/umyvanie-okien-v-domacnosti.png" alt="Umývanie okien v domácnosti — čistenie skiel a rámov" loading="lazy">
-                  </picture>
-                </div>
-              </figure>
-            </div>
+            <div class="showcase-panel__photos" id="gallery-preview"></div>
             <div class="showcase-panel__reels" id="home-reels-track"></div>
           </div>
         </div>
@@ -498,6 +453,10 @@
         <div class="footer-col">
           <h4>Navigácia</h4>
           <a href="/">Domov</a>
+          <a href="/tepovanie-sedaciek">Tepovanie sedačiek</a>
+          <a href="/tepovanie-auta">Tepovanie auta</a>
+          <a href="/umyvanie-okien">Umývanie okien</a>
+          <a href="/ozonovanie">Ozónovanie</a>
           <a href="/cennik">Cenník</a>
           <a href="/galeria">Galéria</a>
           <a href="/kontakt">Kontakt</a>

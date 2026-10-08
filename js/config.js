@@ -2,7 +2,7 @@ const SITE_CONFIG = {
   businessName: "Spotless",
   logoText: "SPOTLESS",
   logo: "/images/logo-spotless.png",
-  tagline: "Profesionálne tepovanie a umývanie okien — Levice a okolie",
+  tagline: "Profesionálne tepovanie a umývanie okien — Levice, Nitra a okolie",
   description:
     "Hĺbkové tepovanie sedačiek, kobercov, áut a umývanie okien v Leviciach a Nitre. Vráťte čistotu svojmu domovu či vozidlu.",
 
@@ -79,7 +79,7 @@ const SITE_CONFIG = {
       eyebrow: "Referencie",
       title: "Pred a po — naša práca",
       subtitle:
-        "Reálne výsledky tepovania sedačiek, kobercov a interiérov áut.",
+        "Reálne výsledky tepovania sedačiek, kobercov, áut a umývania okien v Leviciach, Nitre a okolí.",
     },
     reviews: {
       eyebrow: "Recenzie",
@@ -101,24 +101,231 @@ const SITE_CONFIG = {
       title: "Cenník tepovania, čistenia okien a ozónovania",
       subtitle:
         "Transparentné ceny bez skrytých poplatkov. Doprava v rámci mesta Levice je zdarma.",
+      pageTitle: "Cenník tepovania Levice a Nitra | Spotless Cleaning",
       metaDescription:
-        "Cenník tepovania sedačiek, kobercov a áut, čistenie okien a ozónovania v Leviciach. Doprava v meste zdarma.",
+        "Transparentný cenník tepovania sedačiek, kobercov a áut, čistenia okien a kože v Leviciach a Nitre. Doprava v Leviciach zdarma.",
     },
     gallery: {
       eyebrow: "Galéria",
-      title: "Galéria — fotky pred a po",
+      collectionTag: "Pred a po tepovaní",
+      title: "Galéria",
+      titleMuted: "pred a po",
       subtitle:
         "Reálne výsledky tepovania sedačiek, kobercov, kresiel a interiérov áut. Kliknite na fotku pre zväčšenie.",
+      pageTitle: "Galéria pred a po — tepovanie | Spotless Cleaning",
       metaDescription:
-        "Galéria Spotless Cleaning — fotky pred a po tepovaní sedačiek, kobercov a áut v Leviciach a okolí.",
+        "Fotky pred a po tepovaní sedačiek, kobercov a interiérov áut v Leviciach, Nitre a okolí. Spotless Cleaning.",
     },
     contact: {
       eyebrow: "Kontakt",
       title: "Kontakt a objednávka",
       subtitle:
         "Zavolajte, napíšte email alebo vyplňte formulár. Ozveme sa do 24 hodín s termínom čistenia.",
+      pageTitle: "Kontakt a objednávka — Levice, Nitra | Spotless Cleaning",
       metaDescription:
-        "Objednávka tepovania — Spotless Cleaning. Telefón +421 951 093 781, email, formulár. Odpoveď do 24 hodín.",
+        "Objednávka tepovania v Leviciach a Nitre. Telefón +421 951 093 781, email alebo formulár. Odpoveď do 24 hodín.",
+    },
+  },
+
+  servicePages: {
+    "tepovanie-sedaciek": {
+      slug: "tepovanie-sedaciek",
+      path: "/tepovanie-sedaciek",
+      breadcrumbName: "Tepovanie sedačiek",
+      eyebrow: "Služba",
+      title: "Tepovanie sedačiek a kobercov",
+      subtitle:
+        "Hĺbkové čistenie gaučov, kresiel, postelí a kobercov u vás doma — Levice, Nitra a okolie. Doprava v Leviciach zdarma.",
+      pageTitle: "Tepovanie sedačiek Levice a Nitra | Spotless Cleaning",
+      metaDescription:
+        "Profesionálne tepovanie sedačiek, kobercov a koženého nábytku v Leviciach a Nitre. Prídeme k vám, výsledok pred a po. Ceny od 6 € / miesto.",
+      image: "/images/tepovanie-sedaciek-levice-pred-a-po.png",
+      imageAlt: "Tepovanie sedačky — porovnanie pred a po čistení v Leviciach",
+      intro: `<p>Potrebujete <strong>tepovanie sedačiek v Leviciach, Nitre alebo okolí</strong>? Spotless Cleaning príde s profesionálnou technikou priamo k vám domov alebo do firmy. Odstránime škvrny, prach, pachy aj alergény z hĺbky vlákien — bez nutnosti veľkého presunu nábytku.</p>
+        <p>Okrem gaučov a kresiel čistíme aj <strong>tepovanie kobercov</strong> a šetrné <strong>čistenie kože</strong> s impregnáciou. Výsledky si pozrite v <a href="/galeria">galérii pred a po</a> alebo si rovno pozrite orientačné ceny nižšie.</p>`,
+      processTitle: "Ako prebieha tepovanie u vás",
+      process: [
+        {
+          title: "Objednávka",
+          text: "Zavoláte, napíšete alebo vyplníte formulár — do 24 hodín sa dohodneme na termíne a rozsahu.",
+        },
+        {
+          title: "Príjazd k vám",
+          text: "Privezieme extrakčné tepovanie a vhodné prípravky. V Leviciach je doprava zdarma.",
+        },
+        {
+          title: "Hĺbkové čistenie",
+          text: "Vysávanie, aplikácia čističa a extrakcia nečistôt — sedačky, koberce aj koža podľa typu materiálu.",
+        },
+        {
+          title: "Schnutie a odporúčania",
+          text: "Po tepovaní odporúčame vetranie. Schnutie zvyčajne 6–12 hodín podľa vlhkosti a materiálu.",
+        },
+      ],
+      pricingCategories: ["Tepovanie nábytku", "Tepovanie kobercov", "Čistenie kože"],
+      galleryIndices: [6],
+      faqQuestions: [
+        "Ako dlho po tepovaní schne sedačka alebo koberec?",
+        "Čo všetko zahŕňa čistenie kože a ošetrenie kožených sedačiek?",
+        "Prečo si vybrať Spotless Cleaning?",
+      ],
+      ctaKey: "serviceFurniture",
+      relatedServices: [
+        { title: "Tepovanie interiéru auta", href: "/tepovanie-auta" },
+        { title: "Umývanie okien", href: "/umyvanie-okien" },
+        { title: "Ozónovanie", href: "/ozonovanie" },
+      ],
+    },
+    "tepovanie-auta": {
+      slug: "tepovanie-auta",
+      path: "/tepovanie-auta",
+      breadcrumbName: "Tepovanie auta",
+      eyebrow: "Služba",
+      title: "Tepovanie interiéru auta",
+      subtitle:
+        "Hĺbkové čistenie sedadiel, kobercov, kufra a stropnice — hatchback, sedan, combi aj SUV. Levice, Nitra a okolie.",
+      pageTitle: "Tepovanie auta Levice a Nitra | Spotless Cleaning",
+      metaDescription:
+        "Tepovanie autosedačiek a kompletný interiér vozidla v Leviciach a Nitre. Sedadlá od 6 €, hatchback od 45 €. Čistenie kože v aute.",
+      image: "/images/tepovanie-autosedaciek-nitra.png",
+      imageAlt: "Tepovanie autosedačiek — pred a po čistení v Nitre",
+      intro: `<p><strong>Tepovanie auta v Leviciach, Nitre a okolí</strong> vráti interiéru sviežosť — odstránime škvrny od jedla a nápojov, pot, prach aj nepríjemné pachy z sedadiel a kobercov.</p>
+        <p>Ponúkame čistenie jednotlivých sedadiel aj <strong>kompletný interiér</strong> (hatchback, sedan, combi, SUV) vrátane kufra. Pre kožené sedačky robíme šetrné <strong>čistenie kože s impregnáciou</strong>. Ukážky práce sú v <a href="/galeria">galérii pred a po</a>.</p>`,
+      processTitle: "Ako prebieha tepovanie auta",
+      process: [
+        {
+          title: "Dohoda termínu",
+          text: "Napíšete typ vozidla a rozsah — sedadlá, celý interiér alebo koža. Ozveme sa do 24 hodín.",
+        },
+        {
+          title: "Príprava interiéru",
+          text: "Odstránime voľné predmety, dôkladne vysajeme sedadlá, koberce a kufor.",
+        },
+        {
+          title: "Tepovanie a extrakcia",
+          text: "Aplikujeme vhodný čistič a extrahujeme nečistoty z textilu alebo kože podľa materiálu.",
+        },
+        {
+          title: "Kontrola a odovzdanie",
+          text: "Skontrolujeme výsledok s vami. Po tepovaní necháme dvere otvorené na vetranie.",
+        },
+      ],
+      pricingCategories: ["Tepovanie automobilov", "Čistenie kože"],
+      galleryIndices: [0, 1, 2, 3, 4],
+      faqQuestions: [
+        "Koľko stojí tepovanie auta?",
+        "Čo všetko zahŕňa čistenie kože a ošetrenie kožených sedačiek?",
+        "Prečo si vybrať Spotless Cleaning?",
+      ],
+      ctaKey: "serviceCar",
+      relatedServices: [
+        { title: "Tepovanie sedačiek", href: "/tepovanie-sedaciek" },
+        { title: "Umývanie okien", href: "/umyvanie-okien" },
+        { title: "Ozónovanie auta", href: "/ozonovanie" },
+      ],
+    },
+    "umyvanie-okien": {
+      slug: "umyvanie-okien",
+      path: "/umyvanie-okien",
+      breadcrumbName: "Umývanie okien",
+      eyebrow: "Služba",
+      title: "Umývanie okien",
+      subtitle:
+        "Čistenie skiel, rámov, kľučiek a parapetov bez šmúh — domácnosti aj firmy v Leviciach, Nitre a okolí.",
+      pageTitle: "Umývanie okien Levice a Nitra | Spotless Cleaning",
+      metaDescription:
+        "Umývanie okien v domácnosti a vo firmách — Levice, Nitra a okolie. 1-krídlo od 6 €, balkónové dvere, francúzske okná a žalúzie.",
+      image: "/images/hero-cleaning.png",
+      imageAlt: "Profesionálne umývanie okien — Spotless Cleaning",
+      intro: `<p>Profesionálne <strong>umývanie okien v Leviciach, Nitre a okolí</strong> — sklá, rámy, kľučky aj parapety. Pracujeme šetrne a dôkladne, bez šmúh a pruhov.</p>
+        <p>Realizujeme aj <strong>balkónové dvere, francúzske okná a žalúzie</strong>. Pre firmy vieme pripraviť pravidelnú starostlivosť o výklady. V chladnejších mesiacoch umývame, pokiaľ teploty neklesnú pod bod mrazu — viac v sekcii FAQ.</p>`,
+      processTitle: "Ako prebieha umývanie okien",
+      process: [
+        {
+          title: "Objednávka",
+          text: "Uveďte počet okien alebo pošlite fotku — pripravíme orientačnú cenu podľa cenníka.",
+        },
+        {
+          title: "Príprava",
+          text: "Zabezpečíme prístup k oknám, ochránime podlahy a parapety podľa potreby.",
+        },
+        {
+          title: "Umývanie",
+          text: "Sklá, rámy, kľučky a parapety — ručne aj plošne, podľa typu okna.",
+        },
+        {
+          title: "Kontrola",
+          text: "Skontrolujeme výsledok proti svetlu, odstránime posledné kvapôčky a šmuhy.",
+        },
+      ],
+      pricingCategories: ["Čistenie okien"],
+      galleryIndices: [],
+      faqQuestions: [
+        "Vykonávate umývanie okien v domácnosti aj počas zimy?",
+        "Prečo si vybrať Spotless Cleaning?",
+      ],
+      ctaKey: "serviceWindows",
+      relatedServices: [
+        { title: "Tepovanie sedačiek", href: "/tepovanie-sedaciek" },
+        { title: "Tepovanie auta", href: "/tepovanie-auta" },
+        { title: "Cenník služieb", href: "/cennik" },
+      ],
+    },
+    ozonovanie: {
+      slug: "ozonovanie",
+      path: "/ozonovanie",
+      breadcrumbName: "Ozónovanie",
+      eyebrow: "Služba",
+      title: "Ozónovanie a dezinfekcia",
+      subtitle:
+        "Neutralizácia pachov a dezinfekcia ozónom — autá, byty, kancelárie. Profesionálne ozónovanie aj prenájom stroja od 15 €.",
+      pageTitle: "Ozónovanie a dezinfekcia | Spotless Cleaning",
+      metaDescription:
+        "Ozónovanie auta, bytu a kancelárie v Leviciach a Nitre. Odstránenie pachu po fajčení, zvieratách a vlhkosti. Prenájom ozónového stroja od 15 €.",
+      image: "/images/pred-po-auto.png",
+      imageAlt: "Čistý interiér auta — vhodné pred aj po ozónovaní",
+      intro: `<p><strong>Ozónovanie</strong> je účinný spôsob, ako odstrániť zápach po fajčení, zvieratách, vlhkosti alebo zatuchnutý vzduch v aute, byte či kancelárii. Spotless Cleaning pôsobí v Leviciach, Nitre a okolí.</p>
+        <p>Ponúkame <strong>profesionálne ozónovanie na mieste</strong> aj <strong>prenájom ozónového prístroja</strong> — ceny od 15 € nájdete v <a href="/cennik">cenníku</a>. Často ho kombinujeme s <a href="/tepovanie-auta">tepovaním auta</a> pre maximálny efekt.</p>`,
+      processTitle: "Ako prebieha ozónovanie",
+      process: [
+        {
+          title: "Konzultácia",
+          text: "Zistíme typ priestoru, zdroj pachu a či stačí prenájom stroja alebo servis na mieste.",
+        },
+        {
+          title: "Príprava",
+          text: "Priestor alebo auto pripravíme — odporúčame pred ozónom odstrániť zdroj nečistôt (napr. tepovanie).",
+        },
+        {
+          title: "Cyklus ozónu",
+          text: "Spustíme ozónový generátor na dohodnutý čas podľa veľkosti priestoru.",
+        },
+        {
+          title: "Vetranie",
+          text: "Po ukončení dôkladne vyvetráme — do priestoru sa môžete vrátiť až po rozptýlení ozónu.",
+        },
+      ],
+      pricingCategories: ["Dezinfekcia ozónom"],
+      galleryIndices: [4],
+      faqQuestions: ["Prečo si vybrať Spotless Cleaning?"],
+      faqExtra: [
+        {
+          question: "Kedy sa oplatí ozónovanie auta alebo bytu?",
+          answer:
+            "Keď bežné vetranie a čistenie nestačia — silný zápach po fajčení, zvieratách, rozliaty nápoj v aute, plesni alebo zatuchnutý interiér po dlhšom státí. Ozón dopĺňame tepovaním, nie nahrádza ho.",
+        },
+        {
+          question: "Ponúkate prenájom ozónového stroja?",
+          answer:
+            "Áno. V cenníku nájdete dezinfekciu a prenájom od 15 €. Pri prevzatí vám vysvetlíme bezpečné použitie, odporúčaný čas cyklu a vetranie po skončení.",
+        },
+      ],
+      ctaKey: "serviceOzone",
+      relatedServices: [
+        { title: "Tepovanie auta", href: "/tepovanie-auta" },
+        { title: "Tepovanie sedačiek", href: "/tepovanie-sedaciek" },
+        { title: "Cenník", href: "/cennik" },
+      ],
     },
   },
 
@@ -140,6 +347,42 @@ const SITE_CONFIG = {
       primary: { text: "Objednať tepovanie", link: "/kontakt" },
       secondary: { text: "Pozrieť cenník", link: "/cennik" },
       note: "Doprava v Leviciach zdarma",
+    },
+    serviceFurniture: {
+      eyebrow: "Objednávka",
+      title: "Chcete čistú sedačku alebo koberec?",
+      subtitle:
+        "Napíšte nám rozmery alebo pošlite fotku — pripravíme nezáväznú ponuku a termín tepovania u vás doma.",
+      primary: { text: "Objednať tepovanie", link: "/kontakt" },
+      secondary: { text: "Celý cenník", link: "/cennik" },
+      note: "Odpoveď do 24 hodín · Doprava v Leviciach zdarma",
+    },
+    serviceCar: {
+      eyebrow: "Objednávka",
+      title: "Chcete čistý interiér auta?",
+      subtitle:
+        "Napíšte typ vozidla a čo potrebujete vyčistiť — pripravíme cenu a termín tepovania.",
+      primary: { text: "Objednať tepovanie auta", link: "/kontakt" },
+      secondary: { text: "Cenník auta", link: "/cennik" },
+      note: "Odpoveď do 24 hodín · Levice, Nitra a okolie",
+    },
+    serviceWindows: {
+      eyebrow: "Objednávka",
+      title: "Chcete čisté okná bez šmúh?",
+      subtitle:
+        "Pošlite počet okien alebo fotku — pripravíme termín umývania u vás doma alebo vo firme.",
+      primary: { text: "Objednať umývanie okien", link: "/kontakt" },
+      secondary: { text: "Cenník okien", link: "/cennik" },
+      note: "Odpoveď do 24 hodín · Doprava v Leviciach zdarma",
+    },
+    serviceOzone: {
+      eyebrow: "Objednávka",
+      title: "Potrebujete odstrániť zápach ozónom?",
+      subtitle:
+        "Opíšte priestor alebo auto — poradíme, či stačí prenájom stroja, alebo ozónovanie na mieste.",
+      primary: { text: "Nezáväzná objednávka", link: "/kontakt" },
+      secondary: { text: "Ceny ozónovania", link: "/cennik" },
+      note: "Prenájom stroja od 15 € · Levice a okolie",
     },
   },
 
@@ -221,8 +464,9 @@ const SITE_CONFIG = {
     {
       icon: "🛋️",
       title: "Tepovanie sedačiek a kobercov",
+      href: "/tepovanie-sedaciek",
       text: "Hlboké tepovanie sedačiek, kresiel, postelí a kobercov — viditeľný výsledok pred a po.",
-      detail: `<p>Ponúkame komplexné služby zamerané na <a href="/galeria">tepovanie sedačiek</a> a tepovanie gaučov, ktoré zbavia nábytok prachu, škvŕn a nepríjemných pachov. Pracujeme s certifikovanými prípravkami a prídeme priamo k vám — prehľad cien nájdete v <a href="/cennik">cenníku</a>.</p>
+      detail: `<p>Ponúkame komplexné služby zamerané na <a href="/tepovanie-sedaciek">tepovanie sedačiek</a> a tepovanie gaučov, ktoré zbavia nábytok prachu, škvŕn a nepríjemných pachov. Pracujeme s certifikovanými prípravkami a prídeme priamo k vám — prehľad cien nájdete v <a href="/cennik">cenníku</a>.</p>
         <h4>Hĺbkové tepovanie sedačiek a gaučov</h4>
         <p>Čistenie sedačiek odstraňuje nečistoty a alergény z hĺbky vlákien. Prídeme s profesionálnym vybavením priamo k vám domov.</p>
         <h4>Tepovanie kobercov</h4>
@@ -233,23 +477,26 @@ const SITE_CONFIG = {
     {
       icon: "🚗",
       title: "Tepovanie interiéru auta",
+      href: "/tepovanie-auta",
       text: "Čistenie sedadiel a kompletný interiér hatchbacku, sedanu alebo SUV. Kufor aj koberce.",
-      detail: `<p>Trávite v aute veľa času? Doprajte interiéru hĺbkové tepovanie vrátane kufra a koberčekov. Tepovanie autosedačiek odstráni škvrny od jedla, nápojov aj potu.</p>
+      detail: `<p>Trávite v aute veľa času? Doprajte interiéru <a href="/tepovanie-auta">hĺbkové tepovanie</a> vrátane kufra a koberčekov. Tepovanie autosedačiek odstráni škvrny od jedla, nápojov aj potu.</p>
         <h4>Čistenie kože v aute</h4>
         <p>Šetrné čistenie kožených sedačiek s impregnáciou, ktorá chráni materiál pred popraskaním. Ceny nájdete transparentne v <a href="/cennik">cenníku</a> — bez skrytých poplatkov.</p>`,
     },
     {
       icon: "🪟",
       title: "Umývanie okien",
+      href: "/umyvanie-okien",
       text: "Okná, balkónové dvere, francúzske okná a žalúzie — bez šmúh, pre domácnosti aj firmy.",
-      detail: `<p>Špinavé okná bránia prirodzenému svetlu. Zabezpečujeme <a href="/kontakt">umývanie okien v domácnosti</a> aj vo firmách — sklá, rámy, kľučky a parapety, bez šmúh.</p>
+      detail: `<p>Špinavé okná bránia prirodzenému svetlu. Zabezpečujeme <a href="/umyvanie-okien">umývanie okien v domácnosti</a> aj vo firmách — sklá, rámy, kľučky a parapety, bez šmúh.</p>
         <p>Realizujeme aj počas chladnejších mesiacov, pokiaľ teploty neklesnú pod bod mrazu.</p>`,
     },
     {
       icon: "🌿",
       title: "Ozónovanie a dezinfekcia",
+      href: "/ozonovanie",
       text: "Dezinfekcia priestorov ozónom. Možnosť prenájmu ozónového stroja od 15 €.",
-      detail: `<p>Dezinfekcia priestorov ozónom je účinná proti pachom, baktériám a alergénom — vhodná pre autá, byty aj kancelárie. Odstraňuje zápach po fajčení, zvieratách či vlhkosti.</p>
+      detail: `<p><a href="/ozonovanie">Dezinfekcia priestorov ozónom</a> je účinná proti pachom, baktériám a alergénom — vhodná pre autá, byty aj kancelárie. Odstraňuje zápach po fajčení, zvieratách či vlhkosti.</p>
         <p>Okrem profesionálneho ozónovania ponúkame aj prenájom ozónového prístroja — ceny od 15 € nájdete v <a href="/cennik">cenníku</a>.</p>`,
     },
   ],
@@ -338,40 +585,111 @@ const SITE_CONFIG = {
 
   gallery: [
     {
-      src: "/images/tepovanie-sedaciek-levice-pred-a-po.png",
-      alt: "Tepovanie sedačky — porovnanie pred a po čistení",
-      caption: "Tepovanie sedačky — pred a po",
+      compare: {
+        before: "/images/tepovanie-stredny-panel-pred.jpg",
+        after: "/images/tepovanie-stredny-panel-po.jpg",
+        beforeAlt: "Stredný panel auta pred tepovaním — špinavá látka",
+        afterAlt: "Stredný panel auta po tepovaní — vyčistená látka",
+      },
+      caption: "Stredný panel auta — posuňte pre porovnanie pred a po",
       wide: true,
     },
     {
-      src: "/images/tepovanie-autosedaciek-nitra.png",
-      alt: "Tepovanie autosedačiek — pred a po čistení",
-      caption: "Tepovanie autosedačiek — pred a po",
+      compare: {
+        before: "/images/tepovanie-auto-predna-sedacka-pred.jpg",
+        after: "/images/tepovanie-auto-predna-sedacka-po.jpg",
+        beforeAlt: "Predné sedadlo auta pred tepovaním",
+        afterAlt: "Predné sedadlo auta po tepovaní",
+      },
+      caption: "Predné sedadlo — posuňte pre porovnanie pred a po",
       wide: true,
     },
     {
-      src: "/images/umyvanie-okien-v-domacnosti.png",
-      alt: "Umývanie okien v domácnosti — čistenie skiel a rámov",
-      caption: "Umývanie okien v domácnosti",
+      compare: {
+        before: "/images/tepovanie-auto-zadna-sedacka-pred.jpg",
+        after: "/images/tepovanie-auto-zadna-sedacka-po.jpg",
+        beforeAlt: "Zadné sedadlo auta pred tepovaním — škvrna na látke",
+        afterAlt: "Zadné sedadlo auta po tepovaní — vyčistená látka",
+      },
+      caption: "Zadné sedadlo — posuňte pre porovnanie pred a po",
       wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-auto-cierna-sedacka-pred.jpg",
+        after: "/images/tepovanie-auto-cierna-sedacka-po.jpg",
+        beforeAlt: "Čierne autosedadlo pred tepovaním",
+        afterAlt: "Čierne autosedadlo po tepovaní",
+      },
+      caption: "Autosedadlo — posuňte pre porovnanie pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-auto-zadne-sedadla-pred.jpg",
+        after: "/images/tepovanie-auto-zadne-sedadla-po.jpg",
+        beforeAlt: "Zadná lavica auta pred tepovaním",
+        afterAlt: "Zadná lavica auta po tepovaní",
+      },
+      caption: "Zadná lavica — posuňte pre porovnanie pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-postel-pred.jpg",
+        after: "/images/tepovanie-postel-po.jpg",
+        beforeAlt: "Posteľ a matrac pred tepovaním",
+        afterAlt: "Posteľ a matrac po tepovaní",
+      },
+      caption: "Tepovanie postele — posuňte pre porovnanie pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-sedacka-pred.png",
+        after: "/images/tepovanie-sedacka-po.jpg",
+        beforeAlt: "Rozkladacia sedačka pred tepovaním — škvrny na látke",
+        afterAlt: "Rozkladacia sedačka po tepovaní — vyčistená látka",
+      },
+      compareAspect: "landscape",
+      caption: "Tepovanie sedačky — posuňte pre porovnanie pred a po",
+      wide: true,
+    },
+    {
+      src: "/images/pred-po-sedadlo-1.png",
+      alt: "Autosedadlo pred a po tepovaní — porovnanie 1",
+      caption: "Autosedadlo — pred a po",
+      pair: "autosedadlo",
     },
     {
       src: "/images/pred-po-sedadlo-2.png",
-      alt: "Pred a po čistení autosedačky",
-      caption: "Autosedačka — pred a po",
-      wide: true,
+      alt: "Autosedadlo pred a po tepovaní — porovnanie 2",
+      caption: "Autosedadlo — pred a po",
+      pair: "autosedadlo",
     },
     {
-      src: "/images/pred-po-kreslo.png",
-      alt: "Pred a po tepovaní kresla",
-      caption: "Tepovanie kresla — pred a po",
-      wide: true,
+      src: "/images/pred-po-kufor.png",
+      alt: "Kufor auta pred a po tepovaní",
+      caption: "Kufor — pred a po",
+      pair: "auto-interier",
     },
     {
       src: "/images/pred-po-auto.png",
-      alt: "Pred a po tepovaní interiéru auta",
+      alt: "Interiér auta pred a po tepovaní",
       caption: "Interiér auta — pred a po",
-      wide: true,
+      pair: "auto-interier",
+    },
+    {
+      src: "/images/pred-po-kreslo.png",
+      alt: "Kreslo pred a po tepovaní",
+      caption: "Tepovanie kresla — pred a po",
+      pair: "nabytok",
+    },
+    {
+      src: "/images/pred-po-sedacka.png",
+      alt: "Sedačka pred a po tepovaní",
+      caption: "Tepovanie sedačky — pred a po",
+      pair: "nabytok",
     },
   ],
 
