@@ -1881,48 +1881,50 @@ ul {
   }
 }
 
-/* Bento mriežka — viac fotiek naraz, asymetria, hover */
+/* Bento mriežka — prirodzený pomer fotiek (bez orezania), asymetria podľa orientácie */
 .gallery-mosaic--bento {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(68px, 11.5vw);
+  grid-auto-rows: auto;
   grid-auto-flow: dense;
   gap: clamp(0.4rem, 0.9vw, 0.55rem);
-  align-items: stretch;
+  align-items: start;
 }
 
 @media (min-width: 640px) {
   .gallery-mosaic--bento {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: minmax(72px, 8.5vw);
     gap: clamp(0.45rem, 0.75vw, 0.6rem);
   }
 }
 
 @media (min-width: 1024px) {
   .gallery-mosaic--bento {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    grid-auto-rows: minmax(78px, 7.25vw);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
-.gallery-mosaic--bento .gallery-bento--wide {
+.gallery-mosaic--bento .gallery-bento--portrait {
+  grid-column: span 1;
+}
+
+.gallery-mosaic--bento .gallery-bento--landscape {
   grid-column: span 2;
 }
 
-.gallery-mosaic--bento .gallery-bento--tall {
-  grid-row: span 2;
+.gallery-mosaic--bento .gallery-bento--panorama {
+  grid-column: span 3;
 }
 
-.gallery-mosaic--bento .gallery-bento--feature {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-@media (min-width: 1024px) {
-  .gallery-mosaic--bento .gallery-bento--feature {
+@media (max-width: 639px) {
+  .gallery-mosaic--bento .gallery-bento--panorama {
     grid-column: span 2;
-    grid-row: span 2;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .gallery-mosaic--bento .gallery-bento--panorama {
+    grid-column: span 4;
   }
 }
 
@@ -1930,8 +1932,7 @@ ul {
   margin: 0;
   min-height: 0;
   min-width: 0;
-  height: 100%;
-  display: flex;
+  display: block;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
@@ -1956,9 +1957,7 @@ ul {
 
 .gallery-mosaic--bento .gallery-tile__media {
   position: relative;
-  flex: 1;
   width: 100%;
-  min-height: 0;
   overflow: hidden;
   line-height: 0;
   border: none;
@@ -1969,22 +1968,20 @@ ul {
 .gallery-mosaic--bento .gallery-tile__media picture {
   display: block;
   width: 100%;
-  height: 100%;
 }
 
 .gallery-mosaic--bento .gallery-tile__media img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+  height: auto;
+  vertical-align: middle;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
 }
 
 .gallery-mosaic--bento .gallery-tile:hover .gallery-tile__media img,
 .gallery-mosaic--bento .gallery-tile:focus-visible .gallery-tile__media img {
-  transform: scale(1.07);
-  filter: brightness(1.06);
+  transform: scale(1.025);
+  filter: brightness(1.04);
 }
 
 .gallery-tile {
@@ -2125,11 +2122,6 @@ ul {
 }
 
 @media (max-width: 767px) {
-  .gallery-mosaic--bento .gallery-bento--feature {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-
   .gallery-tile--compare .gallery-tile__media {
     aspect-ratio: 576 / 1024;
     max-height: min(75vh, 560px);
