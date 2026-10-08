@@ -1394,22 +1394,29 @@ function renderGallerySectionsHtml(items, lightboxItems, sections) {
 }
 
 const GALLERY_SCATTER_SLOTS = [
-  { x: 1, y: 0, w: 28, r: -7, z: 2 },
-  { x: 31, y: 6, w: 24, r: 5, z: 3 },
-  { x: 58, y: 1, w: 26, r: -4, z: 4 },
-  { x: 76, y: 14, w: 22, r: 8, z: 2 },
-  { x: 5, y: 34, w: 30, r: 4, z: 5 },
-  { x: 38, y: 38, w: 25, r: -6, z: 6 },
-  { x: 66, y: 32, w: 28, r: 3, z: 4 },
-  { x: 18, y: 66, w: 26, r: -5, z: 3 },
-  { x: 48, y: 62, w: 32, r: 2, z: 7 },
-  { x: 0, y: 58, w: 23, r: 6, z: 2 },
+  { x: 0, y: 0, w: 27, r: -8, z: 2 },
+  { x: 29, y: 5, w: 23, r: 6, z: 3 },
+  { x: 54, y: 0, w: 25, r: -5, z: 4 },
+  { x: 72, y: 12, w: 26, r: 7, z: 2 },
+  { x: 3, y: 32, w: 29, r: 5, z: 5 },
+  { x: 35, y: 36, w: 24, r: -7, z: 6 },
+  { x: 62, y: 30, w: 27, r: 4, z: 4 },
+  { x: 14, y: 64, w: 25, r: -4, z: 3 },
+  { x: 42, y: 60, w: 31, r: 3, z: 7 },
+  { x: 68, y: 58, w: 28, r: -6, z: 5 },
 ];
 
-function scatterWidthForRatio(ratio) {
-  if (ratio >= 1.35) return 36;
-  if (ratio >= 1.05) return 30;
-  return 24;
+const GALLERY_SCATTER_MOBILE_ROTATIONS = [-3.5, 3, -2.5, 2.5, -4, 3.5, -2, 4, -3, 2];
+
+function isGalleryScatterMobile() {
+  return window.matchMedia("(max-width: 639px)").matches;
+}
+
+function scatterWidthForRatio(ratio, mobile) {
+  if (mobile) return ratio >= 1.15 ? 100 : 100;
+  if (ratio >= 1.35) return 34;
+  if (ratio >= 1.05) return 28;
+  return 22;
 }
 
 function applyGalleryScatterLayout(container) {
@@ -1419,26 +1426,46 @@ function applyGalleryScatterLayout(container) {
     : [...container.querySelectorAll(".gallery-mosaic--scatter")];
   if (!mosaics.length) return;
 
+  const mobile = isGalleryScatterMobile();
+
   mosaics.forEach((mosaic) => {
+    mosaic.classList.toggle("gallery-mosaic--scatter-mobile", mobile);
     const tiles = [...mosaic.querySelectorAll(".gallery-scatter-item")];
-    const bandHeight = mosaic.dataset.scatterCompact === "true" ? 72 : 88;
+    const bandHeight = 82;
 
     tiles.forEach((tile, index) => {
-      const slot = GALLERY_SCATTER_SLOTS[index % GALLERY_SCATTER_SLOTS.length];
-      const band = Math.floor(index / GALLERY_SCATTER_SLOTS.length);
-      const yShift = band * bandHeight;
+      tile.classList.remove("gallery-scatter-item--wide");
 
-      tile.style.setProperty("--s-x", `${slot.x}%`);
-      tile.style.setProperty("--s-y", `calc(${slot.y + yShift * 0.35}% + ${band * 1.75}rem)`);
-      tile.style.setProperty("--s-w", `${slot.w}%`);
-      tile.style.setProperty("--s-r", `${slot.r}deg`);
-      tile.style.setProperty("--s-z", String(slot.z + band));
+      if (mobile) {
+        tile.style.removeProperty("--s-x");
+        tile.style.removeProperty("--s-y");
+        tile.style.removeProperty("--s-w");
+        tile.style.setProperty(
+          "--s-r",
+          `${GALLERY_SCATTER_MOBILE_ROTATIONS[index % GALLERY_SCATTER_MOBILE_ROTATIONS.length]}deg`
+        );
+        tile.style.setProperty("--s-z", String((index % 5) + 1));
+      } else {
+        const slot = GALLERY_SCATTER_SLOTS[index % GALLERY_SCATTER_SLOTS.length];
+        const band = Math.floor(index / GALLERY_SCATTER_SLOTS.length);
+        const yShift = band * bandHeight;
+
+        tile.style.setProperty("--s-x", `${slot.x}%`);
+        tile.style.setProperty("--s-y", `calc(${slot.y + yShift * 0.32}% + ${band * 1.65}rem)`);
+        tile.style.setProperty("--s-w", `${slot.w}%`);
+        tile.style.setProperty("--s-r", `${slot.r}deg`);
+        tile.style.setProperty("--s-z", String(slot.z + band));
+      }
 
       const img = tile.querySelector("img");
       const applySize = () => {
         if (!img?.naturalWidth) return;
-        const w = scatterWidthForRatio(img.naturalWidth / img.naturalHeight);
-        tile.style.setProperty("--s-w", `${w}%`);
+        const ratio = img.naturalWidth / img.naturalHeight;
+        if (mobile) {
+          tile.classList.toggle("gallery-scatter-item--wide", ratio >= 1.2);
+        } else {
+          tile.style.setProperty("--s-w", `${scatterWidthForRatio(ratio, false)}%`);
+        }
         refreshScatterCanvas(mosaic);
       };
 
@@ -1452,12 +1479,29 @@ function applyGalleryScatterLayout(container) {
 
 function refreshScatterCanvas(mosaic) {
   requestAnimationFrame(() => {
+    if (isGalleryScatterMobile()) {
+      mosaic.style.minHeight = "";
+      return;
+    }
     let maxBottom = 0;
     mosaic.querySelectorAll(".gallery-scatter-item").forEach((tile) => {
       maxBottom = Math.max(maxBottom, tile.offsetTop + tile.offsetHeight);
     });
-    mosaic.style.minHeight = `${Math.max(maxBottom + 48, 280)}px`;
+    mosaic.style.minHeight = `${Math.max(maxBottom + 56, 300)}px`;
   });
+}
+
+let galleryScatterResizeTimer;
+function scheduleGalleryScatterRelayout() {
+  clearTimeout(galleryScatterResizeTimer);
+  galleryScatterResizeTimer = setTimeout(() => {
+    const root = document.getElementById("gallery-full");
+    if (root) applyGalleryScatterLayout(root);
+  }, 120);
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("resize", scheduleGalleryScatterRelayout, { passive: true });
 }
 
 function buildGalleryMosaicStaticTile(item, lightboxItems) {
