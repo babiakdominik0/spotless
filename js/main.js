@@ -938,7 +938,7 @@ function renderPageContent(config, page) {
     const compareItems = getGalleryCompareItems(allGallery);
     const staticGallery = allGallery.filter((item) => !item.compare);
     renderGalleryCompareSpotlight(compareItems);
-    renderGallery(staticGallery, "gallery-full", config.gallery);
+    renderGallery(staticGallery, "gallery-full", config.gallery, config);
     document.querySelector(".gallery-showcase")?.toggleAttribute("hidden", !staticGallery.length);
     renderReels(config, "reels-track", { linked: true });
   }
@@ -1355,10 +1355,48 @@ function mosaicVariantClass(index, isCompare) {
   return `gallery-tile--v${index % 6}`;
 }
 
-function applyGalleryBentoLayout(container) {
-  if (!container?.classList.contains("gallery-mosaic--bento")) return;
+function groupGalleryItemsBySection(items, sections) {
+  if (!sections?.length) return [{ id: "all", title: null, items: items || [] }];
+  const buckets = Object.fromEntries(sections.map((s) => [s.id, []]));
+  const fallbackId = sections[0].id;
+  (items || []).forEach((item) => {
+    const key = item.category && buckets[item.category] ? item.category : fallbackId;
+    buckets[key].push(item);
+  });
+  return sections
+    .filter((section) => buckets[section.id]?.length)
+    .map((section) => ({ ...section, items: buckets[section.id] }));
+}
 
-  container.querySelectorAll(".gallery-bento").forEach((tile) => {
+function renderGallerySectionsHtml(items, lightboxItems, sections) {
+  return groupGalleryItemsBySection(items, sections)
+    .map((group) => {
+      const link = group.serviceHref
+        ? `<a class="gallery-section__link" href="${group.serviceHref}">Viac o službe <span aria-hidden="true">→</span></a>`
+        : "";
+      return `
+    <section class="gallery-section" aria-labelledby="gallery-section-${group.id}">
+      <div class="gallery-section__head">
+        <h3 class="gallery-section__title" id="gallery-section-${group.id}">${group.title}</h3>
+        ${link}
+      </div>
+      <div class="gallery-mosaic gallery-mosaic--bento">
+        ${renderGalleryMosaicHtml(group.items, lightboxItems)}
+      </div>
+    </section>`;
+    })
+    .join("");
+}
+
+function applyGalleryBentoLayout(container) {
+  if (!container) return;
+  const mosaics = container.classList.contains("gallery-mosaic--bento")
+    ? [container]
+    : [...container.querySelectorAll(".gallery-mosaic--bento")];
+  if (!mosaics.length) return;
+
+  mosaics.forEach((mosaic) => {
+  mosaic.querySelectorAll(".gallery-bento").forEach((tile) => {
     const img = tile.querySelector("img");
     if (!img) return;
 
@@ -1377,6 +1415,7 @@ function applyGalleryBentoLayout(container) {
 
     if (img.complete) apply();
     else img.addEventListener("load", apply, { once: true });
+  });
   });
 }
 
@@ -1399,7 +1438,7 @@ function renderGalleryMosaicHtml(items, lightboxItems) {
   return items.map((item) => buildGalleryMosaicStaticTile(item, lightboxItems)).join("");
 }
 
-function renderGallery(items, containerId, lightboxSource) {
+function renderGallery(items, containerId, lightboxSource, pageConfig) {
   const container = document.getElementById(containerId);
   if (!container || !items?.length) return;
 
@@ -1407,9 +1446,10 @@ function renderGallery(items, containerId, lightboxSource) {
   const isMosaic = containerId === "gallery-full";
   const isPage = isMosaic || containerId === "service-gallery";
   const lightboxItems = getGalleryLightboxItems(lightboxSource || items);
+  const gallerySections = pageConfig?.gallerySections;
 
   if (hasStaticContent(container)) {
-    if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--bento";
+    if (isMosaic) container.className = gallerySections?.length ? "gallery-sections" : "gallery-mosaic gallery-mosaic--bento";
     else if (isPage) container.className = "gallery-grid gallery-grid--page";
     bindGalleryItems(container, lightboxItems);
     initCompareSliders(container);
@@ -1417,12 +1457,17 @@ function renderGallery(items, containerId, lightboxSource) {
     return;
   }
 
-  if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--bento";
-  else if (isPage) container.className = "gallery-grid gallery-grid--page";
+  const mosaicStaticOnly = isMosaic && !items.some((item) => item.compare);
 
-  if (isMosaic && !items.some((item) => item.compare)) {
+  if (mosaicStaticOnly && gallerySections?.length) {
+    container.className = "gallery-sections";
+    container.innerHTML = renderGallerySectionsHtml(items, lightboxItems, gallerySections);
+  } else if (mosaicStaticOnly) {
+    container.className = "gallery-mosaic gallery-mosaic--bento";
     container.innerHTML = renderGalleryMosaicHtml(items, lightboxItems);
   } else {
+    if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--bento";
+    else if (isPage) container.className = "gallery-grid gallery-grid--page";
     container.innerHTML = items
       .map((item, index) => {
         const wideClass =

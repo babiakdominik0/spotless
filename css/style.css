@@ -1441,12 +1441,50 @@ ul {
 }
 
 .gallery-showcase__title {
-  margin: 0 0 0.85rem;
+  margin: 0 0 1.25rem;
   font-size: clamp(1.05rem, 2vw, 1.2rem);
   font-weight: 600;
   color: var(--color-text-muted);
   text-align: center;
   letter-spacing: 0.02em;
+}
+
+.gallery-sections {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.gallery-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gallery-section__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.gallery-section__link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.gallery-section__link:hover {
+  color: #fff;
 }
 
 /* Galéria — kompaktný compare carousel + fullscreen */
