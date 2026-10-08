@@ -3,13 +3,19 @@ function toWebpSrc(src) {
   return src.replace(/\.(png|jpe?g)$/i, ".webp");
 }
 
-function buildPictureMarkup(src, { alt = "", loading, fetchPriority, className, width, height } = {}) {
-  const webp = toWebpSrc(src);
+/** WebP existuje len pri vybraných PNG v /images/ — pri JPG inak 404 a v <picture> sa náhľad nemusí načítať. */
+function shouldUseWebpSrc(src) {
+  return Boolean(src && /\.png$/i.test(src));
+}
+
+function buildPictureMarkup(src, { alt = "", loading, fetchPriority, className, width, height, decoding } = {}) {
+  const webp = shouldUseWebpSrc(src) ? toWebpSrc(src) : null;
   const imgAttrs = [
     `src="${src}"`,
     alt !== undefined ? `alt="${alt}"` : "",
     loading ? `loading="${loading}"` : "",
     fetchPriority ? `fetchpriority="${fetchPriority}"` : "",
+    decoding ? `decoding="${decoding}"` : "",
     className ? `class="${className}"` : "",
     width ? `width="${width}"` : "",
     height ? `height="${height}"` : "",
@@ -1369,7 +1375,7 @@ function buildGalleryMosaicStaticTile(item, lightboxItems) {
   return `
     <figure class="gallery-tile gallery-item" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-tile__media">
-        ${buildPictureMarkup(item.src, { alt: item.alt, loading: "lazy" })}
+        ${buildPictureMarkup(item.src, { alt: item.alt, loading: "eager", decoding: "async" })}
         <div class="gallery-tile__overlay">
           ${item.caption ? `<p class="gallery-tile__caption">${item.caption}</p>` : ""}
           <span class="gallery-tile__hint">Zväčšiť</span>
@@ -1448,10 +1454,11 @@ function renderGallery(items, containerId, lightboxSource) {
           return buildGalleryMosaicStaticTile(item, lightboxItems);
         }
 
+        const previewLoading = isPreview ? "eager" : "lazy";
         return `
     <figure class="gallery-item${wideClass}" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-item__frame">
-        ${buildPictureMarkup(item.src, { alt: item.alt, loading: "lazy" })}
+        ${buildPictureMarkup(item.src, { alt: item.alt, loading: previewLoading, decoding: "async" })}
       </div>
       ${item.caption ? `<figcaption class="gallery-caption">${item.caption}</figcaption>` : ""}
     </figure>
