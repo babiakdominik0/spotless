@@ -23,7 +23,7 @@ function buildPictureMarkup(src, { alt = "", loading, fetchPriority, className, 
 }
 
 function hasStaticContent(container) {
-  return container?.dataset.staticContent === "true" || container.children.length > 0;
+  return container?.dataset.staticContent === "true";
 }
 
 function getGalleryLightboxItems(items) {
@@ -285,6 +285,21 @@ function initServiceCompareCarousel(carousel, items) {
 
   carousel._carouselIndex = index;
   renderWindow();
+}
+
+function getHomeGalleryPreviewItems(gallery, config) {
+  const count = config.homeGalleryPreview || 6;
+  const staticItems = (gallery || []).filter((item) => item.src);
+  const keys = config.homeGalleryPreviewKeys;
+
+  if (keys?.length) {
+    const picked = keys
+      .map((key) => staticItems.find((item) => item.src.includes(key)))
+      .filter(Boolean);
+    if (picked.length) return picked.slice(0, count);
+  }
+
+  return staticItems.slice(0, count);
 }
 
 function getGalleryCompareItems(items) {
@@ -654,6 +669,15 @@ function applySectionCopy(config) {
     if (title && copy.title) title.textContent = copy.title;
     if (subtitle && copy.subtitle) subtitle.textContent = copy.subtitle;
   });
+
+  const igShowcase = document.querySelector("[data-instagram-profile]");
+  const reels = config.instagramReels;
+  if (igShowcase && reels?.profileUrl) {
+    igShowcase.href = reels.profileUrl;
+    igShowcase.textContent = reels.profileHandle
+      ? `${reels.profileHandle} — Instagram`
+      : "Viac na Instagrame";
+  }
 }
 
 function getPageCopy(config, page) {
@@ -891,8 +915,7 @@ function renderPageContent(config, page) {
   if (page === "home") {
     renderHome(config);
     renderServices(config);
-    const previewCount = config.homeGalleryPreview || 3;
-    const preview = config.gallery?.filter((item) => item.src).slice(0, previewCount);
+    const preview = getHomeGalleryPreviewItems(config.gallery, config);
     renderGallery(preview, "gallery-preview", config.gallery);
     renderReels(config, "home-reels-track", {
       linked: false,

@@ -163,7 +163,7 @@ const SITE_CONFIG = {
         },
       ],
       pricingCategories: ["Tepovanie nábytku", "Tepovanie kobercov", "Čistenie kože"],
-      galleryIndices: [6],
+      galleryIndices: [6, 10, 11, 13, 5],
       faqQuestions: [
         "Ako dlho po tepovaní schne sedačka alebo koberec?",
         "Čo všetko zahŕňa čistenie kože a ošetrenie kožených sedačiek?",
@@ -211,7 +211,7 @@ const SITE_CONFIG = {
         },
       ],
       pricingCategories: ["Tepovanie automobilov", "Čistenie kože"],
-      galleryIndices: [0, 1, 2, 3, 4],
+      galleryIndices: [0, 1, 2, 3, 4, 7, 9, 12, 14, 16],
       faqQuestions: [
         "Koľko stojí tepovanie auta?",
         "Čo všetko zahŕňa čistenie kože a ošetrenie kožených sedačiek?",
@@ -259,7 +259,7 @@ const SITE_CONFIG = {
         },
       ],
       pricingCategories: ["Čistenie okien"],
-      galleryIndices: [],
+      galleryIndices: [15],
       faqQuestions: [
         "Vykonávate umývanie okien v domácnosti aj počas zimy?",
         "Prečo si vybrať Spotless Cleaning?",
@@ -656,6 +656,106 @@ const SITE_CONFIG = {
       wide: true,
     },
     {
+      compare: {
+        before: "/images/tepovanie-auto-sedadlo-sede-pred.jpg",
+        after: "/images/tepovanie-auto-sedadlo-sede-po.jpg",
+        beforeAlt: "Sivé autosedadlo pred tepovaním — špinavá látka",
+        afterAlt: "Sivé autosedadlo po tepovaní — vyčistená látka",
+      },
+      caption: "Autosedadlo — posuňte pre porovnanie pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-auto-lavica-pred.jpg",
+        after: "/images/tepovanie-auto-lavica-po.jpg",
+        beforeAlt: "Zadná lavica auta pred tepovaním",
+        afterAlt: "Zadná lavica auta po tepovaní",
+      },
+      caption: "Zadná sedacia lavica — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-auto-modra-pred.jpg",
+        after: "/images/tepovanie-auto-modra-po.jpg",
+        beforeAlt: "Modré autosedadlá pred tepovaním",
+        afterAlt: "Modré autosedadlá po tepovaní",
+      },
+      caption: "Modrý interiér auta — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-koberec-pred.jpg",
+        after: "/images/tepovanie-koberec-po.jpg",
+        beforeAlt: "Koberec v obývačke pred tepovaním",
+        afterAlt: "Koberec po tepovaní — obnovená farba",
+      },
+      caption: "Tepovanie koberca — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-koberec-2-pred.jpg",
+        after: "/images/tepovanie-koberec-2-po.jpg",
+        beforeAlt: "Koberec pri sedačke pred tepovaním",
+        afterAlt: "Koberec pri sedačke po tepovaní",
+      },
+      caption: "Koberec — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-auto-zadne-pred-2.jpg",
+        after: "/images/tepovanie-auto-zadne-po-2.jpg",
+        beforeAlt: "Zadné sedadlá auta pred tepovaním",
+        afterAlt: "Zadné sedadlá auta po tepovaní",
+      },
+      caption: "Zadné sedadlá — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-postel-pred-2.jpg",
+        after: "/images/tepovanie-postel-po-2.jpg",
+        beforeAlt: "Matrac a posteľ pred tepovaním — škvrny",
+        afterAlt: "Matrac a posteľ po tepovaní",
+      },
+      caption: "Tepovanie matraca — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-auto-koza-pred.jpg",
+        after: "/images/tepovanie-auto-koza-po.jpg",
+        beforeAlt: "Kožené autosedadlo pred čistením",
+        afterAlt: "Kožené autosedadlo po čistení kože",
+      },
+      caption: "Čistenie kože v aute — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/umyvanie-okien-pred.jpg",
+        after: "/images/umyvanie-okien-po.jpg",
+        beforeAlt: "Okno pred umývaním — špinavé sklo a rám",
+        afterAlt: "Okno po umývaní — čisté sklo bez šmúh",
+      },
+      caption: "Umývanie okien — pred a po",
+      wide: true,
+    },
+    {
+      compare: {
+        before: "/images/tepovanie-auto-dvere-pred.jpg",
+        after: "/images/tepovanie-auto-dvere-po.jpg",
+        beforeAlt: "Dvere auta a čalúnenie pred čistením",
+        afterAlt: "Dvere auta po čistení interiéru",
+      },
+      caption: "Dvere a čalúnenie auta — pred a po",
+      wide: true,
+    },
+    {
       src: "/images/pred-po-sedadlo-1.png",
       alt: "Autosedadlo pred a po tepovaní — porovnanie 1",
       caption: "Autosedadlo — pred a po",
@@ -691,9 +791,52 @@ const SITE_CONFIG = {
       caption: "Tepovanie sedačky — pred a po",
       pair: "nabytok",
     },
+    {
+      src: "/images/tepovanie-seda-modra-gauc.jpg",
+      alt: "Modrá sedačka po tepovaní v interiéri",
+      caption: "Tepovanie sedačky — výsledok",
+    },
+    {
+      src: "/images/tepovanie-seda-gauc-exterier.jpg",
+      alt: "Modrá sedačka pripravená na tepovanie",
+      caption: "Sedačka — pred čistením",
+    },
+    {
+      src: "/images/tepovanie-seda-kreslo-pred.jpg",
+      alt: "Kreslo pred tepovaním",
+      caption: "Tepovanie kresla — pred",
+    },
+    {
+      src: "/images/tepovanie-sedacka-po.jpg",
+      alt: "Rozkladacia sedačka po tepovaní — vyčistená látka",
+      caption: "Tepovanie sedačky — výsledok",
+    },
+    {
+      src: "/images/umyvanie-okien-po.jpg",
+      alt: "Okno po umývaní — čisté sklo bez šmúh",
+      caption: "Umývanie okien",
+    },
+    {
+      src: "/images/tepovanie-auto-koza-po.jpg",
+      alt: "Kožené autosedadlo po čistení",
+      caption: "Čistenie kože v aute",
+    },
+    {
+      src: "/images/tepovanie-koberec-po.jpg",
+      alt: "Koberec po tepovaní",
+      caption: "Tepovanie koberca",
+    },
   ],
 
-  homeGalleryPreview: 3,
+  homeGalleryPreview: 6,
+  homeGalleryPreviewKeys: [
+    "pred-po-sedacka",
+    "pred-po-auto",
+    "pred-po-kreslo",
+    "tepovanie-seda-modra-gauc",
+    "umyvanie-okien-po",
+    "tepovanie-auto-koza-po",
+  ],
   homeReelsPreview: 2,
   homeReelIds: ["DJ4msrLs9Rm", "DYVML_fsQwL"],
 
