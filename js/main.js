@@ -713,6 +713,11 @@ function renderPageHeader(config, page) {
     galleryMuted.textContent = ` ${copy.titleMuted}`;
   }
 
+  const galleryShowcaseTitle = document.querySelector("[data-gallery-showcase-title]");
+  if (galleryShowcaseTitle && copy.showcaseTitle) {
+    galleryShowcaseTitle.textContent = copy.showcaseTitle;
+  }
+
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && copy.metaDescription) metaDesc.content = copy.metaDescription;
 

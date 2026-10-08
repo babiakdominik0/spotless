@@ -110,6 +110,7 @@ const SITE_CONFIG = {
       collectionTag: "Pred a po tepovaní",
       title: "Galéria",
       titleMuted: "pred a po",
+      showcaseTitle: "Naša práca",
       subtitle:
         "Reálne výsledky tepovania sedačiek, kobercov, kresiel a interiérov áut. Kliknite na fotku pre zväčšenie.",
       pageTitle: "Galéria pred a po — tepovanie | Spotless Cleaning",
