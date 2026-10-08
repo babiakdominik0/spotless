@@ -303,10 +303,7 @@ function getHomeGalleryPreviewItems(gallery, config) {
 }
 
 function getGalleryCompareItems(items) {
-  const compares = (items || []).filter((item) => item.compare);
-  const landscape = compares.filter((item) => item.compareAspect === "landscape");
-  const rest = compares.filter((item) => item.compareAspect !== "landscape");
-  return [...landscape, ...rest];
+  return (items || []).filter((item) => item.compare);
 }
 
 function buildGalleryCompareCarouselSlide(item) {
