@@ -217,13 +217,20 @@ function buildServiceCarouselSlide(item, slideClass) {
   `;
 }
 
-function initServiceCompareCarousel(carousel, items) {
+function initServiceCompareCarousel(carousel, items, options = {}) {
+  const { lightboxItems } = options;
   const track = carousel.querySelector(".service-compare-carousel__track");
   const prevBtn = carousel.querySelector("[data-carousel-prev]");
   const nextBtn = carousel.querySelector("[data-carousel-next]");
-  const statusEl = document.getElementById("service-compare-status");
-  const captionEl = document.getElementById("service-compare-caption");
-  const hintEl = document.getElementById("service-compare-hint");
+  const statusEl =
+    carousel.querySelector("[data-carousel-status]") ??
+    document.getElementById("service-compare-status");
+  const captionEl =
+    carousel.querySelector("[data-carousel-caption]") ??
+    document.getElementById("service-compare-caption");
+  const hintEl =
+    carousel.querySelector("[data-carousel-hint]") ??
+    document.getElementById("service-compare-hint");
 
   if (!track || !items?.length) return;
 
@@ -236,6 +243,10 @@ function initServiceCompareCarousel(carousel, items) {
     }
     if (hintEl) {
       hintEl.classList.toggle("is-hidden", !items[index]?.compare);
+    }
+    if (lightboxItems?.length && items[index]?.src) {
+      const li = lightboxItems.findIndex((g) => g.src === items[index].src);
+      carousel.dataset.lightboxIndex = li >= 0 ? String(li) : "";
     }
   };
 
@@ -288,6 +299,25 @@ function initServiceCompareCarousel(carousel, items) {
         goTo(index + 1);
       }
     });
+
+    if (lightboxItems?.length) {
+      carousel.addEventListener("click", (e) => {
+        if (e.target.closest(".service-compare-carousel__btn")) return;
+        if (e.target.closest(".ba-compare")) return;
+        const active = carousel.querySelector(".service-compare-carousel__slide.is-active");
+        if (!active?.contains(e.target)) return;
+        const li = parseInt(carousel.dataset.lightboxIndex, 10);
+        if (!Number.isNaN(li) && li >= 0) openLightbox(lightboxItems, li);
+      });
+      carousel.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        const li = parseInt(carousel.dataset.lightboxIndex, 10);
+        if (!Number.isNaN(li) && li >= 0) {
+          e.preventDefault();
+          openLightbox(lightboxItems, li);
+        }
+      });
+    }
   }
 
   carousel._carouselIndex = index;
@@ -1365,12 +1395,255 @@ function groupGalleryItemsBySection(items, sections) {
   const buckets = Object.fromEntries(sections.map((s) => [s.id, []]));
   const fallbackId = sections[0].id;
   (items || []).forEach((item) => {
-    const key = item.category && buckets[item.category] ? item.category : fallbackId;
+    const cat = typeof item.category === "string" ? item.category.trim() : item.category;
+    const key = cat && buckets[cat] ? cat : fallbackId;
     buckets[key].push(item);
   });
   return sections
     .filter((section) => buckets[section.id]?.length)
     .map((section) => ({ ...section, items: buckets[section.id] }));
+}
+
+function isGalleryCombinedImageItem(item) {
+  return /pred-po|rozdiel/i.test(item?.src || "");
+}
+
+function isGalleryPredItem(item) {
+  if (isGalleryCombinedImageItem(item)) return false;
+  const src = item?.src || "";
+  if (/(^|[/_-])pred\./i.test(src)) return true;
+  return /— pred\s*$/i.test(item?.caption || "");
+}
+
+function isGalleryPoItem(item) {
+  if (isGalleryCombinedImageItem(item)) return false;
+  const src = item?.src || "";
+  if (/(^|[/_-])po\./i.test(src)) return true;
+  return /— po\s*$/i.test(item?.caption || "");
+}
+
+function galleryPairCaption(before, after) {
+  const raw = before?.caption || after?.caption || before?.alt || "";
+  return raw.replace(/\s*—\s*(pred|po)\s*$/i, "").trim();
+}
+
+function groupGalleryItemsIntoPairSlides(items, lightboxItems) {
+  const slides = [];
+  const used = new Set();
+
+  const pushSlide = (slide) => {
+    if (slide.kind === "pair") {
+      slide.caption = galleryPairCaption(slide.before, slide.after);
+      slide.lightboxIndexBefore = lightboxItems.findIndex((g) => g.src === slide.before.src);
+      slide.lightboxIndexAfter = lightboxItems.findIndex((g) => g.src === slide.after.src);
+      slide.lightboxIndex = slide.lightboxIndexBefore;
+    } else {
+      slide.caption = slide.item.caption || slide.item.alt || "";
+      slide.lightboxIndex = lightboxItems.findIndex((g) => g.src === slide.item.src);
+    }
+    slides.push(slide);
+  };
+
+  for (let i = 0; i < items.length; i += 1) {
+    if (used.has(i)) continue;
+    const item = items[i];
+
+    if (item.pair) {
+      let mateIndex = -1;
+      for (let j = i + 1; j < items.length; j += 1) {
+        if (used.has(j) || items[j].pair !== item.pair) continue;
+        if (j !== i + 1) continue;
+        const mate = items[j];
+        const itemCat = item.category?.trim?.() ?? item.category;
+        const mateCat = mate.category?.trim?.() ?? mate.category;
+        if (itemCat && mateCat && itemCat !== mateCat) continue;
+        if (
+          (isGalleryPredItem(item) && isGalleryPoItem(mate)) ||
+          (isGalleryPoItem(item) && isGalleryPredItem(mate))
+        ) {
+          mateIndex = j;
+          break;
+        }
+      }
+
+      if (mateIndex >= 0) {
+        used.add(i);
+        used.add(mateIndex);
+        const mate = items[mateIndex];
+        const before = isGalleryPredItem(item) ? item : mate;
+        const after = isGalleryPoItem(item) ? item : mate;
+        pushSlide({ kind: "pair", before, after });
+        continue;
+      }
+    }
+
+    used.add(i);
+    if (isGalleryCombinedImageItem(item)) {
+      pushSlide({ kind: "combined", item });
+    } else {
+      pushSlide({ kind: "single", item });
+    }
+  }
+
+  return slides;
+}
+
+function coverflowLightboxAttr(index) {
+  return typeof index === "number" && index >= 0 ? ` data-lightbox-index="${index}"` : "";
+}
+
+function buildGalleryCoverflowSlideContent(slide) {
+  if (slide.kind === "pair") {
+    return `
+      <div class="gallery-coverflow__pair">
+        <figure class="gallery-coverflow__half gallery-coverflow__half--before"${coverflowLightboxAttr(slide.lightboxIndexBefore)} role="button" aria-label="Otvoriť pred: ${slide.before.alt}">
+          <span class="gallery-coverflow__label">Pred</span>
+          ${buildPictureMarkup(slide.before.src, { alt: slide.before.alt, loading: "lazy", decoding: "async" })}
+        </figure>
+        <figure class="gallery-coverflow__half gallery-coverflow__half--after"${coverflowLightboxAttr(slide.lightboxIndexAfter)} role="button" aria-label="Otvoriť po: ${slide.after.alt}">
+          <span class="gallery-coverflow__label">Po</span>
+          ${buildPictureMarkup(slide.after.src, { alt: slide.after.alt, loading: "lazy", decoding: "async" })}
+        </figure>
+      </div>`;
+  }
+
+  const item = slide.item;
+  return `
+    <div class="gallery-coverflow__single"${coverflowLightboxAttr(slide.lightboxIndex)} role="button" aria-label="Otvoriť: ${item.alt}">
+      ${buildPictureMarkup(item.src, { alt: item.alt, loading: "lazy", decoding: "async" })}
+    </div>`;
+}
+
+function buildGalleryCoverflowSlideMarkup(slide, slotClass, isActive) {
+  return `
+    <figure class="gallery-coverflow__slide ${slotClass}" role="group" aria-roledescription="slide" aria-hidden="${isActive ? "false" : "true"}">
+      ${buildGalleryCoverflowSlideContent(slide)}
+    </figure>`;
+}
+
+function initGalleryCoverflowCarousel(carousel, slides, lightboxItems) {
+  const track = carousel.querySelector(".gallery-coverflow__track");
+  const prevBtn = carousel.querySelector("[data-coverflow-prev]");
+  const nextBtn = carousel.querySelector("[data-coverflow-next]");
+  const statusEl = carousel.querySelector("[data-coverflow-status]");
+  const captionEl = carousel.querySelector("[data-coverflow-caption]");
+  const tagEl = carousel.querySelector("[data-coverflow-tag]");
+
+  if (!track || !slides?.length) return;
+
+  let index = carousel._coverflowIndex ?? 0;
+
+  const slotClassForOffset = (offset) => {
+    if (offset === 0) return "is-active";
+    if (offset === -1) return "is-offset-1 is-left";
+    if (offset === 1) return "is-offset-1 is-right";
+    if (offset === -2) return "is-offset-2 is-left";
+    return "is-offset-2 is-right";
+  };
+
+  const updateMeta = () => {
+    const slide = slides[index];
+    if (statusEl) statusEl.textContent = `${index + 1} / ${slides.length}`;
+    if (captionEl) captionEl.textContent = slide?.caption || "";
+    if (tagEl) {
+      tagEl.textContent =
+        slide?.kind === "pair" ? "Pred a po" : slide?.kind === "combined" ? "Porovnanie" : "Fotka";
+    }
+    const li = slide?.lightboxIndex;
+    carousel.dataset.lightboxIndex = typeof li === "number" && li >= 0 ? String(li) : "";
+  };
+
+  const renderWindow = () => {
+    const n = slides.length;
+    carousel.classList.toggle("is-single", n <= 1);
+    carousel.classList.toggle("is-compact-set", n > 1 && n <= 4);
+    carousel.dataset.slideCount = String(n);
+
+    if (n <= 1) {
+      track.innerHTML = buildGalleryCoverflowSlideMarkup(slides[0], "is-active", true);
+      updateMeta();
+      return;
+    }
+
+    const offsets = n >= 5 ? [-2, -1, 0, 1, 2] : n === 2 ? [-1, 0, 1] : [-1, 0, 1];
+
+    track.innerHTML = offsets
+      .map((offset) => {
+        const slideIndex = (index + offset + n * 50) % n;
+        return buildGalleryCoverflowSlideMarkup(
+          slides[slideIndex],
+          slotClassForOffset(offset),
+          offset === 0
+        );
+      })
+      .join("");
+
+    updateMeta();
+  };
+
+  const goTo = (nextIndex) => {
+    index = (nextIndex + slides.length) % slides.length;
+    carousel._coverflowIndex = index;
+    renderWindow();
+  };
+
+  if (carousel.dataset.coverflowReady !== "true") {
+    carousel.dataset.coverflowReady = "true";
+
+    prevBtn?.addEventListener("click", () => goTo(index - 1));
+    nextBtn?.addEventListener("click", () => goTo(index + 1));
+
+    carousel.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goTo(index - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goTo(index + 1);
+      }
+      if (e.key === "Enter") {
+        const li = parseInt(carousel.dataset.lightboxIndex, 10);
+        if (!Number.isNaN(li) && li >= 0) {
+          e.preventDefault();
+          openLightbox(lightboxItems, li);
+        }
+      }
+    });
+
+    carousel.addEventListener("click", (e) => {
+      if (e.target.closest("[data-coverflow-prev], [data-coverflow-next]")) return;
+      const active = carousel.querySelector(".gallery-coverflow__slide.is-active");
+      if (!active?.contains(e.target)) return;
+      const target = e.target.closest("[data-lightbox-index]");
+      if (!target || !active.contains(target)) return;
+      const li = parseInt(target.dataset.lightboxIndex, 10);
+      if (!Number.isNaN(li) && li >= 0) openLightbox(lightboxItems, li);
+    });
+  }
+
+  carousel._coverflowIndex = index;
+  renderWindow();
+}
+
+function buildGalleryCoverflowHtml(group) {
+  const label = group.title || "Fotky";
+  return `
+      <div class="gallery-coverflow" data-gallery-coverflow data-section-id="${group.id}" aria-roledescription="carousel" aria-label="${label}" tabindex="0">
+        <div class="gallery-coverflow__row">
+          <button type="button" class="gallery-coverflow__btn" data-coverflow-prev aria-label="Predchádzajúca ukážka"><span aria-hidden="true">&#8249;</span></button>
+          <div class="gallery-coverflow__viewport">
+            <div class="gallery-coverflow__track"></div>
+          </div>
+          <button type="button" class="gallery-coverflow__btn" data-coverflow-next aria-label="Nasledujúca ukážka"><span aria-hidden="true">&#8250;</span></button>
+        </div>
+        <div class="gallery-coverflow__meta">
+          <p class="gallery-coverflow__tag" data-coverflow-tag aria-hidden="true"></p>
+          <p class="gallery-coverflow__caption" data-coverflow-caption></p>
+          <p class="gallery-coverflow__status" data-coverflow-status aria-live="polite"></p>
+          <p class="gallery-coverflow__hint">Kliknutím na Pred alebo Po otvoríte príslušnú fotku.</p>
+        </div>
+      </div>`;
 }
 
 function renderGallerySectionsHtml(items, lightboxItems, sections) {
@@ -1385,129 +1658,33 @@ function renderGallerySectionsHtml(items, lightboxItems, sections) {
         <h3 class="gallery-section__title" id="gallery-section-${group.id}">${group.title}</h3>
         ${link}
       </div>
-      <div class="gallery-mosaic gallery-mosaic--scatter">
-        ${renderGalleryMosaicHtml(group.items, lightboxItems)}
-      </div>
+      ${buildGalleryCoverflowHtml(group)}
     </section>`;
     })
     .join("");
 }
 
-const GALLERY_SCATTER_SLOTS = [
-  { x: 0, y: 0, w: 27, r: -8, z: 2 },
-  { x: 29, y: 5, w: 23, r: 6, z: 3 },
-  { x: 54, y: 0, w: 25, r: -5, z: 4 },
-  { x: 72, y: 12, w: 26, r: 7, z: 2 },
-  { x: 3, y: 32, w: 29, r: 5, z: 5 },
-  { x: 35, y: 36, w: 24, r: -7, z: 6 },
-  { x: 62, y: 30, w: 27, r: 4, z: 4 },
-  { x: 14, y: 64, w: 25, r: -4, z: 3 },
-  { x: 42, y: 60, w: 31, r: 3, z: 7 },
-  { x: 68, y: 58, w: 28, r: -6, z: 5 },
-];
-
-const GALLERY_SCATTER_MOBILE_ROTATIONS = [-3.5, 3, -2.5, 2.5, -4, 3.5, -2, 4, -3, 2];
-
-function isGalleryScatterMobile() {
-  return window.matchMedia("(max-width: 639px)").matches;
-}
-
-function scatterWidthForRatio(ratio, mobile) {
-  if (mobile) return ratio >= 1.15 ? 100 : 100;
-  if (ratio >= 1.35) return 34;
-  if (ratio >= 1.05) return 28;
-  return 22;
-}
-
-function applyGalleryScatterLayout(container) {
+function initGalleryCoverflowCarousels(container, items, lightboxItems, sections) {
   if (!container) return;
-  const mosaics = container.classList.contains("gallery-mosaic--scatter")
-    ? [container]
-    : [...container.querySelectorAll(".gallery-mosaic--scatter")];
-  if (!mosaics.length) return;
+  const groups = sections?.length
+    ? groupGalleryItemsBySection(items, sections)
+    : [{ id: "all", items: (items || []).filter((item) => item.src) }];
 
-  const mobile = isGalleryScatterMobile();
-
-  mosaics.forEach((mosaic) => {
-    mosaic.classList.toggle("gallery-mosaic--scatter-mobile", mobile);
-    const tiles = [...mosaic.querySelectorAll(".gallery-scatter-item")];
-    const bandHeight = 82;
-
-    tiles.forEach((tile, index) => {
-      tile.classList.remove("gallery-scatter-item--wide");
-
-      if (mobile) {
-        tile.style.removeProperty("--s-x");
-        tile.style.removeProperty("--s-y");
-        tile.style.removeProperty("--s-w");
-        tile.style.setProperty(
-          "--s-r",
-          `${GALLERY_SCATTER_MOBILE_ROTATIONS[index % GALLERY_SCATTER_MOBILE_ROTATIONS.length]}deg`
-        );
-        tile.style.setProperty("--s-z", String((index % 5) + 1));
-      } else {
-        const slot = GALLERY_SCATTER_SLOTS[index % GALLERY_SCATTER_SLOTS.length];
-        const band = Math.floor(index / GALLERY_SCATTER_SLOTS.length);
-        const yShift = band * bandHeight;
-
-        tile.style.setProperty("--s-x", `${slot.x}%`);
-        tile.style.setProperty("--s-y", `calc(${slot.y + yShift * 0.32}% + ${band * 1.65}rem)`);
-        tile.style.setProperty("--s-w", `${slot.w}%`);
-        tile.style.setProperty("--s-r", `${slot.r}deg`);
-        tile.style.setProperty("--s-z", String(slot.z + band));
-      }
-
-      const img = tile.querySelector("img");
-      const applySize = () => {
-        if (!img?.naturalWidth) return;
-        const ratio = img.naturalWidth / img.naturalHeight;
-        if (mobile) {
-          tile.classList.toggle("gallery-scatter-item--wide", ratio >= 1.2);
-        } else {
-          tile.style.setProperty("--s-w", `${scatterWidthForRatio(ratio, false)}%`);
-        }
-        refreshScatterCanvas(mosaic);
-      };
-
-      if (img?.complete) applySize();
-      else img?.addEventListener("load", applySize, { once: true });
-    });
-
-    refreshScatterCanvas(mosaic);
+  groups.forEach((group) => {
+    if (!group.items?.length) return;
+    const carousel = container.querySelector(`[data-section-id="${group.id}"]`);
+    if (!carousel) return;
+    const slides = groupGalleryItemsIntoPairSlides(group.items, lightboxItems);
+    if (!slides.length) return;
+    carousel._coverflowIndex = 0;
+    initGalleryCoverflowCarousel(carousel, slides, lightboxItems);
   });
-}
-
-function refreshScatterCanvas(mosaic) {
-  requestAnimationFrame(() => {
-    if (isGalleryScatterMobile()) {
-      mosaic.style.minHeight = "";
-      return;
-    }
-    let maxBottom = 0;
-    mosaic.querySelectorAll(".gallery-scatter-item").forEach((tile) => {
-      maxBottom = Math.max(maxBottom, tile.offsetTop + tile.offsetHeight);
-    });
-    mosaic.style.minHeight = `${Math.max(maxBottom + 56, 300)}px`;
-  });
-}
-
-let galleryScatterResizeTimer;
-function scheduleGalleryScatterRelayout() {
-  clearTimeout(galleryScatterResizeTimer);
-  galleryScatterResizeTimer = setTimeout(() => {
-    const root = document.getElementById("gallery-full");
-    if (root) applyGalleryScatterLayout(root);
-  }, 120);
-}
-
-if (typeof window !== "undefined") {
-  window.addEventListener("resize", scheduleGalleryScatterRelayout, { passive: true });
 }
 
 function buildGalleryMosaicStaticTile(item, lightboxItems) {
   const lightboxIndex = lightboxItems.findIndex((g) => g.src === item.src);
   return `
-    <figure class="gallery-tile gallery-item gallery-scatter-item" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
+    <figure class="gallery-tile gallery-item" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-tile__media">
         ${buildPictureMarkup(item.src, { alt: item.alt, loading: "eager", decoding: "async" })}
         <div class="gallery-tile__overlay">
@@ -1517,10 +1694,6 @@ function buildGalleryMosaicStaticTile(item, lightboxItems) {
       </div>
     </figure>
   `;
-}
-
-function renderGalleryMosaicHtml(items, lightboxItems) {
-  return items.map((item) => buildGalleryMosaicStaticTile(item, lightboxItems)).join("");
 }
 
 function renderGallery(items, containerId, lightboxSource, pageConfig) {
@@ -1534,11 +1707,11 @@ function renderGallery(items, containerId, lightboxSource, pageConfig) {
   const gallerySections = pageConfig?.gallerySections;
 
   if (hasStaticContent(container)) {
-    if (isMosaic) container.className = gallerySections?.length ? "gallery-sections" : "gallery-mosaic gallery-mosaic--scatter";
+    if (isMosaic) container.className = gallerySections?.length ? "gallery-sections" : "gallery-sections";
     else if (isPage) container.className = "gallery-grid gallery-grid--page";
     bindGalleryItems(container, lightboxItems);
     initCompareSliders(container);
-    if (isMosaic) applyGalleryScatterLayout(container);
+    if (isMosaic) initGalleryCoverflowCarousels(container, items, lightboxItems, gallerySections);
     return;
   }
 
@@ -1548,10 +1721,13 @@ function renderGallery(items, containerId, lightboxSource, pageConfig) {
     container.className = "gallery-sections";
     container.innerHTML = renderGallerySectionsHtml(items, lightboxItems, gallerySections);
   } else if (mosaicStaticOnly) {
-    container.className = "gallery-mosaic gallery-mosaic--scatter";
-    container.innerHTML = renderGalleryMosaicHtml(items, lightboxItems);
+    container.className = "gallery-sections";
+    container.innerHTML = `
+    <section class="gallery-section" aria-label="Fotogaléria">
+      ${buildGalleryCoverflowHtml({ id: "all", title: "Fotky" })}
+    </section>`;
   } else {
-    if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--scatter";
+    if (isMosaic) container.className = "gallery-mosaic";
     else if (isPage) container.className = "gallery-grid gallery-grid--page";
     container.innerHTML = items
       .map((item, index) => {
@@ -1600,7 +1776,9 @@ function renderGallery(items, containerId, lightboxSource, pageConfig) {
 
   bindGalleryItems(container, lightboxItems);
   initCompareSliders(container);
-  if (isMosaic) applyGalleryScatterLayout(container);
+  if (isMosaic && mosaicStaticOnly) {
+    initGalleryCoverflowCarousels(container, items, lightboxItems, gallerySections);
+  }
 }
 
 function renderReels(config, containerId = "reels-track", options = { linked: true }) {
