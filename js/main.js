@@ -1385,7 +1385,7 @@ function renderGallerySectionsHtml(items, lightboxItems, sections) {
         <h3 class="gallery-section__title" id="gallery-section-${group.id}">${group.title}</h3>
         ${link}
       </div>
-      <div class="gallery-mosaic gallery-mosaic--bento">
+      <div class="gallery-mosaic gallery-mosaic--scatter">
         ${renderGalleryMosaicHtml(group.items, lightboxItems)}
       </div>
     </section>`;
@@ -1393,41 +1393,77 @@ function renderGallerySectionsHtml(items, lightboxItems, sections) {
     .join("");
 }
 
-function applyGalleryBentoLayout(container) {
+const GALLERY_SCATTER_SLOTS = [
+  { x: 1, y: 0, w: 28, r: -7, z: 2 },
+  { x: 31, y: 6, w: 24, r: 5, z: 3 },
+  { x: 58, y: 1, w: 26, r: -4, z: 4 },
+  { x: 76, y: 14, w: 22, r: 8, z: 2 },
+  { x: 5, y: 34, w: 30, r: 4, z: 5 },
+  { x: 38, y: 38, w: 25, r: -6, z: 6 },
+  { x: 66, y: 32, w: 28, r: 3, z: 4 },
+  { x: 18, y: 66, w: 26, r: -5, z: 3 },
+  { x: 48, y: 62, w: 32, r: 2, z: 7 },
+  { x: 0, y: 58, w: 23, r: 6, z: 2 },
+];
+
+function scatterWidthForRatio(ratio) {
+  if (ratio >= 1.35) return 36;
+  if (ratio >= 1.05) return 30;
+  return 24;
+}
+
+function applyGalleryScatterLayout(container) {
   if (!container) return;
-  const mosaics = container.classList.contains("gallery-mosaic--bento")
+  const mosaics = container.classList.contains("gallery-mosaic--scatter")
     ? [container]
-    : [...container.querySelectorAll(".gallery-mosaic--bento")];
+    : [...container.querySelectorAll(".gallery-mosaic--scatter")];
   if (!mosaics.length) return;
 
   mosaics.forEach((mosaic) => {
-  mosaic.querySelectorAll(".gallery-bento").forEach((tile) => {
-    const img = tile.querySelector("img");
-    if (!img) return;
+    const tiles = [...mosaic.querySelectorAll(".gallery-scatter-item")];
+    const bandHeight = mosaic.dataset.scatterCompact === "true" ? 72 : 88;
 
-    const apply = () => {
-      if (!img.naturalWidth) return;
-      const ratio = img.naturalWidth / img.naturalHeight;
-      tile.classList.remove(
-        "gallery-bento--portrait",
-        "gallery-bento--landscape",
-        "gallery-bento--panorama"
-      );
-      if (ratio >= 1.35) tile.classList.add("gallery-bento--panorama");
-      else if (ratio >= 1.05) tile.classList.add("gallery-bento--landscape");
-      else tile.classList.add("gallery-bento--portrait");
-    };
+    tiles.forEach((tile, index) => {
+      const slot = GALLERY_SCATTER_SLOTS[index % GALLERY_SCATTER_SLOTS.length];
+      const band = Math.floor(index / GALLERY_SCATTER_SLOTS.length);
+      const yShift = band * bandHeight;
 
-    if (img.complete) apply();
-    else img.addEventListener("load", apply, { once: true });
+      tile.style.setProperty("--s-x", `${slot.x}%`);
+      tile.style.setProperty("--s-y", `calc(${slot.y + yShift * 0.35}% + ${band * 1.75}rem)`);
+      tile.style.setProperty("--s-w", `${slot.w}%`);
+      tile.style.setProperty("--s-r", `${slot.r}deg`);
+      tile.style.setProperty("--s-z", String(slot.z + band));
+
+      const img = tile.querySelector("img");
+      const applySize = () => {
+        if (!img?.naturalWidth) return;
+        const w = scatterWidthForRatio(img.naturalWidth / img.naturalHeight);
+        tile.style.setProperty("--s-w", `${w}%`);
+        refreshScatterCanvas(mosaic);
+      };
+
+      if (img?.complete) applySize();
+      else img?.addEventListener("load", applySize, { once: true });
+    });
+
+    refreshScatterCanvas(mosaic);
   });
+}
+
+function refreshScatterCanvas(mosaic) {
+  requestAnimationFrame(() => {
+    let maxBottom = 0;
+    mosaic.querySelectorAll(".gallery-scatter-item").forEach((tile) => {
+      maxBottom = Math.max(maxBottom, tile.offsetTop + tile.offsetHeight);
+    });
+    mosaic.style.minHeight = `${Math.max(maxBottom + 48, 280)}px`;
   });
 }
 
 function buildGalleryMosaicStaticTile(item, lightboxItems) {
   const lightboxIndex = lightboxItems.findIndex((g) => g.src === item.src);
   return `
-    <figure class="gallery-tile gallery-item gallery-bento" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
+    <figure class="gallery-tile gallery-item gallery-scatter-item" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-tile__media">
         ${buildPictureMarkup(item.src, { alt: item.alt, loading: "eager", decoding: "async" })}
         <div class="gallery-tile__overlay">
@@ -1454,11 +1490,11 @@ function renderGallery(items, containerId, lightboxSource, pageConfig) {
   const gallerySections = pageConfig?.gallerySections;
 
   if (hasStaticContent(container)) {
-    if (isMosaic) container.className = gallerySections?.length ? "gallery-sections" : "gallery-mosaic gallery-mosaic--bento";
+    if (isMosaic) container.className = gallerySections?.length ? "gallery-sections" : "gallery-mosaic gallery-mosaic--scatter";
     else if (isPage) container.className = "gallery-grid gallery-grid--page";
     bindGalleryItems(container, lightboxItems);
     initCompareSliders(container);
-    if (isMosaic) applyGalleryBentoLayout(container);
+    if (isMosaic) applyGalleryScatterLayout(container);
     return;
   }
 
@@ -1468,10 +1504,10 @@ function renderGallery(items, containerId, lightboxSource, pageConfig) {
     container.className = "gallery-sections";
     container.innerHTML = renderGallerySectionsHtml(items, lightboxItems, gallerySections);
   } else if (mosaicStaticOnly) {
-    container.className = "gallery-mosaic gallery-mosaic--bento";
+    container.className = "gallery-mosaic gallery-mosaic--scatter";
     container.innerHTML = renderGalleryMosaicHtml(items, lightboxItems);
   } else {
-    if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--bento";
+    if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--scatter";
     else if (isPage) container.className = "gallery-grid gallery-grid--page";
     container.innerHTML = items
       .map((item, index) => {
@@ -1520,7 +1556,7 @@ function renderGallery(items, containerId, lightboxSource, pageConfig) {
 
   bindGalleryItems(container, lightboxItems);
   initCompareSliders(container);
-  if (isMosaic) applyGalleryBentoLayout(container);
+  if (isMosaic) applyGalleryScatterLayout(container);
 }
 
 function renderReels(config, containerId = "reels-track", options = { linked: true }) {

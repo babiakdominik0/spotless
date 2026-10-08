@@ -1487,6 +1487,15 @@ ul {
   color: #fff;
 }
 
+.gallery-section .gallery-mosaic--scatter {
+  margin-top: 0.35rem;
+  overflow: visible;
+}
+
+.gallery-section {
+  overflow: visible;
+}
+
 /* Galéria — kompaktný compare carousel + fullscreen */
 .gallery-compare-spotlight {
   padding-bottom: 1.75rem;
@@ -1919,107 +1928,110 @@ ul {
   }
 }
 
-/* Bento mriežka — prirodzený pomer fotiek (bez orezania), asymetria podľa orientácie */
-.gallery-mosaic--bento {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: auto;
-  grid-auto-flow: dense;
-  gap: clamp(0.4rem, 0.9vw, 0.55rem);
-  align-items: start;
-}
-
-@media (min-width: 640px) {
-  .gallery-mosaic--bento {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(0.45rem, 0.75vw, 0.6rem);
-  }
-}
-
-@media (min-width: 1024px) {
-  .gallery-mosaic--bento {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-}
-
-.gallery-mosaic--bento .gallery-bento--portrait {
-  grid-column: span 1;
-}
-
-.gallery-mosaic--bento .gallery-bento--landscape {
-  grid-column: span 2;
-}
-
-.gallery-mosaic--bento .gallery-bento--panorama {
-  grid-column: span 3;
-}
-
-@media (max-width: 639px) {
-  .gallery-mosaic--bento .gallery-bento--panorama {
-    grid-column: span 2;
-  }
-}
-
-@media (min-width: 640px) and (max-width: 1023px) {
-  .gallery-mosaic--bento .gallery-bento--panorama {
-    grid-column: span 4;
-  }
-}
-
-.gallery-mosaic--bento .gallery-tile {
-  margin: 0;
-  min-height: 0;
-  min-width: 0;
-  display: block;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: var(--color-surface);
-  transition:
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s ease,
-    border-color 0.35s ease,
-    z-index 0s;
-}
-
-.gallery-mosaic--bento .gallery-tile:hover,
-.gallery-mosaic--bento .gallery-tile:focus-visible {
-  transform: translateY(-3px) scale(1.015);
-  z-index: 3;
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow:
-    0 14px 36px rgba(0, 0, 0, 0.38),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
-}
-
-.gallery-mosaic--bento .gallery-tile__media {
+/* Koláž — „rozhádzané“ fotky s výrazným hover zoomom */
+.gallery-mosaic--scatter {
   position: relative;
   width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  border: none;
-  border-radius: 0;
-  background: #0a0a0a;
+  min-height: 280px;
+  padding: 0.25rem 0 1rem;
+  isolation: isolate;
 }
 
-.gallery-mosaic--bento .gallery-tile__media picture {
+.gallery-mosaic--scatter .gallery-scatter-item {
+  position: absolute;
+  left: var(--s-x, 5%);
+  top: var(--s-y, 0);
+  width: var(--s-w, 28%);
+  margin: 0;
+  padding: 0.3rem 0.3rem 0.55rem;
+  border-radius: 12px;
+  background: linear-gradient(165deg, rgba(32, 32, 32, 0.98) 0%, rgba(14, 14, 14, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.42),
+    0 2px 0 rgba(255, 255, 255, 0.04) inset;
+  cursor: pointer;
+  transform: rotate(var(--s-r, 0deg));
+  transform-origin: 50% 55%;
+  z-index: var(--s-z, 1);
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1),
+    box-shadow 0.45s ease,
+    border-color 0.35s ease,
+    opacity 0.35s ease,
+    filter 0.35s ease;
+  will-change: transform;
+}
+
+.gallery-mosaic--scatter .gallery-scatter-item:hover,
+.gallery-mosaic--scatter .gallery-scatter-item:focus-visible {
+  transform: rotate(0deg) scale(1.55);
+  z-index: 50;
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.gallery-mosaic--scatter:has(.gallery-scatter-item:hover) .gallery-scatter-item:not(:hover):not(:focus-visible),
+.gallery-mosaic--scatter:has(.gallery-scatter-item:focus-visible) .gallery-scatter-item:not(:hover):not(:focus-visible) {
+  opacity: 0.55;
+  filter: saturate(0.75) blur(0.3px);
+}
+
+.gallery-mosaic--scatter .gallery-scatter-item__frame,
+.gallery-mosaic--scatter .gallery-tile__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  line-height: 0;
+  background: #050505;
+  border: none;
+}
+
+.gallery-mosaic--scatter .gallery-tile__media picture {
   display: block;
   width: 100%;
 }
 
-.gallery-mosaic--bento .gallery-tile__media img {
+.gallery-mosaic--scatter .gallery-tile__media img {
   display: block;
   width: 100%;
   height: auto;
   vertical-align: middle;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
 }
 
-.gallery-mosaic--bento .gallery-tile:hover .gallery-tile__media img,
-.gallery-mosaic--bento .gallery-tile:focus-visible .gallery-tile__media img {
-  transform: scale(1.025);
-  filter: brightness(1.04);
+.gallery-mosaic--scatter .gallery-tile__overlay {
+  border-radius: 0 0 8px 8px;
+  opacity: 0;
+}
+
+.gallery-mosaic--scatter .gallery-scatter-item:hover .gallery-tile__overlay,
+.gallery-mosaic--scatter .gallery-scatter-item:focus-visible .gallery-tile__overlay {
+  opacity: 1;
+}
+
+@media (max-width: 639px) {
+  .gallery-mosaic--scatter .gallery-scatter-item {
+    width: calc(var(--s-w, 28%) + 4%);
+    padding: 0.22rem 0.22rem 0.45rem;
+  }
+
+  .gallery-mosaic--scatter .gallery-scatter-item:hover,
+  .gallery-mosaic--scatter .gallery-scatter-item:focus-visible {
+    transform: rotate(0deg) scale(1.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-mosaic--scatter .gallery-scatter-item {
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .gallery-mosaic--scatter .gallery-scatter-item:hover,
+  .gallery-mosaic--scatter .gallery-scatter-item:focus-visible {
+    transform: rotate(var(--s-r, 0deg)) scale(1.08);
+  }
 }
 
 .gallery-tile {
@@ -2080,18 +2092,7 @@ ul {
   opacity: 1;
 }
 
-@media (hover: hover) {
-  .gallery-mosaic--bento .gallery-tile__overlay {
-    opacity: 0;
-  }
-
-  .gallery-mosaic--bento .gallery-tile:hover .gallery-tile__overlay,
-  .gallery-mosaic--bento .gallery-tile:focus-visible .gallery-tile__overlay {
-    opacity: 1;
-  }
-}
-
-.gallery-mosaic--bento .gallery-tile__caption {
+.gallery-mosaic--scatter .gallery-tile__caption {
   font-size: clamp(0.72rem, 1.6vw, 0.86rem);
   line-height: 1.3;
   display: -webkit-box;
@@ -2100,7 +2101,7 @@ ul {
   overflow: hidden;
 }
 
-.gallery-mosaic--bento .gallery-tile__overlay {
+.gallery-mosaic--scatter .gallery-tile__overlay {
   padding: 0.55rem 0.65rem;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.15) 58%, transparent 100%);
 }
@@ -2165,7 +2166,7 @@ ul {
     max-height: min(75vh, 560px);
   }
 
-  .gallery-tile:not(.gallery-bento) .gallery-tile__overlay {
+  .gallery-tile:not(.gallery-scatter-item) .gallery-tile__overlay {
     opacity: 1;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 70%);
   }
