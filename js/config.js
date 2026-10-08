@@ -79,7 +79,7 @@ const SITE_CONFIG = {
       eyebrow: "Referencie",
       title: "Pred a po — naša práca",
       subtitle:
-        "Reálne výsledky tepovania sedačiek, kobercov, áut a umývania okien v Leviciach, Nitre a okolí.",
+        "Reálne výsledky tepovania sedačiek, kobercov a interiérov áut v Leviciach, Nitre a okolí.",
     },
     reviews: {
       eyebrow: "Recenzie",
@@ -139,8 +139,8 @@ const SITE_CONFIG = {
       pageTitle: "Tepovanie sedačiek Levice a Nitra | Spotless Cleaning",
       metaDescription:
         "Profesionálne tepovanie sedačiek, kobercov a koženého nábytku v Leviciach a Nitre. Prídeme k vám, výsledok pred a po. Ceny od 6 € / miesto.",
-      image: "/images/tepovanie-sedaciek-levice-pred-a-po.png",
-      imageAlt: "Tepovanie sedačky — porovnanie pred a po čistení v Leviciach",
+      image: "/images/tepovanie-sedacka-po.jpg",
+      imageAlt: "Tepovanie sedačky — porovnanie pred a po čistení",
       intro: `<p>Potrebujete <strong>tepovanie sedačiek v Leviciach, Nitre alebo okolí</strong>? Spotless Cleaning príde s profesionálnou technikou priamo k vám domov alebo do firmy. Odstránime škvrny, prach, pachy aj alergény z hĺbky vlákien — bez nutnosti veľkého presunu nábytku.</p>
         <p>Okrem gaučov a kresiel čistíme aj <strong>tepovanie kobercov</strong> a šetrné <strong>čistenie kože</strong> s impregnáciou. Výsledky si pozrite v <a href="/galeria">galérii pred a po</a> alebo si rovno pozrite orientačné ceny nižšie.</p>`,
       processTitle: "Ako prebieha tepovanie u vás",
@@ -187,8 +187,8 @@ const SITE_CONFIG = {
       pageTitle: "Tepovanie auta Levice a Nitra | Spotless Cleaning",
       metaDescription:
         "Tepovanie autosedačiek a kompletný interiér vozidla v Leviciach a Nitre. Sedadlá od 6 €, hatchback od 45 €. Čistenie kože v aute.",
-      image: "/images/tepovanie-autosedaciek-nitra.png",
-      imageAlt: "Tepovanie autosedačiek — pred a po čistení v Nitre",
+      image: "/images/tepovanie-auto-predna-sedacka-po.jpg",
+      imageAlt: "Tepovanie autosedačiek — pred a po čistení",
       intro: `<p><strong>Tepovanie auta v Leviciach, Nitre a okolí</strong> vráti interiéru sviežosť — odstránime škvrny od jedla a nápojov, pot, prach aj nepríjemné pachy z sedadiel a kobercov.</p>
         <p>Ponúkame čistenie jednotlivých sedadiel aj <strong>kompletný interiér</strong> (hatchback, sedan, combi, SUV) vrátane kufra. Pre kožené sedačky robíme šetrné <strong>čistenie kože s impregnáciou</strong>. Ukážky práce sú v <a href="/galeria">galérii pred a po</a>.</p>`,
       processTitle: "Ako prebieha tepovanie auta",
@@ -646,7 +646,7 @@ const SITE_CONFIG = {
     },
     {
       compare: {
-        before: "/images/tepovanie-sedacka-pred.png",
+        before: "/images/tepovanie-sedacka-pred.jpg",
         after: "/images/tepovanie-sedacka-po.jpg",
         beforeAlt: "Rozkladacia sedačka pred tepovaním — škvrny na látke",
         afterAlt: "Rozkladacia sedačka po tepovaní — vyčistená látka",
@@ -694,6 +694,8 @@ const SITE_CONFIG = {
   ],
 
   homeGalleryPreview: 3,
+  homeReelsPreview: 2,
+  homeReelIds: ["DJ4msrLs9Rm", "DYVML_fsQwL"],
 
   instagramReels: {
     profileUrl: "https://www.instagram.com/spotless_cleaning__/",

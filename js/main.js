@@ -894,7 +894,11 @@ function renderPageContent(config, page) {
     const previewCount = config.homeGalleryPreview || 3;
     const preview = config.gallery?.filter((item) => item.src).slice(0, previewCount);
     renderGallery(preview, "gallery-preview", config.gallery);
-    renderReels(config, "home-reels-track", { linked: false });
+    renderReels(config, "home-reels-track", {
+      linked: false,
+      maxItems: config.homeReelsPreview || 2,
+      reelIds: config.homeReelIds,
+    });
     renderReviews(config);
     renderContactServices(config);
     renderFaq(config);
@@ -1447,10 +1451,19 @@ function renderReels(config, containerId = "reels-track", options = { linked: tr
 
   const duration = reelsConfig.previewDuration || 2;
   const linked = options.linked !== false;
+  const maxItems = options.maxItems;
+  let reelItems = reelsConfig.items;
+  if (options.reelIds?.length) {
+    reelItems = options.reelIds
+      .map((id) => reelsConfig.items.find((reel) => reel.id === id))
+      .filter(Boolean);
+  } else if (typeof maxItems === "number" && maxItems > 0) {
+    reelItems = reelItems.slice(0, maxItems);
+  }
   const videoMarkup = (videoSrc) =>
     `<video class="reel-card__video" muted playsinline preload="none" data-src="${videoSrc}" aria-hidden="true"></video>`;
 
-  track.innerHTML = reelsConfig.items
+  track.innerHTML = reelItems
     .map((reel) => {
       const dataAttrs = `data-start="${reel.startTime || 0}" data-duration="${duration}"`;
       const inner = `
