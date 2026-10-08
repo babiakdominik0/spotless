@@ -96,20 +96,22 @@
         <div class="gallery-compare-carousel" id="gallery-compare-carousel" aria-roledescription="carousel" aria-label="Pred a po" tabindex="0">
           <div class="gallery-compare-carousel__row">
             <button type="button" class="gallery-compare-carousel__btn" data-gallery-compare-prev aria-label="Predchádzajúce porovnanie"><span aria-hidden="true">&#8249;</span></button>
-            <button type="button" class="gallery-compare-carousel__open" id="gallery-compare-open" aria-label="Zväčšiť porovnanie na celú obrazovku">
+            <div class="gallery-compare-carousel__stage">
               <div class="gallery-compare-carousel__viewport">
                 <div class="gallery-compare-carousel__track" id="gallery-compare-track"></div>
               </div>
-              <span class="gallery-compare-carousel__open-hint">
-                <span class="gallery-compare-carousel__open-icon" aria-hidden="true"></span>
-                Kliknite pre celú obrazovku
-              </span>
-            </button>
+              <button type="button" class="gallery-compare-carousel__open" id="gallery-compare-open" aria-label="Zväčšiť porovnanie na celú obrazovku">
+                <span class="gallery-compare-carousel__open-hint">
+                  <span class="gallery-compare-carousel__open-icon" aria-hidden="true"></span>
+                  Celá obrazovka
+                </span>
+              </button>
+            </div>
             <button type="button" class="gallery-compare-carousel__btn" data-gallery-compare-next aria-label="Nasledujúce porovnanie"><span aria-hidden="true">&#8250;</span></button>
           </div>
           <p class="gallery-compare-carousel__status" id="gallery-compare-status" aria-live="polite"></p>
           <p class="gallery-compare-carousel__caption" id="gallery-compare-caption"></p>
-          <p class="gallery-compare-carousel__microcopy">V zväčšenom režime posuňte posuvník pre porovnanie pred a po.</p>
+          <p class="gallery-compare-carousel__microcopy">Posuňte posuvník na fotke pre porovnanie pred a po. Voliteľne otvorte celú obrazovku.</p>
         </div>
       </div>
     </section>

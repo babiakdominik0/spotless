@@ -134,6 +134,7 @@ function initCompareSliders(root = document) {
       rootEl.setPointerCapture(e.pointerId);
       positionFromClientX(e.clientX);
       e.preventDefault();
+      e.stopPropagation();
     };
 
     const onPointerMove = (e) => {
@@ -318,7 +319,7 @@ function buildGalleryCompareCarouselSlide(item) {
   return `
     <figure class="gallery-compare-carousel__slide" role="group" aria-roledescription="slide">
       <div class="gallery-compare-carousel__media${mediaClass}" data-gallery-compare-media>
-        ${buildCompareMarkup(item, { preview: true })}
+        ${buildCompareMarkup(item)}
       </div>
     </figure>
   `;
@@ -403,6 +404,7 @@ function initGalleryCompareCarousel(carousel, items) {
         goTo(index + 1);
       }
       if (e.key === "Enter" || e.key === " ") {
+        if (e.target.closest("[data-ba-compare]")) return;
         e.preventDefault();
         const media = track.querySelector("[data-gallery-compare-media]");
         openGalleryCompareFullscreen(items, index, media);
