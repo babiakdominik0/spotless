@@ -1370,7 +1370,7 @@ ul {
 
 /* ===== Gallery page (fresh mosaic layout) ===== */
 .container--gallery {
-  max-width: 1140px;
+  max-width: min(1280px, 96vw);
 }
 
 .gallery-intro {
@@ -1437,11 +1437,11 @@ ul {
 }
 
 .gallery-showcase {
-  padding-bottom: 2rem;
+  padding-bottom: 1.5rem;
 }
 
 .gallery-showcase__title {
-  margin: 0 0 1.25rem;
+  margin: 0 0 0.85rem;
   font-size: clamp(1.05rem, 2vw, 1.2rem);
   font-weight: 600;
   color: var(--color-text-muted);
@@ -1881,29 +1881,110 @@ ul {
   }
 }
 
-.gallery-mosaic {
+/* Bento mriežka — viac fotiek naraz, asymetria, hover */
+.gallery-mosaic--bento {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.65rem, 1.5vw, 1rem);
-  align-items: start;
+  grid-auto-rows: minmax(68px, 11.5vw);
+  grid-auto-flow: dense;
+  gap: clamp(0.4rem, 0.9vw, 0.55rem);
+  align-items: stretch;
 }
 
-@media (min-width: 900px) {
-  .gallery-mosaic {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+@media (min-width: 640px) {
+  .gallery-mosaic--bento {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(72px, 8.5vw);
+    gap: clamp(0.45rem, 0.75vw, 0.6rem);
   }
 }
 
-.gallery-pair {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.65rem, 1.5vw, 1rem);
-  align-items: start;
+@media (min-width: 1024px) {
+  .gallery-mosaic--bento {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-rows: minmax(78px, 7.25vw);
+  }
 }
 
-.gallery-pair .gallery-tile {
+.gallery-mosaic--bento .gallery-bento--wide {
+  grid-column: span 2;
+}
+
+.gallery-mosaic--bento .gallery-bento--tall {
+  grid-row: span 2;
+}
+
+.gallery-mosaic--bento .gallery-bento--feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+@media (min-width: 1024px) {
+  .gallery-mosaic--bento .gallery-bento--feature {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+.gallery-mosaic--bento .gallery-tile {
+  margin: 0;
+  min-height: 0;
   min-width: 0;
+  height: 100%;
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--color-surface);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.35s ease,
+    z-index 0s;
+}
+
+.gallery-mosaic--bento .gallery-tile:hover,
+.gallery-mosaic--bento .gallery-tile:focus-visible {
+  transform: translateY(-3px) scale(1.015);
+  z-index: 3;
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.gallery-mosaic--bento .gallery-tile__media {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  line-height: 0;
+  border: none;
+  border-radius: 0;
+  background: #0a0a0a;
+}
+
+.gallery-mosaic--bento .gallery-tile__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-mosaic--bento .gallery-tile__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+}
+
+.gallery-mosaic--bento .gallery-tile:hover .gallery-tile__media img,
+.gallery-mosaic--bento .gallery-tile:focus-visible .gallery-tile__media img {
+  transform: scale(1.07);
+  filter: brightness(1.06);
 }
 
 .gallery-tile {
@@ -1964,6 +2045,31 @@ ul {
   opacity: 1;
 }
 
+@media (hover: hover) {
+  .gallery-mosaic--bento .gallery-tile__overlay {
+    opacity: 0;
+  }
+
+  .gallery-mosaic--bento .gallery-tile:hover .gallery-tile__overlay,
+  .gallery-mosaic--bento .gallery-tile:focus-visible .gallery-tile__overlay {
+    opacity: 1;
+  }
+}
+
+.gallery-mosaic--bento .gallery-tile__caption {
+  font-size: clamp(0.72rem, 1.6vw, 0.86rem);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.gallery-mosaic--bento .gallery-tile__overlay {
+  padding: 0.55rem 0.65rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.15) 58%, transparent 100%);
+}
+
 .gallery-tile__caption {
   margin: 0;
   font-size: 0.92rem;
@@ -2019,8 +2125,9 @@ ul {
 }
 
 @media (max-width: 767px) {
-  .gallery-pair {
-    grid-template-columns: 1fr;
+  .gallery-mosaic--bento .gallery-bento--feature {
+    grid-column: span 2;
+    grid-row: span 2;
   }
 
   .gallery-tile--compare .gallery-tile__media {
@@ -2028,7 +2135,7 @@ ul {
     max-height: min(75vh, 560px);
   }
 
-  .gallery-tile__overlay {
+  .gallery-tile:not(.gallery-bento) .gallery-tile__overlay {
     opacity: 1;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 70%);
   }

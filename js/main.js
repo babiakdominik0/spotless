@@ -1353,27 +1353,29 @@ function mosaicVariantClass(index, isCompare) {
   return `gallery-tile--v${index % 6}`;
 }
 
-function groupGalleryMosaicItems(items) {
-  const groups = [];
-  let i = 0;
-  while (i < items.length) {
-    const item = items[i];
-    const next = items[i + 1];
-    if (item.pair && next?.pair === item.pair) {
-      groups.push({ type: "pair", items: [item, next] });
-      i += 2;
-    } else {
-      groups.push({ type: "single", items: [item] });
-      i += 1;
-    }
-  }
-  return groups;
+function galleryBentoSizeClass(index) {
+  const pattern = [
+    "gallery-bento--feature",
+    "",
+    "gallery-bento--wide",
+    "",
+    "gallery-bento--tall",
+    "",
+    "",
+    "gallery-bento--wide",
+    "gallery-bento--tall",
+    "",
+    "gallery-bento--wide",
+    "",
+  ];
+  return pattern[index % pattern.length] || "";
 }
 
-function buildGalleryMosaicStaticTile(item, lightboxItems) {
+function buildGalleryMosaicStaticTile(item, lightboxItems, index = 0) {
   const lightboxIndex = lightboxItems.findIndex((g) => g.src === item.src);
+  const bentoClass = galleryBentoSizeClass(index);
   return `
-    <figure class="gallery-tile gallery-item" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
+    <figure class="gallery-tile gallery-item gallery-bento${bentoClass ? ` ${bentoClass}` : ""}" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-tile__media">
         ${buildPictureMarkup(item.src, { alt: item.alt, loading: "eager", decoding: "async" })}
         <div class="gallery-tile__overlay">
@@ -1386,17 +1388,7 @@ function buildGalleryMosaicStaticTile(item, lightboxItems) {
 }
 
 function renderGalleryMosaicHtml(items, lightboxItems) {
-  return groupGalleryMosaicItems(items)
-    .map((group) => {
-      if (group.type === "pair") {
-        return `
-    <div class="gallery-pair">
-      ${group.items.map((item) => buildGalleryMosaicStaticTile(item, lightboxItems)).join("")}
-    </div>`;
-      }
-      return buildGalleryMosaicStaticTile(group.items[0], lightboxItems);
-    })
-    .join("");
+  return items.map((item, index) => buildGalleryMosaicStaticTile(item, lightboxItems, index)).join("");
 }
 
 function renderGallery(items, containerId, lightboxSource) {
@@ -1409,14 +1401,14 @@ function renderGallery(items, containerId, lightboxSource) {
   const lightboxItems = getGalleryLightboxItems(lightboxSource || items);
 
   if (hasStaticContent(container)) {
-    if (isMosaic) container.className = "gallery-mosaic";
+    if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--bento";
     else if (isPage) container.className = "gallery-grid gallery-grid--page";
     bindGalleryItems(container, lightboxItems);
     initCompareSliders(container);
     return;
   }
 
-  if (isMosaic) container.className = "gallery-mosaic";
+  if (isMosaic) container.className = "gallery-mosaic gallery-mosaic--bento";
   else if (isPage) container.className = "gallery-grid gallery-grid--page";
 
   if (isMosaic && !items.some((item) => item.compare)) {
