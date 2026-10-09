@@ -3,9 +3,9 @@ function toWebpSrc(src) {
   return src.replace(/\.(png|jpe?g)$/i, ".webp");
 }
 
-/** WebP existuje pri PNG v /images/; JPG zatiaľ bez hromadného WebP (404 by spomalilo načítanie). */
+/** WebP súbor vedľa originálu (.png / .jpg) — generovanie: scripts/generate-webp.py */
 function shouldUseWebpSrc(src) {
-  return Boolean(src && /\.png$/i.test(src));
+  return Boolean(src && /\.(png|jpe?g)$/i.test(src));
 }
 
 function buildPictureMarkup(src, { alt = "", loading, fetchPriority, className, width, height, decoding } = {}) {
@@ -57,6 +57,13 @@ function compareAlignStyle(align) {
   return `--ba-img-x: ${x}%; --ba-img-y: ${y}%; --ba-img-scale: ${scale};`;
 }
 
+function buildCompareImg(src, { alt = "", className, style, loading = "lazy" } = {}) {
+  const webp = shouldUseWebpSrc(src) ? toWebpSrc(src) : null;
+  const img = `<img class="${className}" src="${src}" alt="${alt}" loading="${loading}" decoding="async" style="${style}">`;
+  if (!webp) return img;
+  return `<picture><source srcset="${webp}" type="image/webp">${img}</picture>`;
+}
+
 function buildCompareMarkup(item, { preview = false } = {}) {
   const c = item.compare;
   if (!c?.before || !c?.after) return "";
@@ -68,10 +75,10 @@ function buildCompareMarkup(item, { preview = false } = {}) {
   return `
     <div class="ba-compare${previewClass}" data-ba-compare style="--ba-pos: 50%">
       <div class="ba-compare__layer ba-compare__layer--after">
-        <img class="ba-compare__after" src="${c.after}" alt="${c.afterAlt || ""}" loading="lazy" decoding="async" style="${afterStyle}">
+        ${buildCompareImg(c.after, { alt: c.afterAlt || "", className: "ba-compare__after", style: afterStyle })}
       </div>
       <div class="ba-compare__layer ba-compare__layer--before">
-        <img class="ba-compare__before" src="${c.before}" alt="${c.beforeAlt || ""}" loading="lazy" decoding="async" style="${beforeStyle}">
+        ${buildCompareImg(c.before, { alt: c.beforeAlt || "", className: "ba-compare__before", style: beforeStyle })}
       </div>
       <button type="button" class="ba-compare__handle" aria-label="Posunúť porovnanie pred a po" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></button>
       <span class="ba-compare__label ba-compare__label--before">Pred</span>
