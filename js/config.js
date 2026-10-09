@@ -793,6 +793,7 @@ const SITE_CONFIG = {
   ],
 
   homeGalleryPreview: 6,
+  homeGalleryPreviewMobile: 4,
   homeGalleryPreviewKeys: [
     "koberec-po",
     "tepovanie-postele-po",

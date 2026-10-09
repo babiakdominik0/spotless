@@ -2,19 +2,35 @@
   var id = window.SPOTLESS_COOKIEBOT_ID;
   if (!id || typeof id !== "string" || !id.trim()) return;
 
-  if (document.getElementById("Cookiebot")) return;
+  function injectCookiebot() {
+    if (document.getElementById("Cookiebot")) return;
 
-  var script = document.createElement("script");
-  script.id = "Cookiebot";
-  script.src = "https://consent.cookiebot.com/uc.js";
-  script.type = "text/javascript";
-  script.setAttribute("data-cbid", id.trim());
-  script.setAttribute("data-blockingmode", "auto");
+    var script = document.createElement("script");
+    script.id = "Cookiebot";
+    script.src = "https://consent.cookiebot.com/uc.js";
+    script.type = "text/javascript";
+    script.setAttribute("data-cbid", id.trim());
+    script.setAttribute("data-blockingmode", "auto");
 
-  var first = document.getElementsByTagName("script")[0];
-  if (first && first.parentNode) {
-    first.parentNode.insertBefore(script, first);
+    var first = document.getElementsByTagName("script")[0];
+    if (first && first.parentNode) {
+      first.parentNode.insertBefore(script, first);
+    } else {
+      document.head.appendChild(script);
+    }
+  }
+
+  function scheduleCookiebot() {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(injectCookiebot, { timeout: 2500 });
+    } else {
+      window.setTimeout(injectCookiebot, 1200);
+    }
+  }
+
+  if (document.readyState === "complete") {
+    scheduleCookiebot();
   } else {
-    document.head.appendChild(script);
+    window.addEventListener("load", scheduleCookiebot, { once: true });
   }
 })();

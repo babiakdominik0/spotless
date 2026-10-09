@@ -3,7 +3,7 @@ function toWebpSrc(src) {
   return src.replace(/\.(png|jpe?g)$/i, ".webp");
 }
 
-/** WebP existuje len pri vybraných PNG v /images/ — pri JPG inak 404 a v <picture> sa náhľad nemusí načítať. */
+/** WebP existuje pri PNG v /images/; JPG zatiaľ bez hromadného WebP (404 by spomalilo načítanie). */
 function shouldUseWebpSrc(src) {
   return Boolean(src && /\.png$/i.test(src));
 }
@@ -325,7 +325,10 @@ function initServiceCompareCarousel(carousel, items, options = {}) {
 }
 
 function getHomeGalleryPreviewItems(gallery, config) {
-  const count = config.homeGalleryPreview || 6;
+  let count = config.homeGalleryPreview || 6;
+  if (typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches) {
+    count = Math.min(count, config.homeGalleryPreviewMobile ?? 4);
+  }
   const staticItems = (gallery || []).filter((item) => item.src);
   const keys = config.homeGalleryPreviewKeys;
 
@@ -1765,11 +1768,17 @@ function renderGallery(items, containerId, lightboxSource, pageConfig) {
           return buildGalleryMosaicStaticTile(item, lightboxItems);
         }
 
-        const previewLoading = isPreview ? "eager" : "lazy";
+        const mobilePreview =
+          isPreview &&
+          typeof window !== "undefined" &&
+          window.matchMedia("(max-width: 639px)").matches;
+        const previewLoading = isPreview ? (mobilePreview ? "lazy" : index < 2 ? "eager" : "lazy") : "lazy";
+        const previewPriority =
+          isPreview && !mobilePreview && index === 0 ? { fetchPriority: "low" } : {};
         return `
     <figure class="gallery-item${wideClass}" data-index="${lightboxIndex}" tabindex="0" role="button" aria-label="Otvoriť: ${item.alt}">
       <div class="gallery-item__frame">
-        ${buildPictureMarkup(item.src, { alt: item.alt, loading: previewLoading, decoding: "async" })}
+        ${buildPictureMarkup(item.src, { alt: item.alt, loading: previewLoading, decoding: "async", ...previewPriority })}
       </div>
       ${item.caption ? `<figcaption class="gallery-caption">${item.caption}</figcaption>` : ""}
     </figure>
@@ -2113,12 +2122,12 @@ function initReelsHover(track) {
 
     reelControllers.push({ card, clearPreview, playPreview });
 
-    initReelPoster(card, video, start, index * 180);
-
     if (touchDevice) {
       initReelTouchScrollPlay(card, playPreview, clearPreview);
       return;
     }
+
+    initReelPoster(card, video, start, index * 180);
 
     card.addEventListener("mouseenter", playPreview);
     card.addEventListener("mouseleave", clearPreview);
