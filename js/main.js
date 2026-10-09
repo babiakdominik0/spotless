@@ -1496,7 +1496,7 @@ function buildGalleryCoverflowSlideContent(slide) {
   if (slide.kind === "pair") {
     return `
       <div class="gallery-coverflow__pair">
-        <div class="gallery-coverflow__pair-head" aria-hidden="true">
+        <div class="gallery-coverflow__pair-head">
           <span class="gallery-coverflow__label">Pred</span>
           <span class="gallery-coverflow__label">Po</span>
         </div>
