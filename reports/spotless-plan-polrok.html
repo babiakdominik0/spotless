@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <title>Spotless Cleaning — Plán na polrok</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #0a0a0a;
+      --color-surface: #141414;
+      --color-text: #f5f5f5;
+      --color-text-muted: #9a9a9a;
+      --color-border: #2a2a2a;
+      --color-accent-soft: #1c1c1c;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: var(--color-text);
+      background: var(--color-bg);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    @page { size: A4; margin: 14mm 16mm 18mm; }
+    .page { page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 250mm;
+      padding-top: 8mm;
+    }
+    .cover__brand { display: flex; align-items: center; gap: 14px; }
+    .cover__brand img { width: 52px; height: 52px; object-fit: contain; }
+    .cover__brand h1 { font-size: 22pt; font-weight: 700; letter-spacing: -0.02em; }
+    .cover__brand p { color: var(--color-text-muted); font-size: 11pt; margin-top: 4px; }
+    .cover__hero { margin: 22mm 0; }
+    .cover__hero h2 { font-size: 26pt; font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; max-width: 14em; }
+    .cover__hero .lead { margin-top: 16px; font-size: 12pt; color: var(--color-text-muted); max-width: 38em; }
+    .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .meta-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
+    }
+    .meta-card__label { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); }
+    .meta-card__value { font-size: 12pt; font-weight: 600; margin-top: 6px; }
+    .section-head {
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .section-head h2 { font-size: 16pt; font-weight: 700; letter-spacing: -0.02em; }
+    .section-head p { margin-top: 6px; color: var(--color-text-muted); font-size: 9.5pt; }
+    h3 { font-size: 11pt; font-weight: 600; margin: 14px 0 8px; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 18px; }
+    .pill {
+      font-size: 9pt;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+    }
+    .pill strong { color: var(--color-text); font-weight: 600; }
+    .focus-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .focus-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .focus-card__num {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-bottom: 6px;
+    }
+    .focus-card h4 { font-size: 11pt; font-weight: 600; margin-bottom: 8px; }
+    .focus-card p { font-size: 9.5pt; color: var(--color-text-muted); }
+    ul.check { list-style: none; padding: 0; margin: 0; }
+    ul.check li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 7px;
+      font-size: 9.5pt;
+      color: var(--color-text-muted);
+    }
+    ul.check li::before { content: "→"; position: absolute; left: 0; color: var(--color-text); }
+    .timeline { margin: 12px 0; }
+    .phase {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .phase:last-child { border-bottom: none; }
+    .phase__when {
+      font-size: 8.5pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      padding-top: 2px;
+    }
+    .phase__title { font-weight: 600; font-size: 10.5pt; margin-bottom: 6px; }
+    .phase__body { font-size: 9.5pt; color: var(--color-text-muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+      margin-bottom: 14px;
+    }
+    th, td {
+      padding: 7px 9px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+    th {
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td.tag { white-space: nowrap; font-size: 8pt; color: var(--color-text-muted); }
+    .note {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-left: 3px solid #fff;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-size: 9.5pt;
+      color: var(--color-text-muted);
+      margin: 12px 0;
+    }
+    .note strong { color: var(--color-text); }
+    .badge {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--color-accent-soft);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+    }
+    .footer {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid var(--color-border);
+      font-size: 8pt;
+      color: var(--color-text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .status-must { color: #f5f5f5; }
+    .status-nice { color: var(--color-text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- 1: Titulka -->
+  <section class="page cover">
+    <div>
+      <div class="cover__brand">
+        <img src="../images/logo-spotless.png" alt="" width="52" height="52">
+        <div>
+          <h1>Spotless Cleaning</h1>
+          <p>Profesionálne tepovanie a umývanie okien — Levice, Nitra a okolie</p>
+        </div>
+      </div>
+      <div class="cover__hero">
+        <span class="badge">Plán rozvoja</span>
+        <h2>Polročný plán webu a marketingu</h2>
+        <p class="lead">
+          Čo spravíme na webe, čo potrebujeme od vás (obsah, recenzie, fotky) a na čo sa zameriame,
+          aby pribudli dopyty z Levíc, Nitry a okolia — bez zbytočného „filler“ obsahu.
+        </p>
+      </div>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-card">
+        <div class="meta-card__label">Obdobie</div>
+        <div class="meta-card__value">Október 2026 – marec 2027</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-card__label">Web</div>
+        <div class="meta-card__value">www.spotlesscleaning.sk</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-card__label">Východisko</div>
+        <div class="meta-card__value">Report výsledkov 9/2026</div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Vygenerované 9. 10. 2026</span>
+      <span>Interný / klientsky plán</span>
+    </div>
+  </section>
+
+  <!-- 2: Ciele a priority -->
+  <section class="page">
+    <div class="section-head">
+      <h2>Kam smerujeme</h2>
+      <p>Realistický cieľ po prvom polroku prevádzky webu</p>
+    </div>
+
+    <p style="color:var(--color-text-muted);font-size:9.5pt;margin-bottom:14px;">
+      Dnes web funguje ako <strong style="color:var(--color-text)">vizitka a dôvera</strong> (direct, Instagram).
+      Organické Google rastie pomaly (~25 klikov / 6 mes.). Ďalších 6 mesiacov posilníme
+      <strong style="color:var(--color-text)">lokálne dopyty + konverzie</strong> (volanie, formulár, cenník) — nie len „viac návštevníkov“.
+    </p>
+
+    <div class="pill-row">
+      <span class="pill"><strong>GSC (SK):</strong> ~25 → 80–150 klikov</span>
+      <span class="pill"><strong>Zobrazenia:</strong> ~1 240 → 2 500–4 000</span>
+      <span class="pill"><strong>GA4 organic:</strong> ~15 → 40–80 relácií</span>
+      <span class="pill"><strong>Meranie:</strong> volania + formulár v GA4</span>
+    </div>
+
+    <h3>Štyri priority (v tomto poradí)</h3>
+    <div class="focus-grid">
+      <div class="focus-card">
+        <div class="focus-card__num">Priorita 1</div>
+        <h4>Google Business Profile + recenzie</h4>
+        <p>Najrýchlejší lokálny dopad pre „tepovanie Levice/Nitra“. Web s tým musí sedieť (NAP, služby, link).</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-card__num">Priorita 2</div>
+        <h4>Obsah služieb a SEO</h4>
+        <p>Posilniť stránky sedačky, auto, okná, ozón podľa dopytov z Search Console — bez nových slabých fotiek.</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-card__num">Priorita 3</div>
+        <h4>Konverzia na webe</h4>
+        <p>Recenzie na homepage, FAQ, CTA, nižší bounce — z toho, čo už príde (direct / social).</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-card__num">Priorita 4</div>
+        <h4>Technika a meranie</h4>
+        <p>Reels komprimovať, GSC rutina, voliteľne malý Ads/Meta test — až keď sú recenzie a GBP v poriadku.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Fotky pred/po:</strong> Do galérie pridávame len materiál, kde je rozdiel viditeľný.
+      Slabé fotky nechávame mimo webu — radšej menej, ale kvalitne. Existujúce silné páry ostávajú.
+    </div>
+
+    <h3>Rozdelenie zodpovedností</h3>
+    <table>
+      <thead>
+        <tr><th>Oblasť</th><th>Web / vývoj</th><th>Spotless (klient)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Texty služieb, FAQ, meta</td>
+          <td class="tag">Návrh + implementácia</td>
+          <td class="tag">Schválenie faktov, ceny, oblasť</td>
+        </tr>
+        <tr>
+          <td>Recenzie na webe</td>
+          <td class="tag">Sekcia + schema</td>
+          <td class="tag">Zber v GBP, súhlas na meno/mesto</td>
+        </tr>
+        <tr>
+          <td>GBP príspevky, fotky profilu</td>
+          <td class="tag">—</td>
+          <td class="tag">Pravidelná starostlivosť</td>
+        </tr>
+        <tr>
+          <td>Nové pred/po do galérie</td>
+          <td class="tag">Upload + config</td>
+          <td class="tag">Fotenie podľa checklistu</td>
+        </tr>
+        <tr>
+          <td>Instagram, QR, vizitky</td>
+          <td class="tag">Link, QR súbor</td>
+          <td class="tag">Bio, tlač, stories CTA</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <span>Spotless Cleaning — Plán polrok</span>
+      <span>Strana 2</span>
+    </div>
+  </section>
+
+  <!-- 3: Časová os -->
+  <section class="page">
+    <div class="section-head">
+      <h2>Časová os (6 mesiacov)</h2>
+      <p>Čo riešime kedy — web, marketing, obsah</p>
+    </div>
+
+    <div class="timeline">
+      <div class="phase">
+        <div class="phase__when">Okt – nov 2026</div>
+        <div>
+          <div class="phase__title">Fáza A — Základ dôvery a indexácie</div>
+          <div class="phase__body">
+            <ul class="check">
+              <li>GSC rutina: sitemap, indexácia služieb, galérie, cenníka; mesačný export dopytov</li>
+              <li>GBP audit: kategórie, služby, oblasť, hodiny, 10+ fotiek (aj z existujúcich reelov / auta / vybavenia)</li>
+              <li>Web: blok recenzií (3–5), FAQ z GSC dopytov, doladenie title/meta galérie a služieb</li>
+              <li>Interné odkazy: domov → služby → cenník → kontakt; Instagram bio → www</li>
+              <li>Technika: komprimovať reel MP4; GA4 udalosti (odoslanie formulára, klik tel.)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase__when">Dec 2026 – jan 2027</div>
+        <div>
+          <div class="phase__title">Fáza B — Obsah služieb + sezóna</div>
+          <div class="phase__body">
+            <ul class="check">
+              <li>Každá služba: sekcia Kde / Pre koho / Čo presne / Ako prebieha (Levice, Nitra, okolie)</li>
+              <li>Cenník: krátka poznámka pri položkách (od…, doprava) — konzistentné s realitou</li>
+              <li>GBP: 2–4 príspevky (pred Vianocami / nový rok — sedačky, autá, okná)</li>
+              <li>Systém recenzií: po zákazke SMS/WhatsApp s linkom na Google hodnotenie</li>
+              <li>Voliteľne: QR kód na kontakt / cenník pre tlač a auto</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase__when">Feb – mar 2027</div>
+        <div>
+          <div class="phase__title">Fáza C — Rast a vyhodnotenie</div>
+          <div class="phase__body">
+            <ul class="check">
+              <li>Polročný report GSC + GA4 (porovnanie s baseline 9/2026)</li>
+              <li>Podľa dopytov: doladiť 1–2 služby, ktoré rastú (napr. okná alebo auto)</li>
+              <li>Galéria: pridať max. 1–2 nové páry pred/po, ak splnia kvalitu (inak nechať)</li>
+              <li>Voliteľne: Google Ads alebo Meta test (500–1000 €/mes., meriame volania/formulár)</li>
+              <li>Lokálne spolupráce: 1–2 partneri (realitka, autobazár) — zľava + zmienka / link</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Mesačný rituál (15 min):</strong> GSC kliky a dopyty → GBP 1 príspevok → skontrolovať formulár a telefón na mobile.
+    </div>
+
+    <div class="footer">
+      <span>Spotless Cleaning — Plán polrok</span>
+      <span>Strana 3</span>
+    </div>
+  </section>
+
+  <!-- 4: Obsah od klienta -->
+  <section class="page">
+    <div class="section-head">
+      <h2>Obsah — čo potrebujeme od vás</h2>
+      <p>Fotky, recenzie, texty; čo je nutné a čo môže počkať</p>
+    </div>
+
+    <h3>Recenzie (priorita: vysoká)</h3>
+    <table>
+      <thead>
+        <tr><th>Čo</th><th>Množstvo</th><th>Kde použijeme</th><th>Stav</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Google recenzie (GBP)</td>
+          <td>Cieľ <strong>+15</strong> za polrok (postupne)</td>
+          <td>Maps, dôvera; text môžeme citovať na webe so súhlasom</td>
+          <td class="tag status-must">Nutné</td>
+        </tr>
+        <tr>
+          <td>Recenzie na webe</td>
+          <td><strong>5–8</strong> s menom, mestom, službou</td>
+          <td>Homepage + prípadne služby</td>
+          <td class="tag status-must">Nutné</td>
+        </tr>
+        <tr>
+          <td>Facebook / Instagram DM</td>
+          <td>2–3 screenshoty so súhlasom</td>
+          <td>Doplnok k recenziám (voliteľné)</td>
+          <td class="tag status-nice">Odporúčané</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Fotografie a video</h3>
+    <table>
+      <thead>
+        <tr><th>Typ</th><th>Požiadavka</th><th>Poznámka</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Pred/po do galérie</strong></td>
+          <td>1–2 nové páry za polrok max.</td>
+          <td>Rovnaký uhol, svetlo; rozdiel viditeľný na mobile. Slabé fotky <strong>nepublikovať</strong>.</td>
+        </tr>
+        <tr>
+          <td>GBP / Instagram</td>
+          <td>Pravidelné fotky práce, vybavenia, auta</td>
+          <td>Nemusia byť pred/po — stačí proces, detail, výsledok zblízka</td>
+        </tr>
+        <tr>
+          <td>Reels (web)</td>
+          <td>Existujúce OK; nové krátke (15–30 s)</td>
+          <td>Pred uploadom komprimovať (menej MB = rýchlejší mobile web)</td>
+        </tr>
+        <tr>
+          <td>Tím / tvár</td>
+          <td>1 fotka pri zákazke (voliteľné)</td>
+          <td>Zvyšuje dôveru na homepage alebo O nás — až ak chcete</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Checklist pri fotení pred/po (pre budúce zákazky)</h3>
+    <ul class="check">
+      <li>Pred: ešte pred prácou, rovnaký záber ako Po</li>
+      <li>Po: hneď po dokončení, rovnaké svetlo (okno / denné)</li>
+      <li>Bez filtra; telefón vodorovne; celá plocha (sedadlo, koberec, okno)</li>
+      <li>Označte si zákazku (napr. „sedačka Nitra 3/2027“) — na web dáme až po schválení</li>
+    </ul>
+
+    <h3>Texty a fakty (od klienta)</h3>
+    <div class="two-col">
+      <ul class="check">
+        <li>Presná oblasť dojazdu (dediny, km okolo Levíc/Nitry)</li>
+        <li>Čas schnutia podľa typu služby</li>
+        <li>Čo nečistíte / neponúkate (aby FAQ bolo pravdivé)</li>
+      </ul>
+      <ul class="check">
+        <li>Aktuálne ceny a zmeny cenníka — vždy schváliť pred publikovaním</li>
+        <li>Telefón a e-mail pre objednávky (konzistentné s GBP)</li>
+        <li>Logo / vizitka — finálna URL www + QR ak tlačíte</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <span>Spotless Cleaning — Plán polrok</span>
+      <span>Strana 4</span>
+    </div>
+  </section>
+
+  <!-- 5: Web — čo pridáme -->
+  <section class="page">
+    <div class="section-head">
+      <h2>Na webe — čo pridáme / upravíme</h2>
+      <p>Konkrétne úpravy spotlesscleaning.sk (bez zmeny štruktúry stránok)</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Úprava</th><th>Popis</th><th>Kedy</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sekcia recenzií</td>
+          <td>3–8 citátov, meno, mesto, služba; JSON-LD ak sedí s obsahom</td>
+          <td class="tag">Fáza A</td>
+        </tr>
+        <tr>
+          <td>FAQ</td>
+          <td>5–8 otázok z GSC (cena, schnutie, oblasť, rozdiel oproti upratovaniu)</td>
+          <td class="tag">Fáza A</td>
+        </tr>
+        <tr>
+          <td>Meta + úvod služieb</td>
+          <td>Levice/Nitra v title; lokálne odseky na každej službe</td>
+          <td class="tag">Fáza A–B</td>
+        </tr>
+        <tr>
+          <td>Galéria — snippet</td>
+          <td>Title/description pre CTR (0 klikov pri zobrazeniach)</td>
+          <td class="tag">Fáza A</td>
+        </tr>
+        <tr>
+          <td>Interné linky</td>
+          <td>Textové odkazy služba ↔ cenník ↔ galéria ↔ kontakt</td>
+          <td class="tag">Fáza A</td>
+        </tr>
+        <tr>
+          <td>GA4 udalosti</td>
+          <td>Formulár odoslaný, klik na tel., voliteľne cenník</td>
+          <td class="tag">Fáza A</td>
+        </tr>
+        <tr>
+          <td>Reels — veľkosť súborov</td>
+          <td>Komprimované MP4, rovnaký dizajn homepage</td>
+          <td class="tag">Fáza A</td>
+        </tr>
+        <tr>
+          <td>OG obrázky služieb</td>
+          <td>Jednotné JPG (nie staré kombinované PNG)</td>
+          <td class="tag">Fáza B</td>
+        </tr>
+        <tr>
+          <td>Galéria — nové páry</td>
+          <td>Len schválené pred/po; coverflow už hotový</td>
+          <td class="tag">Fáza C (podľa materiálu)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Čo zatiaľ nerobíme (úmyselne)</h3>
+    <ul class="check">
+      <li>Novú sales page namiesto existujúceho webu — štruktúra domov / služby / cenník / galéria / kontakt stačí</li>
+      <li>Hromadné doplnenie galérie slabými fotkami</li>
+      <li>Separátne landingy pre každé mesto — najprv posilniť existujúce služby</li>
+      <li>Veľký redesign — focus na obsah a konverziu</li>
+    </ul>
+
+    <h3>Mimo web (odporúčané paralelne)</h3>
+    <ul class="check">
+      <li><strong>Google Business Profile</strong> — príspevky, Q&A, fotky, recenzie</li>
+      <li><strong>Instagram / Facebook</strong> — stories s odkazom na cenník alebo kontakt</li>
+      <li><strong>Direct</strong> — jedna URL na všetkom materiáli (dnes ~70 % trafficu)</li>
+    </ul>
+
+    <div class="section-head" style="margin-top:18px;">
+      <h2 style="font-size:14pt;">Úspech po polroku</h2>
+    </div>
+    <p style="font-size:9.5pt;color:var(--color-text-muted);">
+      Plán je splnený, ak: (1) pribudli recenzie a GBP je aktívny,
+      (2) GSC kliky a organické relácie rastú oproti baseline,
+      (3) viete povedať, koľko dopytov prišlo cez web/formulár/volanie,
+      (4) web odráža aktuálne služby a ceny bez zastaralého obsahu.
+      Virálny traffic nie je cieľ — <strong style="color:var(--color-text)">lokálne objednávky áno</strong>.
+    </p>
+
+    <div class="footer">
+      <span>www.spotlesscleaning.sk</span>
+      <span>Strana 5</span>
+    </div>
+  </section>
+
+</body>
+</html>

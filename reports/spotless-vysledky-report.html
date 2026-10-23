@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <title>Spotless Cleaning — Report výsledkov</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #0a0a0a;
+      --color-surface: #141414;
+      --color-text: #f5f5f5;
+      --color-text-muted: #9a9a9a;
+      --color-border: #2a2a2a;
+      --color-accent-soft: #1c1c1c;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: var(--color-text);
+      background: var(--color-bg);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm 16mm 18mm;
+    }
+
+    .page {
+      page-break-after: always;
+      min-height: 0;
+    }
+
+    .page:last-child {
+      page-break-after: auto;
+    }
+
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 250mm;
+      padding-top: 8mm;
+    }
+
+    .cover__brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cover__brand img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .cover__brand h1 {
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .cover__brand p {
+      color: var(--color-text-muted);
+      font-size: 11pt;
+      margin-top: 4px;
+    }
+
+    .cover__hero {
+      margin: 24mm 0;
+    }
+
+    .cover__hero h2 {
+      font-size: 28pt;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      max-width: 16em;
+    }
+
+    .cover__hero .lead {
+      margin-top: 16px;
+      font-size: 12pt;
+      color: var(--color-text-muted);
+      max-width: 36em;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .meta-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
+    }
+
+    .meta-card__label {
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+    }
+
+    .meta-card__value {
+      font-size: 13pt;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .section-head {
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .section-head h2 {
+      font-size: 16pt;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head p {
+      margin-top: 6px;
+      color: var(--color-text-muted);
+      font-size: 9.5pt;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .kpi {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      text-align: center;
+    }
+
+    .kpi__num {
+      font-size: 20pt;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi__label {
+      font-size: 8pt;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin-bottom: 16px;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    th {
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    tr.highlight td {
+      background: var(--color-accent-soft);
+    }
+
+    .note {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-left: 3px solid #fff;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-size: 9.5pt;
+      color: var(--color-text-muted);
+      margin: 12px 0 18px;
+    }
+
+    .note strong { color: var(--color-text); }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    ul.check {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    ul.check li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 8px;
+      font-size: 9.5pt;
+      color: var(--color-text-muted);
+    }
+
+    ul.check li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--color-text);
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding-top: 12px;
+      border-top: 1px solid var(--color-border);
+      font-size: 8pt;
+      color: var(--color-text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--color-accent-soft);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+    }
+
+    h3 {
+      font-size: 11pt;
+      font-weight: 600;
+      margin: 16px 0 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Strana 1: Titulka -->
+  <section class="page cover">
+    <div>
+      <div class="cover__brand">
+        <img src="../images/logo-spotless.png" alt="" width="52" height="52">
+        <div>
+          <h1>Spotless Cleaning</h1>
+          <p>Profesionálne tepovanie a umývanie okien — Levice, Nitra a okolie</p>
+        </div>
+      </div>
+      <div class="cover__hero">
+        <span class="badge">Interný report</span>
+        <h2>Výsledky webu od spustenia</h2>
+        <p class="lead">
+          Prehľad návštevnosti (Google Analytics 4) a viditeľnosti vo vyhľadávaní (Google Search Console)
+          za obdobie od vzniku stránky po 9. október 2026.
+        </p>
+      </div>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-card">
+        <div class="meta-card__label">Web</div>
+        <div class="meta-card__value">www.spotlesscleaning.sk</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-card__label">GSC — výkon</div>
+        <div class="meta-card__value">Posledných 6 mesiacov</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-card__label">GA4 — návštevnosť</div>
+        <div class="meta-card__value">1. 1. – 9. 10. 2026</div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Vygenerované 9. 10. 2026</span>
+      <span>Zdroje: Search Console, Analytics 4, PageSpeed Insights</span>
+    </div>
+  </section>
+
+  <!-- Strana 2: GSC súhrn -->
+  <section class="page">
+    <div class="section-head">
+      <h2>Google Search Console</h2>
+      <p>Výkon vo vyhľadávaní · typ Web · doménová property spotlesscleaning.sk · dáta od ~28. 6. 2026</p>
+    </div>
+
+    <p style="margin-bottom:14px;color:var(--color-text-muted);font-size:9.5pt;">
+      Hlavný trh je <strong style="color:var(--color-text)">Slovensko</strong>. Organický Google je pri novom webe ešte v raste;
+      značka „Spotless“ už má dobré pozície, všeobecné služby ešte nie.
+    </p>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi__num">25</div>
+        <div class="kpi__label">Kliknutia (SK)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__num">1&nbsp;241</div>
+        <div class="kpi__label">Zobrazenia (SK)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__num">2,0&nbsp;%</div>
+        <div class="kpi__label">Priemerná CTR</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__num">8,3</div>
+        <div class="kpi__label">Priem. pozícia (SK)</div>
+      </div>
+    </div>
+
+    <h3>Najvýznamnejšie stránky vo vyhľadávaní</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th class="num">Kliky</th>
+          <th class="num">Zobrazenia</th>
+          <th class="num">CTR</th>
+          <th class="num">Pozícia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>https://www.spotlesscleaning.sk/</td>
+          <td class="num">12</td>
+          <td class="num">477</td>
+          <td class="num">2,52&nbsp;%</td>
+          <td class="num">10,1</td>
+        </tr>
+        <tr>
+          <td>http://spotlesscleaning.sk/ <span style="color:var(--color-text-muted)">(historická v GSC)</span></td>
+          <td class="num">7</td>
+          <td class="num">776</td>
+          <td class="num">0,9&nbsp;%</td>
+          <td class="num">6,1</td>
+        </tr>
+        <tr>
+          <td>/cennik</td>
+          <td class="num">5</td>
+          <td class="num">155</td>
+          <td class="num">3,23&nbsp;%</td>
+          <td class="num">11,9</td>
+        </tr>
+        <tr>
+          <td>/kontakt</td>
+          <td class="num">2</td>
+          <td class="num">83</td>
+          <td class="num">2,41&nbsp;%</td>
+          <td class="num">6,1</td>
+        </tr>
+        <tr>
+          <td>/galeria</td>
+          <td class="num">0</td>
+          <td class="num">19</td>
+          <td class="num">0&nbsp;%</td>
+          <td class="num">14,0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Poznámka k URL:</strong> Search Console môže ešte zobrazovať starú adresu <code>http://spotlesscleaning.sk/</code>
+      z minulých prehľadávaní. Kanonická verzia webu je <strong>https://www.spotlesscleaning.sk</strong> — po čase sa reporty zjednotia.
+      Stránky služieb (/tepovanie-sedaciek, /tepovanie-auta, …) v tomto exporte ešte nie sú v top 5; treba sledovať indexáciu a dopyty.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Zariadenia (GSC)</h3>
+        <table>
+          <thead>
+            <tr><th>Zariadenie</th><th class="num">Kliky</th><th class="num">Zobrazenia</th><th class="num">Pozícia</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mobil</td><td class="num">15</td><td class="num">881</td><td class="num">5,9</td></tr>
+            <tr><td>Desktop</td><td class="num">8</td><td class="num">416</td><td class="num">13,1</td></tr>
+            <tr><td>Tablet</td><td class="num">3</td><td class="num">30</td><td class="num">4,7</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Krajiny (top)</h3>
+        <table>
+          <thead>
+            <tr><th>Krajina</th><th class="num">Kliky</th><th class="num">Zobrazenia</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight"><td>Slovensko</td><td class="num">25</td><td class="num">1&nbsp;241</td></tr>
+            <tr><td>Maďarsko</td><td class="num">1</td><td class="num">18</td></tr>
+            <tr><td>Rakúsko / Česko</td><td class="num">0</td><td class="num">17</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>Spotless Cleaning — Report výsledkov</span>
+      <span>Strana 2</span>
+    </div>
+  </section>
+
+  <!-- Strana 3: Dopyty + GA4 -->
+  <section class="page">
+    <div class="section-head">
+      <h2>Dopyty a návštevnosť webu</h2>
+      <p>Čo ľudia hľadajú v Google · ako sa správajú na webe (GA4)</p>
+    </div>
+
+    <h3>Top dopyty vo vyhľadávaní (GSC)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Dopyt</th>
+          <th class="num">Kliky</th>
+          <th class="num">Zobrazenia</th>
+          <th class="num">CTR</th>
+          <th class="num">Pozícia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>spotless cleaning</td>
+          <td class="num">7</td>
+          <td class="num">23</td>
+          <td class="num">30,4&nbsp;%</td>
+          <td class="num">3,8</td>
+        </tr>
+        <tr>
+          <td>čistenie</td>
+          <td class="num">2</td>
+          <td class="num">100</td>
+          <td class="num">2&nbsp;%</td>
+          <td class="num">7,1</td>
+        </tr>
+        <tr>
+          <td>tepovanie levice</td>
+          <td class="num">1</td>
+          <td class="num">100</td>
+          <td class="num">1&nbsp;%</td>
+          <td class="num">7,7</td>
+        </tr>
+        <tr>
+          <td>spotless</td>
+          <td class="num">1</td>
+          <td class="num">69</td>
+          <td class="num">1,5&nbsp;%</td>
+          <td class="num">4,8</td>
+        </tr>
+        <tr>
+          <td>upratovacie služby</td>
+          <td class="num">0</td>
+          <td class="num">28</td>
+          <td class="num">0&nbsp;%</td>
+          <td class="num">4,3</td>
+        </tr>
+        <tr>
+          <td>umývanie okien</td>
+          <td class="num">0</td>
+          <td class="num">22</td>
+          <td class="num">0&nbsp;%</td>
+          <td class="num">6,9</td>
+        </tr>
+        <tr>
+          <td>tepovanie nitra / čistenie sedačiek</td>
+          <td class="num">0</td>
+          <td class="num">4–8</td>
+          <td class="num">0&nbsp;%</td>
+          <td class="num">37–49</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:9pt;color:var(--color-text-muted);margin-bottom:16px;">
+      <strong style="color:var(--color-text)">Interpretácia:</strong> Značka funguje (vysoká CTR na „spotless cleaning“).
+      Lokálne a servisné frázy majú zobrazenia, ale služby ešte nie sú v top pozíciách — potrebujú obsah, interné odkazy a Google Business Profile.
+    </p>
+
+    <div class="section-head" style="margin-top:8px;">
+      <h2 style="font-size:14pt;">Google Analytics 4</h2>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi__num">114</div>
+        <div class="kpi__label">Aktívni používatelia</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__num">762</div>
+        <div class="kpi__label">Udalosti</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__num">~31&nbsp;s</div>
+        <div class="kpi__label">Priem. interakcia</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__num">~70&nbsp;%</div>
+        <div class="kpi__label">Direct traffic</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Stránky (podľa titulku)</h3>
+        <table>
+          <thead>
+            <tr><th>Stránka</th><th class="num">Zobrazenia</th><th class="num">Bounce*</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Homepage (SEO title)</td><td class="num">148</td><td class="num">63&nbsp;%</td></tr>
+            <tr><td>Domov</td><td class="num">75</td><td class="num">91&nbsp;%</td></tr>
+            <tr><td>Cenník</td><td class="num">20</td><td class="num">10&nbsp;%</td></tr>
+            <tr><td>Galéria</td><td class="num">20</td><td class="num">14&nbsp;%</td></tr>
+            <tr><td>Kontakt</td><td class="num">17</td><td class="num">30&nbsp;%</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:8pt;color:var(--color-text-muted);">* Miera okamžitého odchodu v GA4 — orientačná.</p>
+      </div>
+      <div>
+        <h3>Zdroje relácií</h3>
+        <table>
+          <thead>
+            <tr><th>Zdroj / médium</th><th class="num">Relácie</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight"><td>(direct) / (none)</td><td class="num">105</td></tr>
+            <tr><td>google / organic</td><td class="num">15</td></tr>
+            <tr><td>m.facebook.com</td><td class="num">7</td></tr>
+            <tr><td>bing / organic</td><td class="num">5</td></tr>
+            <tr><td>ig / social</td><td class="num">5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>Spotless Cleaning — Report výsledkov</span>
+      <span>Strana 3</span>
+    </div>
+  </section>
+
+  <!-- Strana 4: Technika + odporúčania -->
+  <section class="page">
+    <div class="section-head">
+      <h2>Technický stav webu</h2>
+      <p>PageSpeed Insights · nedávne úpravy na spotlesscleaning.sk</p>
+    </div>
+
+    <div class="kpi-row" style="grid-template-columns: repeat(2, 1fr); max-width: 320px;">
+      <div class="kpi">
+        <div class="kpi__num">99</div>
+        <div class="kpi__label">Desktop (PSI)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__num">83–85</div>
+        <div class="kpi__label">Mobile (PSI)</div>
+      </div>
+    </div>
+
+    <ul class="check">
+      <li>Galéria coverflow, pred/po páry, lightbox — dokončené</li>
+      <li>WebP pre JPG v galérii, odložený Cookiebot, ľahšia homepage na mobile</li>
+      <li>SEO: sitemap, breadcrumbs, LocalBusiness schema, meta pre podstránky</li>
+      <li>Kanonická URL: https://www.spotlesscleaning.sk</li>
+    </ul>
+
+    <p style="font-size:9pt;color:var(--color-text-muted);margin:14px 0;">
+      Mobile skóre obmedzuje predovšetkým tretie strany (súhlas cookies) a veľké videá (reels). Ďalší krok: komprimovať MP4 reels.
+    </p>
+
+    <div class="section-head" style="margin-top:20px;">
+      <h2>Odporúčané ďalšie kroky</h2>
+      <p>Priorita pre viac dopytov a konverzií (bez nutnosti nových fotiek do galérie)</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Do 2–4 týždňov</h3>
+        <ul class="check">
+          <li>Google Business Profile — služby, fotky, príspevky, systém recenzií</li>
+          <li>GSC: mesačný prehľad dopytov + indexácia služieb a galérie</li>
+          <li>Recenzie na homepage (3–5 reálnych citátov)</li>
+          <li>Instagram / vizitky — jedna URL: www + kontakt alebo cenník</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Obsah & SEO</h3>
+        <ul class="check">
+          <li>Posilniť texty a meta na stránkach služieb (Levice, Nitra)</li>
+          <li>FAQ podľa dopytov z GSC (ceny, schnutie, oblasť)</li>
+          <li>Galéria: lepší title/description pre CTR vo vyhľadávaní</li>
+          <li>GA4: report landing pages + filter Slovensko</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Realistický cieľ ( ďalších ~6 mesiacov )</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Metrika</th>
+          <th class="num">Teraz</th>
+          <th class="num">Cieľ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>GSC kliky (SK)</td><td class="num">~25</td><td class="num">80–150</td></tr>
+        <tr><td>GSC zobrazenia (SK)</td><td class="num">~1&nbsp;240</td><td class="num">2&nbsp;500–4&nbsp;000</td></tr>
+        <tr><td>Google organic (GA4)</td><td class="num">~15 relácií</td><td class="num">40–80</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note" style="margin-top:16px;">
+      Web dnes primárne podporuje <strong>direct a sociálne siete</strong>; organické Google rastie pomaly, čo je pri lokálnej službe bežné v prvom roku.
+      Najrýchlejší dopad zvyčajne prinesie GBP + recenzie + konzistentný odkaz na web.
+    </div>
+
+    <div class="footer">
+      <span>www.spotlesscleaning.sk · spotlesslv.cleaning@gmail.com</span>
+      <span>Strana 4</span>
+    </div>
+  </section>
+
+</body>
+</html>
