@@ -404,14 +404,19 @@ const SITE_CONFIG = {
     url:
       "https://www.google.com/maps/place/Spotless+Cleaning+-+Tepovanie+%2F+%C4%8Cistenie+okien/@48.1765968,18.5653346,17z/data=!4m8!3m7!1s0x476add000aff8c21:0x2d3ed82480fbe38d!8m2!3d48.1765968!4d18.5653346!9m1!1b1",
     rating: 5,
-    reviewCount: 4,
+    reviewCount: 7,
   },
 
   reviews: [
     {
-      author: "keKs0",
+      author: "srandista11 nuda",
       rating: 5,
-      text: "Vrelo odporúčam, skvelé služby… Či už tepovanie alebo ozón domácnosti",
+      text: "Vynikajúca práca, zariadenie je úžasné, odstránilo všetky škvrny, ktoré bez ohľadu na to, ako veľmi som sa snažil, nezmizli a chlapík bol naozaj milý s dobrým prístupom.",
+    },
+    {
+      author: "Vlada R.",
+      rating: 5,
+      text: "Som veľmi spokojná so službami, dobrá kvalita za dobrú cenu",
     },
     {
       author: "Dominik B.",
@@ -424,7 +429,17 @@ const SITE_CONFIG = {
       text: "Odporúčam všetkými desiatimi. Profesionálny prístup, kvalitne odvedená práca a skvelá komunikácia.",
     },
     {
+      author: "keKs0",
+      rating: 5,
+      text: "Vrelo odporúčam, skvelé služby… Či už tepovanie alebo ozón domácnosti",
+    },
+    {
       author: "Sofia M.",
+      rating: 5,
+      text: "",
+    },
+    {
+      author: "Overené hodnotenie",
       rating: 5,
       text: "",
     },
