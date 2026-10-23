@@ -409,6 +409,11 @@ const SITE_CONFIG = {
 
   reviews: [
     {
+      author: "Mário H.",
+      rating: 5,
+      text: "Názov neklame, práca bola perfektná. Personál bol profesionálny a rýchly, čo je vždy dobré. Vrelo odporúčam. 10/10",
+    },
+    {
       author: "srandista11 nuda",
       rating: 5,
       text: "Vynikajúca práca, zariadenie je úžasné, odstránilo všetky škvrny, ktoré bez ohľadu na to, ako veľmi som sa snažil, nezmizli a chlapík bol naozaj milý s dobrým prístupom.",
@@ -435,11 +440,6 @@ const SITE_CONFIG = {
     },
     {
       author: "Sofia M.",
-      rating: 5,
-      text: "",
-    },
-    {
-      author: "Overené hodnotenie",
       rating: 5,
       text: "",
     },
